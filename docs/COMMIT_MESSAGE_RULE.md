@@ -18,7 +18,7 @@
 
 ##### Type
 
-커킷 타입은 다음을 따른다.
+커밋 타입은 다음을 따른다.
 
 * **build**: 빌드 시스템이나 외부 라이브러리 종속성 변경이나 추가 (example scopes: gulp, broccoli, npm)
 * **ci**: CI 설정, 스크립트 파일의 변경(examples: CircleCi, SauceLabs)
