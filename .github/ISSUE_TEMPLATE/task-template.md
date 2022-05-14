@@ -1,13 +1,16 @@
 ---
 name: Task template
-about: 작업 내용 생성 및 요약
-title: "[Task] - [@작업]"
-labels: enhancement
+about: 작업 요약 및 내용
+title: "[Task] - @title"
+labels: task
 assignees: ''
 
 ---
 
-### 작업 내용 요약
+## 1. 요약
 
+ex) 로그인 화면 기능 추가
 
-### 작업 상세 내용
+## 2. 상세 내용
+
+ex)  로그인 화면 로그인 및 validate 처리
