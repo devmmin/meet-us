@@ -20,7 +20,7 @@
 - feature
     
     feature 브랜치는 새로운 기능 개발 및 버그 수정이 필요할 때마다 develop 브랜치로부터 분기한다. feature 브랜치에서의 작업은 기본적으로 공유할 필요가 없기 때문에 자신의 로컬 저장소에서 관리한다.
-> feature/[기능 요약]
+> feature/[issue번호]
 
 
 
