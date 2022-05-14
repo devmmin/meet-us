@@ -1,38 +1,12 @@
----
-name: Bug report
-about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
+# 이슈 제목
 
----
+## 환경
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+- Browser: [all | Chrome XX | Firefox XX | IE XX | Safari XX | Mobile Chrome XX | Android X]
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+## 이슈 재현
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## 이슈 원인과 해결 
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## 참고한 문서나 자료
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
-
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
-
-**Additional context**
-Add any other context about the problem here.
