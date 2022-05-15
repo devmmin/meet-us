@@ -11,7 +11,7 @@ function Login() {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      if (loginInfo.ID === 'error' && loginInfo.Password) {
+      if (loginInfo.ID === 'error') {
         toast({
           description: 'ID 또는 비밀번호가 맞지 않습니다. 다시 입력해주세요.',
           status: 'error',
@@ -33,7 +33,6 @@ function Login() {
   return (
     <Container maxW="320px" h="100%">
       <Flex flexDirection="column" justifyContent="center" h="100%">
-
         <Heading>Meet Us</Heading>
         <FormControl isInvalid={!loginInfo.ID}>
           <Input
