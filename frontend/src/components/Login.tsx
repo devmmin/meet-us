@@ -3,7 +3,7 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
-function Login() {
+const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [loginInfo, setLoginInfo] = useState({ ID: '', Password: '' });
   const toast = useToast();
@@ -68,6 +68,6 @@ function Login() {
       </Flex>
     </Container>
   );
-}
+};
 
 export default Login;
