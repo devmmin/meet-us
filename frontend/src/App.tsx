@@ -1,9 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-} from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
 import Layout from './components/Layout';
 import Blog from './components/Blog';

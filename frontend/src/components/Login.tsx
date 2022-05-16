@@ -1,5 +1,12 @@
 import {
-  Button, Container, Flex, FormControl, FormErrorMessage, Heading, Input, useToast,
+  Button,
+  Container,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  Heading,
+  Input,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
@@ -23,7 +30,7 @@ const Login = () => {
   };
   const changeHandler = (
     event: React.ChangeEvent<HTMLInputElement>,
-    key: string,
+    key: string
   ) => {
     setLoginInfo((prev) => ({
       ...prev,
@@ -39,7 +46,9 @@ const Login = () => {
             placeholder="ID"
             mt="20px"
             value={loginInfo.ID}
-            onChange={(e) => { changeHandler(e, 'ID'); }}
+            onChange={(e) => {
+              changeHandler(e, 'ID');
+            }}
             disabled={isLoading}
           />
           <FormErrorMessage>아이디 값이 존재하지 않습니다.</FormErrorMessage>
@@ -49,7 +58,9 @@ const Login = () => {
             placeholder="Password"
             mt="20px"
             value={loginInfo.Password}
-            onChange={(e) => { changeHandler(e, 'Password'); }}
+            onChange={(e) => {
+              changeHandler(e, 'Password');
+            }}
             disabled={isLoading}
           />
           <FormErrorMessage>비밀번호 값이 존재하지 않습니다.</FormErrorMessage>

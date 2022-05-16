@@ -10,6 +10,7 @@ import {
   ListItem,
   Stack,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
@@ -22,8 +23,9 @@ const Sidebar = () => {
     { name: '유저 관리', to: '/user-management', icon: '' },
     { name: '설정', to: '/setting', icon: '' },
   ];
+  const { onClose } = useDisclosure();
   return (
-    <Drawer placement="left" isOpen onClose={() => { }}>
+    <Drawer placement="left" isOpen onClose={onClose}>
       <DrawerOverlay />
       <DrawerContent>
         <DrawerHeader borderBottomWidth="1px">Meet us</DrawerHeader>

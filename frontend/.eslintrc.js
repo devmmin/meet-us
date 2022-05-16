@@ -9,6 +9,7 @@ module.exports = {
     'plugin:react/recommended',
     'airbnb',
     'plugin:react/jsx-runtime',
+    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -18,10 +19,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
-  plugins: [
-    'react',
-    '@typescript-eslint',
-  ],
+  plugins: ['react', '@typescript-eslint'],
   rules: {
     'react/jsx-filename-extension': [
       'error',
@@ -35,7 +33,11 @@ module.exports = {
         tsx: 'never',
       },
     ],
-    'react/function-component-definition': [2, { namedComponents: 'arrow-function' }],
+    'react/function-component-definition': [
+      2,
+      { namedComponents: 'arrow-function' },
+    ],
+    'prettier/prettier': ['error', { singleQuote: true }],
   },
   settings: {
     'import/resolver': {
@@ -44,5 +46,4 @@ module.exports = {
       },
     },
   },
-
 };
