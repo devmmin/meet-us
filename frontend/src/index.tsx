@@ -10,6 +10,9 @@ const theme = extendTheme({
       body: {
         margin: 0,
       },
+      '.App': {
+        display: 'flex',
+      },
       'html, body, #root, .App': {
         height: '100%',
       },

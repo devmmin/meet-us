@@ -7,7 +7,7 @@ const Blog = () => (
     flexDirection="column"
     h="100%"
   >
-    Main
+    Blog
   </Flex>
 );
 
