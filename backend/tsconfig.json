@@ -16,6 +16,17 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@models/*": [
+        "src/models/*"
+      ],
+      "@prisma/*": [
+        "src/prisma/*"
+      ],
+      "@resolvers/*": [
+        "src/resolvers/*"
+      ]
+    }
   }
 }
