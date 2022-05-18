@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  mariadb:
+    image: mariadb
+    restart: always
+    ports:
+      - 4406:3306
+    volumes:
+      - "./mariadb/conf.d:/etc/mysql/conf.d"
+      - "./mariadb/data:/var/lib/mysql"
+    environment:
+      - MARIADB_DATABASE=meetus
+      - MARIADB_ROOT_PASSWORD=meetuslovepower
+      - MARIADB_ROOT_HOST=%
+      - MARIADB_USER=meetus
+      - MARIADB_PASSWORD=meetuslovepower
+    networks:
+      - db-net  
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: mysql://meetus:meetuslovepower@mariadb:3306/meetus
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mariadb
+    networks:
+      - db-net  
+networks:
+    db-net:
