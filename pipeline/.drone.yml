@@ -1,0 +1,13 @@
+kind: pipeline
+type: docker
+name: default
+
+steps:
+- name: front-build
+  image: node:14.19.2-alpine3.14
+  commands:
+  - ls -al
+  - cd frontend
+  - npm ci
+  - npm run build
+  - ls -al
