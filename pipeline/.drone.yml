@@ -19,7 +19,7 @@ steps:
     path: /var/run/docker.sock
   commands:
   - cd frontend
-  - docker-compose up -d
+  - docker-compose up --force-recreate --build -d
 
 volumes:
 - name: dockersock
