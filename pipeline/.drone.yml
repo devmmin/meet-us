@@ -7,16 +7,28 @@ steps:
   image: node:16.15.0-alpine3.15
   volumes:
   - name: cache
-    path: /frontend
+    path: /frontend/build
   commands:
   - ls -al
   - cd frontend
   - npm ci
   - npm run build
   - ls -al
-
+- name: docker image build
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  commands:
+  - ls -al
+  - docker ps -a
+  
+  
 
 volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock
 - name: cache
   temp:
     medium: memory
