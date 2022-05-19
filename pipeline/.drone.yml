@@ -3,17 +3,17 @@ type: docker
 name: default
 
 steps:
-- name: front-build
-  image: node:16.15.0-alpine3.15
-  volumes:
-  - name: cache
-    path: /frontend/build
-  commands:
-  - ls -al
-  - cd frontend
-  - npm ci
-  - npm run build
-  - ls -al
+# - name: front-build
+#   image: node:16.15.0-alpine3.15
+#   volumes:
+#   - name: cache
+#     path: /frontend/build
+#   commands:
+#   - ls -al
+#   - cd frontend
+#   - npm ci
+#   - npm run build
+#   - ls -al
 - name: docker image build
   image: docker:dind
   volumes:
