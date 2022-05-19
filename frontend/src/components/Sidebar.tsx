@@ -38,7 +38,7 @@ const Sidebar = () => {
       h="full"
     >
       <Box>
-        <Flex p="14px" alignItems="center">
+        <Flex p="26px 16px" alignItems="center">
           <Icon as={SiChakraui} w="28px" h="28px" mr="12px" color="#7BCBD6" />
           <Heading color="gray.700" fontSize="14px">
             Meet us
@@ -59,6 +59,7 @@ const Sidebar = () => {
                       fontWeight="bold"
                       display="flex"
                       alignItems="center"
+                      p="10px"
                     >
                       {item.icon === 'home' && <Icon as={MdHome} mr="8px" />}
                       {item.icon === 'noti' && (
