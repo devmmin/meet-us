@@ -5,9 +5,18 @@ name: default
 steps:
 - name: front-build
   image: node:16.15.0-alpine3.15
+  volumes:
+  - name: cache
+    path: /
   commands:
   - ls -al
   - cd frontend
   - npm ci
   - npm run build
   - ls -al
+
+
+volumes:
+- name: cache
+  temp:
+    medium: memory
