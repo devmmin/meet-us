@@ -37,7 +37,7 @@ module.exports = {
       2,
       { namedComponents: 'arrow-function' },
     ],
-    'prettier/prettier': ['error', { singleQuote: true }],
+    'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'auto' }],
   },
   settings: {
     'import/resolver': {

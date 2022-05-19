@@ -20,10 +20,12 @@ steps:
   - name: dockersock
     path: /var/run/docker.sock
   commands:
-  - ls -al
+  - cd frontend
+  - docker build --tag meet-us:latest .
+  - docker stop meet-us
+  - docker rm meet-us
+  - docker run --name=meet-us --publish=6001:80 --detach=true meet-us:latest
   - docker ps -a
-  
-  
 
 volumes:
 - name: dockersock
