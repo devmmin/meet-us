@@ -12,13 +12,13 @@ import React, { useState } from 'react';
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [loginInfo, setLoginInfo] = useState({ ID: '', Password: '' });
+  const [loginInfo, setLoginInfo] = useState({ id: '', password: '' });
   const toast = useToast();
   const loginHandler = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      if (loginInfo.ID === 'error') {
+      if (loginInfo.id === 'error') {
         toast({
           description: 'ID 또는 비밀번호가 맞지 않습니다. 다시 입력해주세요.',
           status: 'error',
@@ -41,25 +41,25 @@ const Login = () => {
     <Container maxW="320px" h="100%">
       <Flex flexDirection="column" justifyContent="center" h="100%">
         <Heading>Meet Us</Heading>
-        <FormControl isInvalid={!loginInfo.ID}>
+        <FormControl isInvalid={!loginInfo.id}>
           <Input
             placeholder="ID"
             mt="20px"
-            value={loginInfo.ID}
+            value={loginInfo.id}
             onChange={(e) => {
-              changeHandler(e, 'ID');
+              changeHandler(e, 'id');
             }}
             disabled={isLoading}
           />
           <FormErrorMessage>아이디 값이 존재하지 않습니다.</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!loginInfo.Password}>
+        <FormControl isInvalid={!loginInfo.password}>
           <Input
             placeholder="Password"
             mt="20px"
-            value={loginInfo.Password}
+            value={loginInfo.password}
             onChange={(e) => {
-              changeHandler(e, 'Password');
+              changeHandler(e, 'password');
             }}
             disabled={isLoading}
           />
@@ -72,7 +72,7 @@ const Login = () => {
           isLoading={isLoading}
           onClick={loginHandler}
           mt="20px"
-          disabled={!loginInfo.ID || !loginInfo.Password}
+          disabled={!loginInfo.id || !loginInfo.password}
         >
           Login
         </Button>
