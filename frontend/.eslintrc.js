@@ -22,7 +22,9 @@ module.exports = {
   rules: {
     'react/jsx-filename-extension': [
       'error',
-      { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+      {
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      },
     ],
     'import/extensions': [
       'error',
@@ -34,9 +36,17 @@ module.exports = {
     ],
     'react/function-component-definition': [
       2,
-      { namedComponents: 'arrow-function' },
+      {
+        namedComponents: 'arrow-function',
+      },
     ],
     'comma-dangle': 'off',
+    'object-curly-newline': 'off',
+    'react/jsx-curr': 'off',
+    'react/jsx-one-expression-per-line': 'off',
+    'implicit-arrow-linebreak': 'off',
+    'react/jsx-curly-newline': 'off',
+    'no-else-return': ['error', { allowElseIf: true }],
   },
   settings: {
     'import/resolver': {

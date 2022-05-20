@@ -1,14 +1,54 @@
-import { Flex } from '@chakra-ui/react';
+import { useState } from 'react';
+import ListLayout from './Layout/ListLayout';
 
-const Notice = () => (
-  <Flex
-    justifyContent="center"
-    alignItems="center"
-    flexDirection="column"
-    h="100%"
-  >
-    Notice
-  </Flex>
-);
+const Notice = () => {
+  // TODO: API 연동 이후 로직 변경
+  const [list] = useState([
+    {
+      id: 1,
+      subject: '제목입니다1',
+      status: 'COMPLETED',
+      register: 'Segun Adebayo',
+      createdAt: '2022-01-01 19:00:00',
+    },
+    {
+      id: 2,
+      subject: '제목입니다2',
+      status: 'REQUEST',
+      register: 'Segun Adebayo',
+      createdAt: '2022-01-01 19:00:00',
+    },
+    {
+      id: 3,
+      subject: '제목입니다3',
+      status: 'COMPLETED',
+      register: 'Segun Adebayo',
+      createdAt: '2022-01-01 19:00:00',
+    },
+    {
+      id: 4,
+      subject: '제목입니다4',
+      status: 'REQUEST',
+      register: 'Segun Adebayo',
+      createdAt: '2022-01-01 19:00:00',
+    },
+  ]);
+  const tableHeader = [
+    'CHECKBOX',
+    '제목',
+    '상태',
+    '등록자',
+    '등록/최근 수정 일시',
+    'MORE',
+  ];
+  return (
+    <ListLayout
+      header="공지사항"
+      list={list}
+      tableHeader={tableHeader}
+      buttonTitle="공지사항"
+    />
+  );
+};
 
 export default Notice;
