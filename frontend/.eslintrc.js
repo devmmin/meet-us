@@ -9,7 +9,6 @@ module.exports = {
     'plugin:react/recommended',
     'airbnb',
     'plugin:react/jsx-runtime',
-    'plugin:prettier/recommended',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -37,13 +36,7 @@ module.exports = {
       2,
       { namedComponents: 'arrow-function' },
     ],
-    'prettier/prettier': [
-      'error',
-      {
-        singleQuote: true,
-        endOfLine: 'auto',
-      },
-    ],
+    'comma-dangle': 'off',
   },
   settings: {
     'import/resolver': {
