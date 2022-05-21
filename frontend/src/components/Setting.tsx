@@ -1,4 +1,4 @@
-import ListLayout from './Layout/ListLayout';
+import ListLayout from '../Layout/ListLayout';
 
 const Setting = () => {
   const tableHeader = ['제목', '상태', '등록자', '등록일시'];

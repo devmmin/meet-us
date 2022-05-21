@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ListLayout from './Layout/ListLayout';
+import ListLayout from '../Layout/ListLayout';
 
 const Notice = () => {
   // TODO: API 연동 이후 로직 변경
