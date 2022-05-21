@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './components/Login';
-import Layout from './layout/AdminLayout';
+import Layout from './components/layout/AdminLayout';
 import Blog from './components/Blog';
 import Notice from './components/Notice';
 import Main from './components/Main';
