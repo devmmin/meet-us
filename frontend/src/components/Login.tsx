@@ -32,10 +32,7 @@ const Login = () => {
     event: React.ChangeEvent<HTMLInputElement>,
     key: string
   ) => {
-    setLoginInfo((prev) => ({
-      ...prev,
-      [key]: event.target.value,
-    }));
+    setLoginInfo((prev) => ({ ...prev, [key]: event.target.value }));
   };
   return (
     <Container maxW="320px" h="100%">

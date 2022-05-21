@@ -40,9 +40,7 @@ const Sidebar = () => {
       <Box>
         <Flex p="26px 16px" alignItems="center">
           <Icon as={SiChakraui} w="28px" h="28px" mr="12px" color="#7BCBD6" />
-          <Heading color="gray.700" fontSize="14px">
-            Meet us
-          </Heading>
+          <Heading fontSize="14px">Meet us</Heading>
         </Flex>
         <Divider />
       </Box>
@@ -86,12 +84,8 @@ const Sidebar = () => {
         <Flex p="18px 14px">
           <Avatar mr="10px" />
           <Stack>
-            <Text color="gray.700" fontSize="14px">
-              {userInfo.nickName}
-            </Text>
-            <Text color="gray.700" fontSize="14px">
-              {userInfo.email}
-            </Text>
+            <Text fontSize="14px">{userInfo.nickName}</Text>
+            <Text fontSize="14px">{userInfo.email}</Text>
           </Stack>
         </Flex>
       </Box>

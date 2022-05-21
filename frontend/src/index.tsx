@@ -6,7 +6,7 @@ import reportWebVitals from './reportWebVitals';
 
 const theme = extendTheme({
   styles: {
-    global: {
+    global: ({ colorMode }: { colorMode: string }) => ({
       body: {
         margin: 0,
       },
@@ -16,7 +16,10 @@ const theme = extendTheme({
       'html, body, #root, .App': {
         height: '100%',
       },
-    },
+      'html, body': {
+        color: colorMode === 'dark' ? 'white' : 'gray.700',
+      },
+    }),
   },
 });
 const root = ReactDOM.createRoot(

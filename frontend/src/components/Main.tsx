@@ -1,14 +1,8 @@
-import { Flex } from '@chakra-ui/react';
+import ListLayout from './layout/ListLayout';
 
-const Main = () => (
-  <Flex
-    justifyContent="center"
-    alignItems="center"
-    flexDirection="column"
-    h="100%"
-  >
-    Main 변경된 파일 반영 빌드 확인
-  </Flex>
-);
+const Main = () => {
+  const tableHeader = ['제목', '상태', '등록자', '등록일시'];
+  return <ListLayout header="메인" tableHeader={tableHeader} />;
+};
 
 export default Main;
