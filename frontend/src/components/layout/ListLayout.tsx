@@ -67,9 +67,7 @@ const ListLayout = ({
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   // TODO: 포스트 삭제 API 연동
-  const modalClickHandler = () => {
-    console.log('modalClickHandler');
-  };
+  const modalClickHandler = () => {};
   return (
     <Box p="50px">
       <Modal isOpen={isOpen} onClose={onClose}>
