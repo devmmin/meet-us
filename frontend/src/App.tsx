@@ -1,12 +1,12 @@
 import { Box } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './Components/Login';
-import Layout from './Layout/AdminLayout';
-import Blog from './Components/Blog';
-import Notice from './Components/Notice';
-import Main from './Components/Main';
-import UserManagement from './Components/UserManagement';
-import Setting from './Components/Setting';
+import Login from './components/Login';
+import Layout from './layout/AdminLayout';
+import Blog from './components/Blog';
+import Notice from './components/Notice';
+import Main from './components/Main';
+import UserManagement from './components/UserManagement';
+import Setting from './components/Setting';
 
 const App = () => (
   <Box className="App">
