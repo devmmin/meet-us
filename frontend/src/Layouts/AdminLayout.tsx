@@ -1,11 +1,11 @@
 import { Box } from '@chakra-ui/react';
 import { Outlet } from 'react-router-dom';
-import Sidebar from '../Sidebar';
+import Sidebar from '../components/Sidebar';
 
 const AdminLayout = () => (
   <>
     <Sidebar />
-    <Box bg="gray.50" w="100%">
+    <Box w="100%" pl="320px" as="main">
       <Outlet />
     </Box>
   </>
