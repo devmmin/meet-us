@@ -49,6 +49,7 @@ module.exports = {
     'react/jsx-curly-newline': 'off',
     'no-else-return': ['error', { allowElseIf: true }],
     'operator-linebreak': 'off',
+    'linebreak-style': 'off',
   },
   settings: {
     'import/resolver': {
