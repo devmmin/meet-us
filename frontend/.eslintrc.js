@@ -32,6 +32,7 @@ module.exports = {
       {
         ts: 'never',
         tsx: 'never',
+        js: 'never',
       },
     ],
     'react/function-component-definition': [
@@ -47,6 +48,8 @@ module.exports = {
     'implicit-arrow-linebreak': 'off',
     'react/jsx-curly-newline': 'off',
     'no-else-return': ['error', { allowElseIf: true }],
+    'operator-linebreak': 'off',
+    'linebreak-style': 'off',
   },
   settings: {
     'import/resolver': {
