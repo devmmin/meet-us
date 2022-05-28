@@ -24,8 +24,6 @@ services:
       DATABASE_URL: mysql://meetus:meetuslovepower@mariadb:3306/meetus
     ports:
       - "3000:3000"
-    command: 
-      - npm run prisma:push
     depends_on:
       - mariadb
     networks:
