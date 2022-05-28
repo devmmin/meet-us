@@ -6,8 +6,8 @@ services:
     ports:
       - 4406:3306
     volumes:
-      - "./mariadb/conf.d:/etc/mysql/conf.d"
-      - "./mariadb/data:/var/lib/mysql"
+      - "/volume1/docker/mariadb/conf.d:/etc/mysql/conf.d"
+      - "/volume1/docker/mariadb/data:/var/lib/mysql"
     environment:
       - MARIADB_DATABASE=meetus
       - MARIADB_ROOT_PASSWORD=meetuslovepower
@@ -24,6 +24,8 @@ services:
       DATABASE_URL: mysql://meetus:meetuslovepower@mariadb:3306/meetus
     ports:
       - "3000:3000"
+    command: 
+      - npm run prisma:push
     depends_on:
       - mariadb
     networks:

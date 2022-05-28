@@ -1,5 +1,29 @@
 kind: pipeline
 type: docker
+name: backend
+
+steps:
+- name: docker image build
+  image: docker:dind
+  volumes:
+  - name: dockersock
+    path: /var/run/docker.sock
+  commands:
+  - cd backend
+  - docker-compose up --force-recreate --build -d
+
+volumes:
+- name: dockersock
+  host:
+    path: /var/run/docker.sock
+- name: cache
+  temp:
+    medium: memory
+
+
+---
+kind: pipeline
+type: docker
 name: default
 
 steps:
