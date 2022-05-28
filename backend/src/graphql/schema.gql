@@ -6,8 +6,8 @@ type Post {
   id: String!
   title: String!
   content: String
-  update_time: Timestamp!
-  create_time: Timestamp!
+  updatedAt: Timestamp!
+  createdAt: Timestamp!
 }
 
 """
@@ -15,16 +15,46 @@ type Post {
 """
 scalar Timestamp
 
+type User {
+  id: String!
+  userName: String!
+  role: String!
+  createAt: Timestamp!
+}
+
 type Query {
   postById(id: String!): Post!
   posts(skip: Float, take: Float, orderBy: PostOrderByUpdatedAtInput): [Post!]!
 }
 
 input PostOrderByUpdatedAtInput {
-  createTime: SortOrder!
+  createdAt: SortOrder!
 }
 
 enum SortOrder {
   asc
   desc
+}
+
+type Mutation {
+  createUser(userData: CreateUserInput!): User!
+  updateUser(userData: UpdateUserInput!): User!
+}
+
+input CreateUserInput {
+  userName: String!
+  password: String!
+  role: Role!
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+input UpdateUserInput {
+  userId: String!
+  userName: String!
+  password: String!
+  role: Role!
 }

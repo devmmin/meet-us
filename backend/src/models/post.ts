@@ -13,16 +13,16 @@ export class Post {
   title: string;
   @Field({ nullable: true })
   content: string;
-  @Field((type) => Date)
-  update_time: Date;
-  @Field((type) => Date)
-  create_time: Date;
+  @Field((type) => Date, { name: 'updatedAt' })
+  updated_at: Date;
+  @Field((type) => Date, { name: 'createdAt' })
+  created_at: Date;
 }
 
 @InputType()
 export class PostOrderByUpdatedAtInput {
   @Field((type) => SortOrder)
-  createTime: SortOrder;
+  createdAt: SortOrder;
 }
 
 export enum SortOrder {
