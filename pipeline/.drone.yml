@@ -3,6 +3,17 @@ type: docker
 name: backend
 
 steps:
+
+- name: backend-build
+  image: node:16.15.0-alpine3.15
+  volumes:
+  - name: cache
+    path: /frontend/build
+  commands:
+  - cd backend
+  - npm ci
+  - npm run build
+
 - name: docker image build
   image: docker:dind
   volumes:
