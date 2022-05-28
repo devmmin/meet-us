@@ -24,7 +24,7 @@ export class PostResolver {
     return this.prismaService.post.findMany({
       take: take || undefined,
       skip: skip || undefined,
-      orderBy: { create_time: orderBy.createTime || undefined },
+      orderBy: { created_at: orderBy.createdAt || undefined },
     });
   }
 }

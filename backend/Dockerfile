@@ -5,7 +5,7 @@ WORKDIR /app
 ## 프로젝트의 모든 파일을 WORKDIR(/app)로 복사한다
 COPY . .
 ## Nest.js project를 build 한다
-RUN npm install
+RUN npm ci --only=production
 RUN npm run build
  
 # Step 2
