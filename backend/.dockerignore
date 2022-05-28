@@ -1,2 +1,18 @@
+# 테스트 코드 파일
+test
+# node modules
 node_modules
+# build 파일
 dist
+# idea 설정
+.idea
+# 로컬 개발용 db
+mariadb
+# 로컬 개발용 설정
+.env
+.eslintrc.js
+.gitignore
+.prettierrc
+.docker-compose.yml
+.Dockerfile
+.README.md
