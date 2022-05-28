@@ -24,7 +24,7 @@ volumes:
 ---
 kind: pipeline
 type: docker
-name: default
+name: front
 
 steps:
 - name: front-build
