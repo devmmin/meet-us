@@ -18,30 +18,16 @@ import {
   Tfoot,
   Select,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, ChangeEvent } from 'react';
+import { ChangeEvent } from 'react';
+import { useRecoilState } from 'recoil';
 import { MdChevronLeft, MdChevronRight, MdMoreHoriz } from 'react-icons/md';
-
-interface ListItem {
-  id: number;
-  subject: string;
-  status: string;
-  register: string;
-  createdAt: string;
-}
-
-interface Page {
-  page: number;
-  perPage: number;
-  totalCount: number;
-  totalPage: number;
-}
+import { checkedListState } from '../../recoil/index';
+import { ListItem, Page } from '../../types/index';
 
 interface Props {
   list: ListItem[];
   tableHeader: string[];
   buttonTitle?: string;
-  checkedList: number[];
-  setCheckedList: Dispatch<SetStateAction<Array<number>>>;
   pageInfo?: Page;
 }
 
@@ -50,9 +36,8 @@ const ListTable = ({
   tableHeader,
   pageInfo = { page: 1, perPage: 10, totalCount: 0, totalPage: 1 },
   buttonTitle,
-  checkedList,
-  setCheckedList,
 }: Props) => {
+  const [checkedList, setCheckedList] = useRecoilState(checkedListState);
   const allChecked = list.length > 0 && checkedList.length === list.length;
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: number) => {
     if (id === 0) {

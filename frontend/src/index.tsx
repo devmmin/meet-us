@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { RecoilRoot } from 'recoil';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+const client = new ApolloClient({
+  uri: 'https://48p1r2roz4.sse.codesandbox.io',
+  cache: new InMemoryCache(),
+});
 
 const theme = extendTheme({
   styles: {
     global: ({ colorMode }: { colorMode: string }) => ({
       body: {
         margin: 0,
-      },
-      '.App': {
-        display: 'flex',
       },
       'html, body, #root, .App': {
         height: '100%',
@@ -22,10 +26,15 @@ const theme = extendTheme({
     }),
   },
 });
+
 ReactDOM.render(
   <React.StrictMode>
     <ChakraProvider theme={theme}>
-      <App />
+      <ApolloProvider client={client}>
+        <RecoilRoot>
+          <App />
+        </RecoilRoot>
+      </ApolloProvider>
     </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root') as HTMLElement

@@ -1,5 +1,5 @@
-import { getNoticeList } from '../util';
 import ListLayout from '../layouts/Admin/ListLayout';
+import { getNoticeList } from '../util';
 
 const Notice = () => {
   const {

@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import AdminLayout from './layouts/AdminLayout';
@@ -11,7 +11,7 @@ import PostUpdate from './pages/Blog/BlogUpdate';
 import NoticeUpdate from './pages/Notice/NoticeUpdate';
 
 const App = () => (
-  <Box className="App">
+  <Flex className="App">
     <BrowserRouter>
       <Routes>
         <Route path="/admin" element={<AdminLayout />}>
@@ -26,7 +26,7 @@ const App = () => (
         <Route path="/admin/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
-  </Box>
+  </Flex>
 );
 
 export default App;

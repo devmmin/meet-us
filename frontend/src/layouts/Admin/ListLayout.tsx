@@ -1,24 +1,11 @@
 import { Box, useDisclosure, Text, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
-import { deletePost } from '../../util';
-import ModalLayout from '../../components/Modal/confirmModal';
+import { useRecoilValue } from 'recoil';
+import ConfirmModal from '../../components/Modal/confirmModal';
 import ListHeader from '../../components/List/ListHeader';
 import ListTable from '../../components/List/ListTable';
-
-interface ListItem {
-  id: number;
-  subject: string;
-  status: string;
-  register: string;
-  createdAt: string;
-}
-
-interface Page {
-  page: number;
-  perPage: number;
-  totalCount: number;
-  totalPage: number;
-}
+import { checkedListState } from '../../recoil/index';
+import { ListItem, Page } from '../../types/index';
+import { deletePost } from '../../util';
 
 interface Props {
   title: string;
@@ -37,7 +24,7 @@ const ListLayout = ({
   toPath = '',
   pageInfo,
 }: Props) => {
-  const [checkedList, setCheckedList] = useState<number[]>([]);
+  const checkedList = useRecoilValue(checkedListState);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
   const modalClickHandler = () => {
@@ -51,7 +38,7 @@ const ListLayout = ({
   };
   return (
     <Box p="50px" bg="gray.50" minH="100%">
-      <ModalLayout
+      <ConfirmModal
         title={`${title} 글 삭제`}
         buttonText="삭제"
         clickHandler={modalClickHandler}
@@ -59,7 +46,7 @@ const ListLayout = ({
         onClose={onClose}
       >
         정말로 {checkedList.length}건의 {title} 글을 삭제하시겠습니까?
-      </ModalLayout>
+      </ConfirmModal>
       <ListHeader
         title={title}
         isToggle={checkedList.length > 0}
@@ -77,9 +64,7 @@ const ListLayout = ({
         list={list}
         tableHeader={tableHeader}
         buttonTitle={buttonTitle}
-        checkedList={checkedList}
         pageInfo={pageInfo}
-        setCheckedList={setCheckedList}
       />
     </Box>
   );
