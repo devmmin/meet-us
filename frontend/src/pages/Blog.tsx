@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
+import { useResetRecoilState, useSetRecoilState } from 'recoil';
 import ListLayout from '../layouts/Admin/ListLayout';
-import { pageInfoState } from '../recoil';
+import { checkedListState, pageInfoState } from '../recoil';
 import { getBlogList } from '../util';
 
 const Blog = () => {
   const setPageInfo = useSetRecoilState(pageInfoState);
+  const resetCheckedList = useResetRecoilState(checkedListState);
   const [params] = useSearchParams();
   const {
     data: { list, header, pageInfo },
@@ -17,6 +18,7 @@ const Blog = () => {
 
   useEffect(() => {
     setPageInfo(pageInfo);
+    resetCheckedList();
   });
   return (
     <ListLayout
