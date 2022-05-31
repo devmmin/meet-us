@@ -58,6 +58,13 @@ module.exports = {
       },
     ],
     'import/prefer-default-export': 'off',
+    'no-restricted-syntax': [
+      'error',
+      'FunctionExpression',
+      'WithStatement',
+      "BinaryExpression[operator='in']",
+    ],
+    'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
   },
   settings: {
     'import/resolver': {

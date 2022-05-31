@@ -8,7 +8,7 @@ interface ListItem {
 
 interface Page {
   page: number;
-  perPage: number;
+  offset: number;
   totalCount: number;
   totalPage: number;
 }

@@ -3,8 +3,8 @@ import { useRecoilValue } from 'recoil';
 import ConfirmModal from '../../components/Modal/confirmModal';
 import ListHeader from '../../components/List/ListHeader';
 import ListTable from '../../components/List/ListTable';
-import { checkedListState } from '../../recoil/index';
-import { ListItem, Page } from '../../types/index';
+import { checkedListState } from '../../recoil';
+import { ListItem } from '../../types/index';
 import { deletePost } from '../../util';
 
 interface Props {
@@ -13,7 +13,6 @@ interface Props {
   list?: Array<ListItem>;
   tableHeader: Array<string>;
   toPath?: string;
-  pageInfo?: Page;
 }
 
 const ListLayout = ({
@@ -22,7 +21,6 @@ const ListLayout = ({
   list = [],
   tableHeader = [],
   toPath = '',
-  pageInfo,
 }: Props) => {
   const checkedList = useRecoilValue(checkedListState);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,7 +62,6 @@ const ListLayout = ({
         list={list}
         tableHeader={tableHeader}
         buttonTitle={buttonTitle}
-        pageInfo={pageInfo}
       />
     </Box>
   );
@@ -74,12 +71,6 @@ ListLayout.defaultProps = {
   list: [],
   buttonTitle: '',
   toPath: '',
-  pageInfo: {
-    page: 1,
-    perPage: 10,
-    totalCount: 0,
-    totalPage: 1,
-  },
 };
 
 export default ListLayout;

@@ -15,28 +15,21 @@ import {
   MenuList,
   MenuItem,
   IconButton,
-  Tfoot,
-  Select,
 } from '@chakra-ui/react';
 import { ChangeEvent } from 'react';
 import { useRecoilState } from 'recoil';
-import { MdChevronLeft, MdChevronRight, MdMoreHoriz } from 'react-icons/md';
-import { checkedListState } from '../../recoil/index';
-import { ListItem, Page } from '../../types/index';
+import { MdMoreHoriz } from 'react-icons/md';
+import { checkedListState } from '../../recoil';
+import { ListItem } from '../../types';
+import ListFooter from './ListFooter';
 
 interface Props {
   list: ListItem[];
   tableHeader: string[];
   buttonTitle?: string;
-  pageInfo?: Page;
 }
 
-const ListTable = ({
-  list,
-  tableHeader,
-  pageInfo = { page: 1, perPage: 10, totalCount: 0, totalPage: 1 },
-  buttonTitle,
-}: Props) => {
+const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
   const [checkedList, setCheckedList] = useRecoilState(checkedListState);
   const allChecked = list.length > 0 && checkedList.length === list.length;
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: number) => {
@@ -47,12 +40,6 @@ const ListTable = ({
     } else {
       setCheckedList((prev) => prev.filter((v) => v !== id));
     }
-  };
-  const perPageList = Array(1 * 10)
-    .fill(undefined)
-    .map((arr, i) => i + 1);
-  const getList = () => {
-    // TODO: API 통신 + 상태관리
   };
   return (
     <TableContainer borderRadius="6px 6px 0px 0px">
@@ -130,62 +117,14 @@ const ListTable = ({
             </Tr>
           ))}
         </Tbody>
-        <Tfoot bg="white">
-          <Tr>
-            <Th colSpan={2}>
-              <Flex alignItems="center">
-                Show rows per page
-                <Select
-                  w="75px"
-                  ml="8px"
-                  value={pageInfo.perPage}
-                  onChange={getList}
-                >
-                  {perPageList.map((v) => (
-                    <option key={v} value={v}>
-                      {v}
-                    </option>
-                  ))}
-                </Select>
-              </Flex>
-            </Th>
-            <Th />
-            <Th />
-            <Th />
-            <Th textAlign="right">
-              {pageInfo.page}-{pageInfo.totalPage} of {pageInfo.totalCount}
-              <IconButton
-                size="sm"
-                ml="24px"
-                onClick={getList}
-                icon={<MdChevronLeft />}
-                aria-label="left"
-                bg="white"
-              />
-              <IconButton
-                size="sm"
-                ml="8px"
-                onClick={getList}
-                icon={<MdChevronRight />}
-                aria-label="right"
-                bg="white"
-              />
-            </Th>
-          </Tr>
-        </Tfoot>
       </Table>
+      <ListFooter />
     </TableContainer>
   );
 };
 
 ListTable.defaultProps = {
   buttonTitle: '',
-  pageInfo: {
-    page: 1,
-    perPage: 10,
-    totalCount: 0,
-    totalPage: 1,
-  },
 };
 
 export default ListTable;
