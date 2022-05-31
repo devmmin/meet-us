@@ -64,7 +64,7 @@ module.exports = {
       'WithStatement',
       "BinaryExpression[operator='in']",
     ],
-    'no-console': ['error', { allow: ['warn', 'error', 'debug'] }],
+    'no-console': ['warn', { allow: ['warn', 'error', 'debug'] }],
   },
   settings: {
     'import/resolver': {
