@@ -1,6 +1,7 @@
 interface ListItem {
   id: number;
   subject: string;
+  content: string;
   status: string;
   register: string;
   createdAt: string;

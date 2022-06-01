@@ -1,5 +1,7 @@
 // TODO: mocking
 // TODO: API 통신 시 UI loading, disabled, skeleton ... 처리 필요
+import { ListItem } from '../types';
+
 const header = [
   'CHECKBOX',
   '제목',
@@ -9,11 +11,12 @@ const header = [
   'MORE',
 ];
 
-const list = Array(1 * 20)
+const list: ListItem[] = Array(1 * 20)
   .fill(undefined)
   .map((item, index) => ({
     id: index + 1,
     subject: `제목입니다${index + 1}`,
+    content: `내용입니다${index + 1}`,
     status: index % 2 === 0 ? 'REQUEST' : 'COMPLETED',
     register: 'Segun Adebayo',
     createdAt: '2022-01-01 19:00:00',
@@ -37,11 +40,32 @@ export const getBlogList = ({ page = 1, offset = 10 }: { page: number, offset: n
   };
 };
 
-const listTwo = Array(1 * 4)
+export const getBlogItem = ({ id }: { id: number }) => {
+  if (!id) {
+    return {
+      code: -1,
+      data: {
+        id: 0,
+        subject: '',
+        content: '',
+        status: '',
+        register: '',
+        createdAt: ''
+      }
+    };
+  }
+  return {
+    code: 0,
+    data: list.filter((v) => v.id === id)[0]
+  };
+};
+
+const listTwo: ListItem[] = Array(1 * 4)
   .fill(undefined)
   .map((item, index) => ({
     id: index + 1,
     subject: `제목입니다${index + 1}`,
+    content: `내용입니다${index + 1}`,
     status: index % 2 === 0 ? 'REQUEST' : 'COMPLETED',
     register: 'Segun Adebayo',
     createdAt: '2022-01-01 19:00:00',
@@ -62,6 +86,26 @@ export const getNoticeList = ({ page = 1, offset = 10 }: { page: number, offset:
         totalCount: listTwo.length,
       },
     },
+  };
+};
+
+export const getNoticeItem = ({ id }: { id: number }) => {
+  if (!id) {
+    return {
+      code: -1,
+      data: {
+        id: 0,
+        subject: '',
+        content: '',
+        status: '',
+        register: '',
+        createdAt: ''
+      }
+    };
+  }
+  return {
+    code: 0,
+    data: listTwo.filter((v) => v.id === id)[0]
   };
 };
 

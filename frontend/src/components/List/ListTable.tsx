@@ -19,6 +19,7 @@ import {
 import { ChangeEvent } from 'react';
 import { useRecoilState } from 'recoil';
 import { MdMoreHoriz } from 'react-icons/md';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { checkedListState } from '../../recoil';
 import { ListItem } from '../../types';
 import ListFooter from './ListFooter';
@@ -30,6 +31,8 @@ interface Props {
 }
 
 const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [checkedList, setCheckedList] = useRecoilState(checkedListState);
   const allChecked = list.length > 0 && checkedList.length === list.length;
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: number) => {
@@ -68,8 +71,17 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
         </Thead>
         <Tbody bg="white">
           {list.map((item) => (
-            <Tr key={item.id}>
-              <Td>
+            <Tr
+              key={item.id}
+              onClick={() => {
+                navigate(`../${location.pathname}/update/${item.id}`);
+              }}
+            >
+              <Td
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <Checkbox
                   isChecked={checkedList.includes(item.id)}
                   onChange={(event) => changeHandler(event, item.id)}
