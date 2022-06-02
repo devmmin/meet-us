@@ -12,7 +12,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user: User = req.user as User;
+    const user = <User>req.user;
     console.log('=============', user);
     if (user) {
       const { accessToken, refreshToken, expirationDate } =
@@ -23,6 +23,7 @@ export class AuthController {
         domain: 'https://meet-us.byeonggi.synology.me',
         maxAge: expirationDate,
         sameSite: 'lax',
+        path: '/',
       });
       res.cookie('refresh-token', refreshToken, {
         secure: true,
@@ -30,6 +31,7 @@ export class AuthController {
         domain: 'https://meet-us.byeonggi.synology.me',
         maxAge: expirationDate,
         sameSite: 'lax',
+        path: '/',
       });
       res.status(200).send({ accessToken, refreshToken });
     }
