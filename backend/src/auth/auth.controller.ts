@@ -20,7 +20,7 @@ export class AuthController {
       res.cookie('access-token', accessToken, {
         secure: true,
         httpOnly: true,
-        domain: 'https://meet-us.byeonggi.synology.me',
+        domain: '.byeonggi.synology.me',
         maxAge: expirationDate,
         sameSite: 'lax',
         path: '/',
@@ -28,7 +28,7 @@ export class AuthController {
       res.cookie('refresh-token', refreshToken, {
         secure: true,
         httpOnly: true,
-        domain: 'https://meet-us.byeonggi.synology.me',
+        domain: '.byeonggi.synology.me',
         maxAge: expirationDate,
         sameSite: 'lax',
         path: '/',
