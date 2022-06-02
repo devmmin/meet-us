@@ -10,7 +10,11 @@ async function bootstrap() {
     cors: {
       credentials: true,
       optionsSuccessStatus: 200,
-      origin: [/localhost\:3000/, /\.byeonggi\.synology\.me$/],
+      origin: [
+        'self',
+        /localhost\:3000/,
+        /((?:http(s)?:\/\/)([\w.-]){1,})?(byeonggi\.synology\.me)/,
+      ],
     },
   });
 
