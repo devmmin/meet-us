@@ -19,7 +19,7 @@ const Blog = () => {
   useEffect(() => {
     setPageInfo(pageInfo);
     resetCheckedList();
-  });
+  }, [pageInfo, setPageInfo, resetCheckedList]);
   return (
     <ListLayout
       title="블로그"

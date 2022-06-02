@@ -18,7 +18,7 @@ const Notice = () => {
   useEffect(() => {
     setPageInfo(pageInfo);
     resetCheckedList();
-  });
+  }, [pageInfo, setPageInfo, resetCheckedList]);
   return (
     <ListLayout
       title="공지사항"
