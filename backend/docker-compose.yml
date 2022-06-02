@@ -14,6 +14,7 @@ services:
       - MARIADB_ROOT_HOST=%
       - MARIADB_USER=meetus
       - MARIADB_PASSWORD=meetuslovepower
+      - TZ=Asia/Seoul
     networks:
       - db-net  
   api:
@@ -21,7 +22,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      DATABASE_URL: mysql://meetus:meetuslovepower@mariadb:3306/meetus
+      TZ: Asia/Seoul
     ports:
       - "3000:3000"
     depends_on:
