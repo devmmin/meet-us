@@ -16,7 +16,7 @@ type Post {
 scalar Timestamp
 
 type User {
-  id: String!
+  userId: String!
   userName: String!
   role: String!
   createAt: Timestamp!
@@ -43,6 +43,7 @@ type Mutation {
 
 input CreateUserInput {
   userName: String!
+  userEmail: String!
   password: String!
   role: Role!
 }
@@ -54,6 +55,7 @@ enum Role {
 
 input UpdateUserInput {
   userId: String!
+  userEmail: String!
   userName: String!
   password: String!
   role: Role!

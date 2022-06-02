@@ -1,16 +1,24 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
+import { PostResolver } from '@resolvers/post/post.resolver';
+import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { PrismaService } from './prisma/prisma.service';
-import { PostResolver } from '@resolvers/post/post.resolver';
+import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { UserResolver } from './resolvers/user/user.resolver';
+
+const ENV = process.env.NODE_ENV;
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${ENV}`,
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
       driver: ApolloDriver,
@@ -20,8 +28,10 @@ import { UserResolver } from './resolvers/user/user.resolver';
         dateScalarMode: 'timestamp',
       },
     }),
+    AuthModule,
+    PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService, PostResolver, UserResolver],
+  providers: [AppService, PostResolver, UserResolver],
 })
 export class AppModule {}

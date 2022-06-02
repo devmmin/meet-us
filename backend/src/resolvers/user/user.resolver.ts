@@ -14,12 +14,14 @@ export class UserResolver {
   createUser(@Args('userData') userData: CreateUserInput) {
     return this.prismaService.user.create({
       data: {
+        user_email: userData.userEmail,
         user_name: userData.userName,
         password: userData.password,
         role: userData.role,
       },
     });
   }
+
   @Mutation(() => User)
   updateUser(@Args('userData') userData: UpdateUserInput) {
     return this.prismaService.user.update({
@@ -29,7 +31,7 @@ export class UserResolver {
         role: userData.role,
       },
       where: {
-        id: userData.userId,
+        user_id: userData.userId,
       },
     });
   }

@@ -7,8 +7,8 @@ import {
 
 @ObjectType()
 export class User {
-  @Field()
-  id: string;
+  @Field({ name: 'userId' })
+  user_id: string;
   @Field({ name: 'userName' })
   user_name: string;
   @Field()
@@ -22,6 +22,8 @@ export class CreateUserInput {
   @Field()
   userName: string;
   @Field()
+  userEmail: string;
+  @Field()
   password: string;
   @Field((type) => Role)
   role: Role;
@@ -31,6 +33,8 @@ export class CreateUserInput {
 export class UpdateUserInput {
   @Field()
   userId: string;
+  @Field()
+  userEmail: string;
   @Field()
   userName: string;
   @Field()
