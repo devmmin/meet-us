@@ -12,7 +12,6 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   constructor(private readonly userRepository: UserRepository) {}
   async execute(command: CreateUserCommand) {
     const { user } = command;
-    // user.userEmail;
     const isDuplicateUserEmail = await this.userRepository.findUserByUserEmail(
       user.userEmail,
     );

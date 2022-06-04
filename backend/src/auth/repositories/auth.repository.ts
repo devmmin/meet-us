@@ -1,24 +1,23 @@
+import { RefreahTokenJwt, LoginUser, LoginToken } from '@auth/models';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import { PrismaService } from '@prisma/prisma.service';
-import { User } from '@user/models/user.model';
-import { RefreahTokenJwt } from './models/token.model';
-import { ValidateUser } from './models/user.model';
 
 @Injectable()
-export class AuthService {
+export class AuthRepository {
   constructor(
     private configService: ConfigService,
     private prismaService: PrismaService,
     private jwtService: JwtService,
   ) {}
 
-  public async vaildateUserPassword(user: ValidateUser) {
+  public async findUserByEmailAndPassword(user: LoginUser): Promise<User> {
     return this.prismaService.user.findFirst({
       where: {
         AND: {
-          user_email: user.userEmail,
+          userEmail: user.userEmail,
           password: user.userPassword,
         },
       },
@@ -31,33 +30,32 @@ export class AuthService {
     });
   }
 
-  public async login(payload: User) {
-    const { id } = payload;
-    const refreshToken = this.createRefreshToken(payload);
-    const accessToken = this.createAccessToken(payload);
+  public async createToken(user: User): Promise<LoginToken> {
+    const { id } = user;
+
+    const refreshToken = this.createRefreshToken({ user_id: id });
+    const accessToken = this.createAccessToken({ user_id: id });
 
     const jwt: RefreahTokenJwt = this.jwtService.decode(refreshToken, {
       json: true,
     }) as RefreahTokenJwt;
-    console.log('jwt', jwt.exp * 1000);
     const expirationDate = jwt.exp * 1000;
 
-    await this.prismaService.refresh_token.upsert({
+    await this.prismaService.refreshToken.upsert({
       create: {
         token: refreshToken,
-        user_id: id,
-        token_expiration_date: new Date(expirationDate),
+        userId: id,
+        tokenExpirationDate: new Date(expirationDate),
       },
       update: {
         token: refreshToken,
-        token_expiration_date: new Date(expirationDate),
+        tokenExpirationDate: new Date(expirationDate),
       },
       where: {
-        user_id: id,
+        userId: id,
       },
     });
-
-    return {
+    return <LoginToken>{
       accessToken,
       refreshToken,
       expirationDate,

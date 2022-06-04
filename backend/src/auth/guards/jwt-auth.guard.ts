@@ -1,4 +1,4 @@
-import { AuthService } from '@auth/auth.service';
+import { AuthRepository } from '@auth/repositories';
 import {
   ExecutionContext,
   Injectable,
@@ -6,16 +6,16 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
-import { Observable } from 'rxjs';
 import {
-  TokenExpiredError,
-  NotBeforeError,
   JsonWebTokenError,
+  NotBeforeError,
+  TokenExpiredError,
 } from 'jsonwebtoken';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthRepository) {
     super();
   }
 
@@ -35,15 +35,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
   }
   vaildateToken(token: string) {
     try {
-      this.authService.vaildateAcessToken(token);
+      const res = this.authService.vaildateAcessToken(token);
+      console.log('res', res);
     } catch (error) {
       if (error instanceof TokenExpiredError) {
-        console.log('error', error);
-        throw new UnauthorizedException('The access token expired');
+        throw new UnauthorizedException({ code: -401, error });
       } else if (error instanceof NotBeforeError) {
-        console.log('error', error);
+        throw new UnauthorizedException({ code: -401, error });
       } else if (error instanceof JsonWebTokenError) {
-        console.log('error', error);
+        throw new UnauthorizedException({ code: -1, error });
       }
     }
   }

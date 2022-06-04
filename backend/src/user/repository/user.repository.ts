@@ -9,7 +9,7 @@ export class UserRepository {
   findUserByUserEmail(email: string) {
     return this.prismaService.user.findFirst({
       where: {
-        user_email: email,
+        userEmail: email,
       },
     });
   }
@@ -17,8 +17,8 @@ export class UserRepository {
   createUser(user: CreateUserInput) {
     return this.prismaService.user.create({
       data: {
-        user_email: user.userEmail,
-        user_name: user.userName,
+        userEmail: user.userEmail,
+        userName: user.userName,
         password: user.password,
         role: user.role,
       },
@@ -28,7 +28,7 @@ export class UserRepository {
   updateUser(userData: UpdateUserInput) {
     return this.prismaService.user.update({
       data: {
-        user_name: userData.userName,
+        userName: userData.userName,
         password: userData.password,
         role: userData.role,
       },

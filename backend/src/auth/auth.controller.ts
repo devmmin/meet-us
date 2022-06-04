@@ -1,16 +1,26 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { LoginCommand, LoginResult } from '@auth/commands';
+import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
+import { LoginInput, LoginResponse } from '@auth/models';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ApiBody, ApiResponse } from '@nestjs/swagger';
+import { CommandBus } from '@nestjs/cqrs';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { AuthService } from './auth.service';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { LoginParam, LoginResponse } from '@auth/models';
-import { User } from '@user/models/user.model';
+
+@ApiTags('Authroity')
 @Controller('v1/auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
+    private commandBus: CommandBus,
     private configService: ConfigService,
   ) {}
   /**
@@ -18,16 +28,21 @@ export class AuthController {
    * @param req
    * @param res
    */
-  @ApiBody({ type: LoginParam })
+  @ApiBody({ type: LoginInput })
   @ApiResponse({ type: LoginResponse })
-  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const user = <User>req.user;
-    console.log('=============', user);
-    if (user) {
-      const { accessToken, refreshToken, expirationDate } =
-        await this.authService.login(user);
+  public async login(
+    @Body() loginInput: LoginInput,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const { userEmail, userPassword } = loginInput;
+    const loginResult = await this.commandBus.execute<
+      LoginCommand,
+      LoginResult
+    >(new LoginCommand(userEmail, userPassword));
+    Logger.log(loginResult, 'loginResult');
+    if (loginResult) {
+      const { accessToken, refreshToken, expirationDate } = loginResult;
       res.cookie('access-token', accessToken, {
         secure: true,
         httpOnly: true,
@@ -46,6 +61,11 @@ export class AuthController {
       });
       res.status(200).send({ accessToken, refreshToken });
     }
+  }
+
+  @Post('refresh')
+  refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    // this.authService.
   }
 
   @UseGuards(JwtAuthGuard)

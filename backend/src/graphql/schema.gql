@@ -15,7 +15,7 @@ type Post {
 """
 scalar Timestamp
 
-type User {
+type UserDto {
   userId: String!
   userName: String!
   role: String!
@@ -23,7 +23,7 @@ type User {
 }
 
 type Query {
-  getUserById(id: String!): User!
+  getUserById(id: String!): UserDto!
   postById(id: String!): Post!
   posts(skip: Float, take: Float, orderBy: PostOrderByUpdatedAtInput): [Post!]!
 }
@@ -41,11 +41,11 @@ type Mutation {
   createUser(
     """유저 생성"""
     user: CreateUserInput!
-  ): User!
+  ): UserDto!
   updateUser(
     """유저 업데이트"""
     user: UpdateUserInput!
-  ): User!
+  ): UserDto!
 }
 
 input CreateUserInput {

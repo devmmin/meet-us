@@ -4,7 +4,7 @@ import { CreateUserCommand, UpdateUserCommand } from '@user/commands';
 import {
   CreateUserInput,
   UpdateUserInput,
-  User,
+  UserDto,
 } from '@user/models/user.model';
 import { GetUserByIdQuery } from '@user/queries/get-user-by-id.handler';
 
@@ -15,7 +15,7 @@ export class UserResolver {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Mutation(() => User)
+  @Mutation(() => UserDto)
   async createUser(
     @Args({
       name: 'user',
@@ -27,7 +27,7 @@ export class UserResolver {
     return await this.commandBus.execute(new CreateUserCommand(user));
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserDto)
   async updateUser(
     @Args({
       name: 'user',
@@ -39,7 +39,7 @@ export class UserResolver {
     return await this.commandBus.execute(new UpdateUserCommand(user));
   }
 
-  @Query(() => User)
+  @Query(() => UserDto)
   async getUserById(@Args('id', { type: () => String }) id: string) {
     return await this.queryBus.execute(new GetUserByIdQuery(id));
   }

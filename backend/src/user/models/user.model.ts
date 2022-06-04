@@ -6,6 +6,14 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 
+export class User extends AggregateRoot {
+  constructor(private readonly id: string) {
+    super();
+  }
+
+  create() {}
+}
+
 @InputType()
 export class CreateUserInput {
   @Field()
@@ -33,15 +41,15 @@ export class UpdateUserInput {
 }
 
 @ObjectType()
-export class User {
+export class UserDto {
   @Field({ name: 'userId' })
   id: string;
   @Field({ name: 'userName' })
-  user_name: string;
+  userName: string;
   @Field()
   role: Role;
   @Field((type) => Date, { name: 'createAt' })
-  created_at: Date;
+  createdAt: Date;
 }
 
 export enum Role {
@@ -52,9 +60,3 @@ export enum Role {
 registerEnumType(Role, {
   name: 'Role',
 });
-
-// export class User extends AggregateRoot {
-//   constructor(private readonly id: string) {
-//     super();
-//   }
-// }

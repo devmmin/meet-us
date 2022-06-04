@@ -10,32 +10,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id         String         @id @default(uuid())
-  user_email String         @unique @db.VarChar(320)
-  user_name  String         @db.VarChar(50)
-  password   String         @db.VarChar(50)
-  created_at DateTime       @default(now()) @db.Timestamp(0)
-  role       role           @default(USER)
-  profile    user_profile?
-  token      refresh_token?
-  post       post[]
-  board      board[]
+model User {
+  id        String        @id @default(uuid())
+  userEmail String        @unique @map("user_email") @db.VarChar(320)
+  userName  String        @map("user_name") @db.VarChar(50)
+  password  String        @db.VarChar(50)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+  role      role          @default(USER)
+  profile   user_profile?
+  token     RefreshToken?
+  post      post[]
+  board     board[]
+
+  @@map("user")
 }
 
 model user_profile {
   id            String @id @default(uuid())
   user_id       String @unique
   profile_image String @db.Text
-  user          user   @relation(fields: [user_id], references: [id])
+  user          User   @relation(fields: [user_id], references: [id])
 }
 
-model refresh_token {
-  token_id              String   @id @default(uuid())
-  user_id               String   @unique
-  token                 String   @db.Text
-  token_expiration_date DateTime @db.Timestamp(0)
-  user                  user     @relation(fields: [user_id], references: [id])
+model RefreshToken {
+  id                  String   @id @default(uuid())
+  userId              String   @unique @map("user_id")
+  token               String   @db.Text
+  tokenExpirationDate DateTime @map("token_expiration_date") @db.Timestamp(0)
+  user                User     @relation(fields: [userId], references: [id])
+  @@map("refresh_token")
 }
 
 model post {
@@ -43,7 +46,7 @@ model post {
   title      String   @db.VarChar(100)
   content    String   @db.Text
   author_id  String
-  author     user     @relation(fields: [author_id], references: [id])
+  author     User     @relation(fields: [author_id], references: [id])
   created_at DateTime @default(now()) @db.Timestamp(0)
   updated_at DateTime @default(now()) @db.Timestamp(0)
 }
@@ -54,7 +57,7 @@ model board {
   content    String      @db.Text
   status     boardStatus @default(DRAFT)
   author_id  String
-  author     user        @relation(fields: [author_id], references: [id])
+  author     User        @relation(fields: [author_id], references: [id])
   created_at DateTime    @default(now()) @db.Timestamp(0)
   updated_at DateTime    @default(now()) @db.Timestamp(0)
 }

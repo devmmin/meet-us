@@ -1,14 +1,17 @@
 import { Module } from '@nestjs/common';
+import { CqrsModule } from '@nestjs/cqrs';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthService } from './auth.service';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { AuthController } from './auth.controller';
-import { LocalStrategy } from './strategies/local.strategy';
 import { PrismaModule } from '@prisma/prisma.module';
+import { AuthController } from '@auth/auth.controller';
+import { AuthRepository } from '@auth/repositories';
+import { LoginHandler } from '@auth/commands';
+import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+
+const CommandHandlers = [LoginHandler];
 
 @Module({
-  imports: [JwtModule.register({}), PrismaModule],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  imports: [JwtModule.register({}), PrismaModule, CqrsModule],
+  providers: [AuthRepository, JwtStrategy, ...CommandHandlers],
   controllers: [AuthController],
 })
 export class AuthModule {}
