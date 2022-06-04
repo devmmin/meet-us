@@ -20,7 +20,8 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "ps:gen": "npx prisma generate",
-    "ps:push": "dotenv -e .env.dev npx prisma db push --accept-data-loss"
+    "ps:push": "dotenv -e .env.dev npx prisma db push --accept-data-loss",
+    "doc": "compodoc -p tsconfig.doc.json -s"
   },
   "dependencies": {
     "@nestjs/apollo": "^10.0.11",
@@ -56,6 +57,7 @@
     "swagger-ui-express": "^4.4.0"
   },
   "devDependencies": {
+    "@compodoc/compodoc": "^1.1.19",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/jest": "27.4.1",
