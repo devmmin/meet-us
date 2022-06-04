@@ -1,15 +1,10 @@
-import { User } from '@models/user';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '@prisma/prisma.service';
+import { User } from '@user/models/user.model';
 import { RefreahTokenJwt } from './models/token.model';
 import { ValidateUser } from './models/user.model';
-import {
-  TokenExpiredError,
-  NotBeforeError,
-  JsonWebTokenError,
-} from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
@@ -31,23 +26,13 @@ export class AuthService {
   }
 
   public vaildateAcessToken(token: string) {
-    try {
-      this.jwtService.verify(token, {
-        secret: this.configService.get('ACCESS_TOKEN_SECRET'),
-      });
-    } catch (error) {
-      if (error instanceof TokenExpiredError) {
-        console.log('error', error);
-      } else if (error instanceof NotBeforeError) {
-        console.log('error', error);
-      } else if (error instanceof JsonWebTokenError) {
-        console.log('error', error);
-      }
-    }
+    return this.jwtService.verify(token, {
+      secret: this.configService.get('ACCESS_TOKEN_SECRET'),
+    });
   }
 
   public async login(payload: User) {
-    const { user_id } = payload;
+    const { id } = payload;
     const refreshToken = this.createRefreshToken(payload);
     const accessToken = this.createAccessToken(payload);
 
@@ -60,7 +45,7 @@ export class AuthService {
     await this.prismaService.refresh_token.upsert({
       create: {
         token: refreshToken,
-        user_id: user_id,
+        user_id: id,
         token_expiration_date: new Date(expirationDate),
       },
       update: {
@@ -68,7 +53,7 @@ export class AuthService {
         token_expiration_date: new Date(expirationDate),
       },
       where: {
-        user_id,
+        user_id: id,
       },
     });
 

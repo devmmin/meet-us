@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaService } from './prisma/prisma.service';
+import { PrismaService } from '@prisma/prisma.service';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
+import { setupSwagger } from 'src/config/swagger';
 // import * as csurf from 'csurf';
 
 async function bootstrap() {
@@ -12,12 +13,13 @@ async function bootstrap() {
       optionsSuccessStatus: 200,
       origin: [
         'self',
-        /localhost\:3000/,
+        /((?:http(s)?:\/\/)([\w.-]){1,})?(apollographql\.com)/,
+        /localhost/,
         /((?:http(s)?:\/\/)([\w.-]){1,})?(byeonggi\.synology\.me)/,
       ],
     },
   });
-
+  setupSwagger(app);
   // app.use(
   //   helmet({
   //     contentSecurityPolicy: {

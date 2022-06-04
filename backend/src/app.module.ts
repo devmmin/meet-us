@@ -2,14 +2,15 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
-import { PostResolver } from '@resolvers/post/post.resolver';
 import { ApolloServerPluginLandingPageLocalDefault } from 'apollo-server-core';
 import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { BoardModule } from './board/board.module';
+import { PostModule } from './post/post.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { UserResolver } from './resolvers/user/user.resolver';
+import { UserModule } from './user/user.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -30,8 +31,11 @@ const ENV = process.env.NODE_ENV;
     }),
     AuthModule,
     PrismaModule,
+    UserModule,
+    PostModule,
+    BoardModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PostResolver, UserResolver],
+  providers: [AppService],
 })
 export class AppModule {}

@@ -7,6 +7,11 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { Observable } from 'rxjs';
+import {
+  TokenExpiredError,
+  NotBeforeError,
+  JsonWebTokenError,
+} from 'jsonwebtoken';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -29,6 +34,17 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return true;
   }
   vaildateToken(token: string) {
-    return this.authService.vaildateAcessToken(token);
+    try {
+      this.authService.vaildateAcessToken(token);
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        console.log('error', error);
+        throw new UnauthorizedException('The access token expired');
+      } else if (error instanceof NotBeforeError) {
+        console.log('error', error);
+      } else if (error instanceof JsonWebTokenError) {
+        console.log('error', error);
+      }
+    }
   }
 }

@@ -1,14 +1,10 @@
-import { Post, PostOrderByUpdatedAtInput } from '@models/post';
-import { Inject } from '@nestjs/common';
+import { Post, PostOrderByUpdatedAtInput } from '@post/models/post';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { PrismaService } from '@prisma/prisma.service';
 
 @Resolver(() => Post)
 export class PostResolver {
-  constructor(
-    @Inject(PrismaService)
-    private prismaService: PrismaService,
-  ) {}
+  constructor(private prismaService: PrismaService) {}
 
   @Query(() => Post)
   postById(@Args('id') id: string) {

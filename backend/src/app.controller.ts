@@ -9,10 +9,6 @@ export class AppController {
     private service: PrismaService,
   ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
   @Get('post')
   async getPostList(@Param('id') id: string, @Param('take') take: number) {
     return this.service.post.findMany({

@@ -25,6 +25,7 @@ type User {
 type Query {
   postById(id: String!): Post!
   posts(skip: Float, take: Float, orderBy: PostOrderByUpdatedAtInput): [Post!]!
+  getUserById(id: String!): User!
 }
 
 input PostOrderByUpdatedAtInput {
@@ -37,8 +38,14 @@ enum SortOrder {
 }
 
 type Mutation {
-  createUser(userData: CreateUserInput!): User!
-  updateUser(userData: UpdateUserInput!): User!
+  createUser(
+    """유저 생성"""
+    user: CreateUserInput!
+  ): User!
+  updateUser(
+    """유저 업데이트"""
+    user: UpdateUserInput!
+  ): User!
 }
 
 input CreateUserInput {
