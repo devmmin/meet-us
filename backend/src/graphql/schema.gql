@@ -23,9 +23,9 @@ type User {
 }
 
 type Query {
+  getUserById(id: String!): User!
   postById(id: String!): Post!
   posts(skip: Float, take: Float, orderBy: PostOrderByUpdatedAtInput): [Post!]!
-  getUserById(id: String!): User!
 }
 
 input PostOrderByUpdatedAtInput {
