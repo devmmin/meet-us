@@ -1,16 +1,16 @@
-import { LoginCommand, LoginResult } from '@auth/commands';
-import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
-import { LoginInput, LoginResponse } from '@auth/models';
 import {
-  Body,
-  Controller,
-  Get,
-  Logger,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+  LoginCommand,
+  LoginResult,
+  RefreshAccessTokenCommand,
+  RefreshAccessTokenResult,
+} from '@auth/commands';
+import {
+  LoginInput,
+  LoginResponse,
+  RefreshTokenInput,
+  RefreshTokenResponse,
+} from '@auth/models';
+import { Body, Controller, Logger, Post, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -33,7 +33,7 @@ export class AuthController {
   @Post('login')
   public async login(
     @Body() loginInput: LoginInput,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response<LoginResponse>,
   ) {
     const { userEmail, userPassword } = loginInput;
     const loginResult = await this.commandBus.execute<
@@ -63,14 +63,32 @@ export class AuthController {
     }
   }
 
+  @ApiBody({ type: RefreshTokenInput })
+  @ApiResponse({ type: RefreshTokenResponse })
   @Post('refresh')
-  refresh(@Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    // this.authService.
-  }
+  async refresh(
+    @Body() refreshTokenInput: RefreshTokenInput,
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response<RefreshTokenResponse>,
+  ) {
+    if (req.cookies['refresh-token']) {
+      Logger.log(req.cookies['refresh-token'], '쿠키에 토큰 검사');
+    }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('profile')
-  getProfile(@Req() req) {
-    return req.user;
+    const { refreshToken } = refreshTokenInput;
+    Logger.log(refreshToken, 'refreshToken');
+    const { accessToken, expirationDate } = await this.commandBus.execute<
+      RefreshAccessTokenCommand,
+      RefreshAccessTokenResult
+    >(new RefreshAccessTokenCommand(refreshToken));
+    res.cookie('access-token', refreshToken, {
+      secure: true,
+      httpOnly: true,
+      domain: this.configService.get('SERVER_DOMAIN'),
+      maxAge: expirationDate,
+      sameSite: 'lax',
+      path: '/',
+    });
+    res.status(200).send({ accessToken });
   }
 }

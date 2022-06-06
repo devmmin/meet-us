@@ -4,14 +4,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { PrismaModule } from '@prisma/prisma.module';
 import { AuthController } from '@auth/auth.controller';
 import { AuthRepository } from '@auth/repositories';
-import { LoginHandler } from '@auth/commands';
+import { LoginHandler, RefreshAccessTokenHandler } from '@auth/commands';
 import { JwtStrategy } from '@auth/strategies/jwt.strategy';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
-const CommandHandlers = [LoginHandler];
+const CommandHandlers = [LoginHandler, RefreshAccessTokenHandler];
 
 @Module({
   imports: [JwtModule.register({}), PrismaModule, CqrsModule],
-  providers: [AuthRepository, JwtStrategy, ...CommandHandlers],
+  providers: [AuthRepository, JwtStrategy, ...CommandHandlers, JwtAuthGuard],
   controllers: [AuthController],
 })
 export class AuthModule {}

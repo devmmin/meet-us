@@ -1,26 +1,113 @@
-import { Post, PostOrderByUpdatedAtInput } from '@post/models/post';
-import { Args, Query, Resolver } from '@nestjs/graphql';
-import { PrismaService } from '@prisma/prisma.service';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import {
+  CreatePostCommand,
+  CreatePostResult,
+  DeletePostCommand,
+  DeletePostResult,
+  UpdatePostCommand,
+  UpdatePostResult,
+} from '@post/commands';
+import {
+  CreatePostInput,
+  DeletePostInput,
+  Pagenation,
+  Post,
+  PostDto,
+  PostsOrder,
+  UpdatePostInput,
+} from '@post/models';
+import { GetPostsQuery, GetPostsQueryResult } from '@post/queries';
+import {
+  GetPostByIdQuery,
+  GetPostByIdQueryResult,
+} from '@post/queries/get-post-by-id.handler';
 
-@Resolver(() => Post)
+@Resolver()
 export class PostResolver {
-  constructor(private prismaService: PrismaService) {}
+  constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
-  @Query(() => Post)
-  postById(@Args('id') id: string) {
-    return this.prismaService.post.findUnique({ where: { id } });
+  @Mutation(() => PostDto)
+  public async createPost(
+    @Args({
+      name: 'post',
+      description: 'CreatePost 데이터',
+      type: () => CreatePostInput,
+    })
+    createPostInput: CreatePostInput,
+  ) {
+    const { post } = await this.commandBus.execute<
+      CreatePostCommand,
+      CreatePostResult
+    >(new CreatePostCommand(createPostInput));
+    return post;
+  }
+
+  @Mutation(() => PostDto)
+  public async updatePost(
+    @Args({
+      name: 'post',
+      description: 'UpdatePost 데이터',
+      type: () => UpdatePostInput,
+    })
+    updatePostInput: UpdatePostInput,
+  ) {
+    const { post } = await this.commandBus.execute<
+      UpdatePostCommand,
+      UpdatePostResult
+    >(new UpdatePostCommand(updatePostInput));
+    return post;
+  }
+  @Mutation(() => PostDto)
+  public async deletePost(
+    @Args({
+      name: 'post',
+      description: 'DeletePost 데이터',
+      type: () => DeletePostInput,
+    })
+    deletePostInput: DeletePostInput,
+  ) {
+    const { post } = await this.commandBus.execute<
+      DeletePostCommand,
+      DeletePostResult
+    >(new DeletePostCommand(deletePostInput));
+    return post;
+  }
+
+  @Query(() => PostDto)
+  public async getPostById(
+    @Args({
+      name: 'id',
+      description: 'post id로 post 정보를 가져온다',
+      type: () => String,
+    })
+    id: string,
+  ) {
+    const { post } = await this.queryBus.execute<
+      GetPostByIdQuery,
+      GetPostByIdQueryResult
+    >(new GetPostByIdQuery(id));
+    return post;
   }
 
   @Query(() => [Post])
-  posts(
-    @Args('skip', { nullable: true }) skip: number,
-    @Args('take', { nullable: true }) take: number,
-    @Args('orderBy', { nullable: true }) orderBy: PostOrderByUpdatedAtInput,
+  public async posts(
+    @Args({
+      name: 'pagination',
+      type: () => Pagenation,
+    })
+    pagination: Pagenation,
+    @Args({
+      name: 'order',
+      nullable: true,
+      type: () => PostsOrder,
+    })
+    order: PostsOrder,
   ) {
-    return this.prismaService.post.findMany({
-      take: take || undefined,
-      skip: skip || undefined,
-      orderBy: { created_at: orderBy.createdAt || undefined },
-    });
+    const { posts } = await this.queryBus.execute<
+      GetPostsQuery,
+      GetPostsQueryResult
+    >(new GetPostsQuery(pagination, order));
+    return posts;
   }
 }

@@ -4,7 +4,7 @@ import { PrismaModule } from '@prisma/prisma.module';
 import { CreateUserHandler } from '@user/commands';
 import { UserRepository } from '@user/repository/user.repository';
 import { UserResolver } from '@user/resolvers/user.resolver';
-import { GetUserByIdHandler } from './queries';
+import { GetUserByIdHandler } from '@user/queries';
 
 export const CommandHandlers = [CreateUserHandler];
 export const QueryHandlers = [GetUserByIdHandler];

@@ -1,9 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { PrismaService } from '@prisma/prisma.service';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
 import { setupSwagger } from 'src/config/swagger';
+import { setPrisma } from '@config/prisma';
 // import * as csurf from 'csurf';
 
 async function bootstrap() {
@@ -47,8 +47,7 @@ async function bootstrap() {
   //     path: '/',
   //   }),
   // );
-  const prismaService = app.get(PrismaService);
-  await prismaService.enableShutdownHooks(app);
+  await setPrisma(app);
   await app.listen(3000);
 }
 bootstrap();

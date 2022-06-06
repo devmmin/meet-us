@@ -2,10 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Post {
+type Author {
+  id: String!
+  userName: String!
+}
+
+type PostDto {
   id: String!
   title: String!
-  content: String
+  content: String!
+  authorId: String!
+  author: Author!
   updatedAt: Timestamp!
   createdAt: Timestamp!
 }
@@ -24,8 +31,20 @@ type UserDto {
 
 type Query {
   getUserById(id: String!): UserDto!
-  postById(id: String!): Post!
-  posts(skip: Float, take: Float, orderBy: PostOrderByUpdatedAtInput): [Post!]!
+  getPostById(
+    """post id로 post 정보를 가져온다"""
+    id: String!
+  ): PostDto!
+  posts(pagination: Pagenation!, order: PostsOrder): [PostDto!]!
+}
+
+input Pagenation {
+  skip: Float!
+  take: Float!
+}
+
+input PostsOrder {
+  orderBy: PostOrderByUpdatedAtInput!
 }
 
 input PostOrderByUpdatedAtInput {
@@ -46,6 +65,18 @@ type Mutation {
     """유저 업데이트"""
     user: UpdateUserInput!
   ): UserDto!
+  createPost(
+    """CreatePost 데이터"""
+    post: CreatePostInput!
+  ): PostDto!
+  updatePost(
+    """UpdatePost 데이터"""
+    post: UpdatePostInput!
+  ): PostDto!
+  deletePost(
+    """DeletePost 데이터"""
+    post: DeletePostInput!
+  ): PostDto!
 }
 
 input CreateUserInput {
@@ -66,4 +97,20 @@ input UpdateUserInput {
   userName: String!
   password: String!
   role: Role!
+}
+
+input CreatePostInput {
+  title: String!
+  content: String
+  authorId: String!
+}
+
+input UpdatePostInput {
+  id: String!
+  title: String!
+  content: String
+}
+
+input DeletePostInput {
+  id: String!
 }

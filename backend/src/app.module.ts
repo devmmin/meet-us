@@ -21,7 +21,7 @@ const ENV = process.env.NODE_ENV;
       envFilePath: `.env.${ENV}`,
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      autoSchemaFile: join(process.cwd(), 'src/graphql/schema.gql'),
+      autoSchemaFile: join(process.cwd(), 'graphql/schema.gql'),
       driver: ApolloDriver,
       playground: false,
       plugins: [ApolloServerPluginLandingPageLocalDefault()],

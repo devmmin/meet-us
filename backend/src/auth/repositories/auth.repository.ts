@@ -62,6 +62,19 @@ export class AuthRepository {
     };
   }
 
+  public refreshAccessToken(refreshToken: string) {
+    try {
+      const jwt = this.jwtService.verify<RefreahTokenJwt>(refreshToken, {
+        secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+      });
+      if (jwt) {
+        const { user_id } = jwt;
+        const accessToken = this.createAccessToken({ user_id });
+        return { accessToken, expirationDate: Number(jwt.exp * 1000) };
+      }
+    } catch (error) {}
+  }
+
   public createAccessToken(payload) {
     return this.jwtService.sign(payload, {
       subject: 'access-token',

@@ -6,7 +6,10 @@ import {
   UpdateUserInput,
   UserDto,
 } from '@user/models/user.model';
-import { GetUserByIdQuery } from '@user/queries/get-user-by-id.handler';
+import {
+  GetUserByIdQuery,
+  GetUserByIdQueryResult,
+} from '@user/queries/get-user-by-id.handler';
 
 @Resolver()
 export class UserResolver {
@@ -41,6 +44,10 @@ export class UserResolver {
 
   @Query(() => UserDto)
   async getUserById(@Args('id', { type: () => String }) id: string) {
-    return await this.queryBus.execute(new GetUserByIdQuery(id));
+    const { user } = await this.queryBus.execute<
+      GetUserByIdQuery,
+      GetUserByIdQueryResult
+    >(new GetUserByIdQuery(id));
+    return user;
   }
 }

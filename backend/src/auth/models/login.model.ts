@@ -24,11 +24,6 @@ export class LoginResponse {
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
   })
   refreshToken: string;
-  @ApiProperty({
-    description: '만료일자(유닉스 시간)',
-    example: '1213141',
-  })
-  expirationDate: number;
 }
 
 export interface LoginUser {
@@ -47,4 +42,19 @@ export interface LoginToken {
   accessToken: string;
   refreshToken: string;
   expirationDate: number;
+}
+
+export class RefreshTokenInput {
+  @ApiProperty({
+    description: 'refresh 토큰',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+  })
+  refreshToken: string;
+}
+export class RefreshTokenResponse {
+  @ApiProperty({
+    description: 'access 토큰',
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
+  })
+  accessToken: string;
 }

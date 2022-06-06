@@ -6,12 +6,10 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 
-export class User extends AggregateRoot {
+export class UserAggregateRoot extends AggregateRoot {
   constructor(private readonly id: string) {
     super();
   }
-
-  create() {}
 }
 
 @InputType()

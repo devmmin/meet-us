@@ -17,19 +17,21 @@ model User {
   password  String        @db.VarChar(50)
   createdAt DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
   role      role          @default(USER)
-  profile   user_profile?
+  profile   UserProfile?
   token     RefreshToken?
-  post      post[]
-  board     board[]
+  post      Post[]
+  board     Board[]
 
   @@map("user")
 }
 
-model user_profile {
-  id            String @id @default(uuid())
-  user_id       String @unique
-  profile_image String @db.Text
-  user          User   @relation(fields: [user_id], references: [id])
+model UserProfile {
+  id           String @id @default(uuid())
+  userId       String @unique @map("user_id")
+  profileImage String @map("profile_image") @db.Text
+  user         User   @relation(fields: [userId], references: [id])
+
+  @@map("user_profile")
 }
 
 model RefreshToken {
@@ -38,28 +40,33 @@ model RefreshToken {
   token               String   @db.Text
   tokenExpirationDate DateTime @map("token_expiration_date") @db.Timestamp(0)
   user                User     @relation(fields: [userId], references: [id])
+
   @@map("refresh_token")
 }
 
-model post {
-  id         String   @id @default(uuid())
-  title      String   @db.VarChar(100)
-  content    String   @db.Text
-  author_id  String
-  author     User     @relation(fields: [author_id], references: [id])
-  created_at DateTime @default(now()) @db.Timestamp(0)
-  updated_at DateTime @default(now()) @db.Timestamp(0)
+model Post {
+  id        String   @id @default(uuid())
+  title     String   @db.VarChar(100)
+  content   String   @db.Text
+  authorId  String   @map("author_id")
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(0)
+
+  @@map("post")
 }
 
-model board {
-  id         String      @id @default(uuid())
-  title      String      @db.VarChar(100)
-  content    String      @db.Text
-  status     boardStatus @default(DRAFT)
-  author_id  String
-  author     User        @relation(fields: [author_id], references: [id])
-  created_at DateTime    @default(now()) @db.Timestamp(0)
-  updated_at DateTime    @default(now()) @db.Timestamp(0)
+model Board {
+  id        String      @id @default(uuid())
+  title     String      @db.VarChar(100)
+  content   String      @db.Text
+  status    boardStatus @default(DRAFT)
+  authorId  String      @map("author_id")
+  author    User        @relation(fields: [authorId], references: [id])
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime    @default(now()) @map("updated_at") @db.Timestamp(0)
+
+  @@map("board")
 }
 
 enum boardStatus {

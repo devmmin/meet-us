@@ -33,6 +33,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     return true;
   }
+
   vaildateToken(token: string) {
     try {
       const res = this.authService.vaildateAcessToken(token);
