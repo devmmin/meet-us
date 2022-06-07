@@ -1,3 +1,4 @@
+import { AggregateRoot } from '@nestjs/cqrs';
 import {
   Field,
   InputType,
@@ -5,22 +6,18 @@ import {
   registerEnumType,
 } from '@nestjs/graphql';
 
-@ObjectType()
-export class User {
-  @Field()
-  id: string;
-  @Field({ name: 'userName' })
-  user_name: string;
-  @Field()
-  role: Role;
-  @Field((type) => Date, { name: 'createAt' })
-  created_at: Date;
+export class UserAggregateRoot extends AggregateRoot {
+  constructor(private readonly id: string) {
+    super();
+  }
 }
 
 @InputType()
 export class CreateUserInput {
   @Field()
   userName: string;
+  @Field()
+  userEmail: string;
   @Field()
   password: string;
   @Field((type) => Role)
@@ -32,11 +29,25 @@ export class UpdateUserInput {
   @Field()
   userId: string;
   @Field()
+  userEmail: string;
+  @Field()
   userName: string;
   @Field()
   password: string;
   @Field((type) => Role)
   role: Role;
+}
+
+@ObjectType()
+export class UserDto {
+  @Field({ name: 'userId' })
+  id: string;
+  @Field({ name: 'userName' })
+  userName: string;
+  @Field()
+  role: Role;
+  @Field((type) => Date, { name: 'createAt' })
+  createdAt: Date;
 }
 
 export enum Role {

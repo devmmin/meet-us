@@ -10,28 +10,68 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id         String        @id @default(uuid())
-  user_name  String        @db.VarChar(50)
-  role       role          @default(USER)
-  password   String        @db.VarChar(50)
-  created_at DateTime      @default(now()) @db.Timestamp(0)
-  profile    user_profile?
+model User {
+  id        String        @id @default(uuid())
+  userEmail String        @unique @map("user_email") @db.VarChar(320)
+  userName  String        @map("user_name") @db.VarChar(50)
+  password  String        @db.VarChar(50)
+  createdAt DateTime      @default(now()) @map("created_at") @db.Timestamp(0)
+  role      role          @default(USER)
+  profile   UserProfile?
+  token     RefreshToken?
+  post      Post[]
+  board     Board[]
+
+  @@map("user")
 }
 
-model user_profile {
-  id            String @id @default(uuid())
-  user_id       String @unique
-  profile_image String @db.Text
-  user          user   @relation(fields: [user_id], references: [id])
+model UserProfile {
+  id           String @id @default(uuid())
+  userId       String @unique @map("user_id")
+  profileImage String @map("profile_image") @db.Text
+  user         User   @relation(fields: [userId], references: [id])
+
+  @@map("user_profile")
 }
 
-model post {
-  id          String   @id @default(uuid())
-  title       String   @db.VarChar(100)
-  content     String   @db.Text
-  updated_at DateTime @default(now()) @db.Timestamp(0)
-  created_at DateTime @default(now()) @db.Timestamp(0)
+model RefreshToken {
+  id                  String   @id @default(uuid())
+  userId              String   @unique @map("user_id")
+  token               String   @db.Text
+  tokenExpirationDate DateTime @map("token_expiration_date") @db.Timestamp(0)
+  user                User     @relation(fields: [userId], references: [id])
+
+  @@map("refresh_token")
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String   @db.VarChar(100)
+  content   String   @db.Text
+  authorId  String   @map("author_id")
+  author    User     @relation(fields: [authorId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime @default(now()) @map("updated_at") @db.Timestamp(0)
+
+  @@map("post")
+}
+
+model Board {
+  id        String      @id @default(uuid())
+  title     String      @db.VarChar(100)
+  content   String      @db.Text
+  status    boardStatus @default(DRAFT)
+  authorId  String      @map("author_id")
+  author    User        @relation(fields: [authorId], references: [id])
+  createdAt DateTime    @default(now()) @map("created_at") @db.Timestamp(0)
+  updatedAt DateTime    @default(now()) @map("updated_at") @db.Timestamp(0)
+
+  @@map("board")
+}
+
+enum boardStatus {
+  DRAFT
+  PUBLISHED
 }
 
 enum role {
