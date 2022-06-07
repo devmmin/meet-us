@@ -12,7 +12,6 @@ type PostDto {
   title: String!
   content: String!
   authorId: String!
-  author: Author!
   updatedAt: Timestamp!
   createdAt: Timestamp!
 }
@@ -21,6 +20,16 @@ type PostDto {
 `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
 """
 scalar Timestamp
+
+type Post {
+  id: String!
+  title: String!
+  content: String!
+  authorId: String!
+  author: Author!
+  updatedAt: Timestamp!
+  createdAt: Timestamp!
+}
 
 type UserDto {
   userId: String!
@@ -35,7 +44,7 @@ type Query {
     """post id로 post 정보를 가져온다"""
     id: String!
   ): PostDto!
-  posts(pagination: Pagenation!, order: PostsOrder): [PostDto!]!
+  posts(pagination: Pagenation!, order: PostsOrder): [Post!]!
 }
 
 input Pagenation {

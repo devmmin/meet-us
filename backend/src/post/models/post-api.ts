@@ -25,8 +25,6 @@ export class PostDto {
   content: string;
   @Field()
   authorId: string;
-  @Field(() => Author)
-  author?: Author;
   @Field(() => Date)
   updatedAt: Date;
   @Field(() => Date)
