@@ -15,44 +15,25 @@ import {
   MenuList,
   MenuItem,
   IconButton,
-  Tfoot,
-  Select,
 } from '@chakra-ui/react';
-import { Dispatch, SetStateAction, ChangeEvent } from 'react';
-import { MdChevronLeft, MdChevronRight, MdMoreHoriz } from 'react-icons/md';
-
-interface ListItem {
-  id: number;
-  subject: string;
-  status: string;
-  register: string;
-  createdAt: string;
-}
-
-interface Page {
-  page: number;
-  perPage: number;
-  totalCount: number;
-  totalPage: number;
-}
+import { ChangeEvent } from 'react';
+import { useRecoilState } from 'recoil';
+import { MdMoreHoriz } from 'react-icons/md';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { checkedListState } from '../../recoil';
+import { ListItem } from '../../types';
+import ListFooter from './ListFooter';
 
 interface Props {
   list: ListItem[];
   tableHeader: string[];
   buttonTitle?: string;
-  checkedList: number[];
-  setCheckedList: Dispatch<SetStateAction<Array<number>>>;
-  pageInfo?: Page;
 }
 
-const ListTable = ({
-  list,
-  tableHeader,
-  pageInfo = { page: 1, perPage: 10, totalCount: 0, totalPage: 1 },
-  buttonTitle,
-  checkedList,
-  setCheckedList,
-}: Props) => {
+const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [checkedList, setCheckedList] = useRecoilState(checkedListState);
   const allChecked = list.length > 0 && checkedList.length === list.length;
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: number) => {
     if (id === 0) {
@@ -62,12 +43,6 @@ const ListTable = ({
     } else {
       setCheckedList((prev) => prev.filter((v) => v !== id));
     }
-  };
-  const perPageList = Array(1 * 10)
-    .fill(undefined)
-    .map((arr, i) => i + 1);
-  const getList = () => {
-    // TODO: API 통신 + 상태관리
   };
   return (
     <TableContainer borderRadius="6px 6px 0px 0px">
@@ -96,8 +71,17 @@ const ListTable = ({
         </Thead>
         <Tbody bg="white">
           {list.map((item) => (
-            <Tr key={item.id}>
-              <Td>
+            <Tr
+              key={item.id}
+              onClick={() => {
+                navigate(`../${location.pathname}/update/${item.id}`);
+              }}
+            >
+              <Td
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <Checkbox
                   isChecked={checkedList.includes(item.id)}
                   onChange={(event) => changeHandler(event, item.id)}
@@ -145,62 +129,14 @@ const ListTable = ({
             </Tr>
           ))}
         </Tbody>
-        <Tfoot bg="white">
-          <Tr>
-            <Th colSpan={2}>
-              <Flex alignItems="center">
-                Show rows per page
-                <Select
-                  w="75px"
-                  ml="8px"
-                  value={pageInfo.perPage}
-                  onChange={getList}
-                >
-                  {perPageList.map((v) => (
-                    <option key={v} value={v}>
-                      {v}
-                    </option>
-                  ))}
-                </Select>
-              </Flex>
-            </Th>
-            <Th />
-            <Th />
-            <Th />
-            <Th textAlign="right">
-              {pageInfo.page}-{pageInfo.totalPage} of {pageInfo.totalCount}
-              <IconButton
-                size="sm"
-                ml="24px"
-                onClick={getList}
-                icon={<MdChevronLeft />}
-                aria-label="left"
-                bg="white"
-              />
-              <IconButton
-                size="sm"
-                ml="8px"
-                onClick={getList}
-                icon={<MdChevronRight />}
-                aria-label="right"
-                bg="white"
-              />
-            </Th>
-          </Tr>
-        </Tfoot>
       </Table>
+      <ListFooter />
     </TableContainer>
   );
 };
 
 ListTable.defaultProps = {
   buttonTitle: '',
-  pageInfo: {
-    page: 1,
-    perPage: 10,
-    totalCount: 0,
-    totalPage: 1,
-  },
 };
 
 export default ListTable;

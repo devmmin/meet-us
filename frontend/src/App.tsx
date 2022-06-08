@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/Login';
 import AdminLayout from './layouts/AdminLayout';
@@ -11,22 +11,28 @@ import PostUpdate from './pages/Blog/BlogUpdate';
 import NoticeUpdate from './pages/Notice/NoticeUpdate';
 
 const App = () => (
-  <Box className="App">
+  <Flex className="App">
     <BrowserRouter>
       <Routes>
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="main" element={<Main />} />
           <Route path="notice" element={<Notice />} />
-          <Route path="notice/update" element={<NoticeUpdate />} />
+          <Route path="notice/update">
+            <Route index element={<NoticeUpdate />} />
+            <Route path=":id" element={<NoticeUpdate />} />
+          </Route>
           <Route path="blog" element={<Blog />} />
-          <Route path="blog/update" element={<PostUpdate />} />
+          <Route path="blog/update">
+            <Route index element={<PostUpdate />} />
+            <Route path=":id" element={<PostUpdate />} />
+          </Route>
           <Route path="user-management" element={<UserManagement />} />
           <Route path="setting" element={<Setting />} />
         </Route>
         <Route path="/admin/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
-  </Box>
+  </Flex>
 );
 
 export default App;

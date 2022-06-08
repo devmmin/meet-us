@@ -50,6 +50,21 @@ module.exports = {
     'no-else-return': ['error', { allowElseIf: true }],
     'operator-linebreak': 'off',
     'linebreak-style': 'off',
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': [
+      'warn',
+      {
+        additionalHooks: 'useRecoilCallback',
+      },
+    ],
+    'import/prefer-default-export': 'off',
+    'no-restricted-syntax': [
+      'error',
+      'FunctionExpression',
+      'WithStatement',
+      "BinaryExpression[operator='in']",
+    ],
+    'no-console': ['warn', { allow: ['warn', 'error', 'debug'] }],
   },
   settings: {
     'import/resolver': {
