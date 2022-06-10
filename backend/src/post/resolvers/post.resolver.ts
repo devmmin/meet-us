@@ -11,10 +11,11 @@ import {
 import {
   CreatePostInput,
   DeletePostInput,
-  Pagenation,
+  OffsetPagination,
   Post,
-  PostDto,
+  Posts,
   PostsOrder,
+  PostWithoutAuthor,
   UpdatePostInput,
 } from '@post/models';
 import { GetPostsQuery, GetPostsQueryResult } from '@post/queries';
@@ -27,11 +28,13 @@ import {
 export class PostResolver {
   constructor(private commandBus: CommandBus, private queryBus: QueryBus) {}
 
-  @Mutation(() => PostDto)
+  @Mutation(() => PostWithoutAuthor, {
+    description: '신규 Post를 생성한다',
+  })
   public async createPost(
     @Args({
       name: 'post',
-      description: 'CreatePost 데이터',
+      description: '신규 Post Parameter',
       type: () => CreatePostInput,
     })
     createPostInput: CreatePostInput,
@@ -43,7 +46,9 @@ export class PostResolver {
     return post;
   }
 
-  @Mutation(() => PostDto)
+  @Mutation(() => PostWithoutAuthor, {
+    description: 'post 정보를 수정한다.',
+  })
   public async updatePost(
     @Args({
       name: 'post',
@@ -58,27 +63,31 @@ export class PostResolver {
     >(new UpdatePostCommand(updatePostInput));
     return post;
   }
-  @Mutation(() => PostDto)
+  @Mutation(() => PostWithoutAuthor, {
+    description: 'post id로 post 삭제한다',
+  })
   public async deletePost(
     @Args({
-      name: 'post',
-      description: 'DeletePost 데이터',
+      name: 'id',
+      description: 'Post Id',
       type: () => DeletePostInput,
     })
-    deletePostInput: DeletePostInput,
+    id: string,
   ) {
     const { post } = await this.commandBus.execute<
       DeletePostCommand,
       DeletePostResult
-    >(new DeletePostCommand(deletePostInput));
+    >(new DeletePostCommand(id));
     return post;
   }
 
-  @Query(() => PostDto)
+  @Query(() => Post, {
+    description: 'Post Id로 Post 정보를 가져온다',
+  })
   public async getPostById(
     @Args({
       name: 'id',
-      description: 'post id로 post 정보를 가져온다',
+      description: 'Post Id',
       type: () => String,
     })
     id: string,
@@ -90,24 +99,32 @@ export class PostResolver {
     return post;
   }
 
-  @Query(() => [Post])
+  @Query(() => Posts, {
+    description: 'Post 리스트를 가져온다',
+  })
   public async posts(
     @Args({
       name: 'pagination',
-      type: () => Pagenation,
+      type: () => OffsetPagination,
+      description: `Offset 기반 Pagination Parameter 
+      [https://www.prisma.io/docs/concepts/components/prisma-client/pagination#offset-pagination]`,
     })
-    pagination: Pagenation,
+    pagination: OffsetPagination,
     @Args({
-      name: 'order',
+      name: 'orderBy',
       nullable: true,
       type: () => PostsOrder,
+      defaultValue: {
+        createAt: 'desc',
+      },
+      description: 'Order(정렬) Parameter(기본값-생성일자-desc)',
     })
-    order: PostsOrder,
+    orderBy: PostsOrder,
   ) {
     const { posts } = await this.queryBus.execute<
       GetPostsQuery,
       GetPostsQueryResult
-    >(new GetPostsQuery(pagination, order));
+    >(new GetPostsQuery(pagination, orderBy));
     return posts;
   }
 }

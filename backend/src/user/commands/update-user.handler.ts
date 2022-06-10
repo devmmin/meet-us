@@ -1,5 +1,5 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { UpdateUserInput } from '@user/models/user.model';
+import { UpdateUserInput } from '@user/models/user-api.model';
 import { UserRepository } from '@user/repository/user.repository';
 
 export class UpdateUserCommand {

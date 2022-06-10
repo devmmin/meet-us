@@ -16,7 +16,7 @@ import { CommandBus } from '@nestjs/cqrs';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
-@ApiTags('Authroity')
+@ApiTags('Authority')
 @Controller('v1/auth')
 export class AuthController {
   constructor(

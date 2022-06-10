@@ -2,6 +2,7 @@ import { AuthRepository } from '@auth/repositories';
 import {
   ExecutionContext,
   Injectable,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -26,7 +27,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     const { authorization } = request.headers;
     if (authorization) {
       const token = authorization.replace('Bearer ', '');
-      this.vaildateToken(token);
+      this.validateToken(token);
     } else {
       throw new UnauthorizedException('The token is Empty');
     }
@@ -34,10 +35,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     return true;
   }
 
-  vaildateToken(token: string) {
+  validateToken(token: string) {
     try {
-      const res = this.authService.vaildateAcessToken(token);
-      console.log('res', res);
+      const res = this.authService.validateAccessToken(token);
+      Logger.log('Token validateToken', res);
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         throw new UnauthorizedException({ code: -401, error });

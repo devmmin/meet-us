@@ -1,11 +1,11 @@
 import {
   INestApplication,
   Injectable,
-  OnModuleInit,
-  OnApplicationBootstrap,
   Logger,
+  OnApplicationBootstrap,
+  OnModuleInit,
 } from '@nestjs/common';
-import { PrismaClient, Prisma } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { format } from 'sql-formatter';
 
 @Injectable()

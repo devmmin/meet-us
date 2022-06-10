@@ -31,7 +31,7 @@ export interface LoginUser {
   userPassword: string;
 }
 
-export interface RefreahTokenJwt {
+export interface RefreshTokenJwt {
   user_id: string;
   iat: string;
   exp: number;

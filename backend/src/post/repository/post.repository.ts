@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import {
   CreatePostInput,
-  Pagenation,
+  OffsetPagination,
   PostsOrder,
   UpdatePostInput,
 } from '@post/models';
-import { Prisma } from '@prisma/client';
 import { PrismaService } from '@prisma/prisma.service';
 
 @Injectable()
@@ -40,20 +39,12 @@ export class PostRepository {
   }
 
   getPostById(id: string) {
-    return this.prismaService.post.findUnique({ where: { id } });
-  }
-
-  getPosts(pagenation: Pagenation, order: PostsOrder) {
-    const { skip, take } = pagenation;
-    const { orderBy } = order;
-    return this.prismaService.post.findMany({
-      take: take || undefined,
-      skip: skip || undefined,
-      orderBy: { createdAt: orderBy.createdAt || undefined },
+    return this.prismaService.post.findUnique({
       select: {
         id: true,
         title: true,
         content: true,
+        status: true,
         createdAt: true,
         updatedAt: true,
         authorId: true,
@@ -64,6 +55,42 @@ export class PostRepository {
           },
         },
       },
+      where: { id },
     });
+  }
+  /**
+   *
+   * @param pagination
+   * @param order
+   * @returns
+   */
+  async getPosts(pagination: OffsetPagination, order: PostsOrder) {
+    const { skip, take } = pagination;
+    const { createdAt } = order;
+
+    const [list, totalCount] = await this.prismaService.$transaction([
+      this.prismaService.post.findMany({
+        take: take || undefined,
+        skip: skip || undefined,
+        orderBy: { createdAt: createdAt || undefined },
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          status: true,
+          createdAt: true,
+          updatedAt: true,
+          authorId: true,
+          author: {
+            select: {
+              id: true,
+              userName: true,
+            },
+          },
+        },
+      }),
+      this.prismaService.post.count(),
+    ]);
+    return { list, totalCount };
   }
 }
