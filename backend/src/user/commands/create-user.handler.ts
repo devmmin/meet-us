@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { UserRepository } from '@user/repository/user.repository';
-import { CreateUserInput } from '@user/models/user.model';
+import { CreateUserInput } from '@user/models/user-api.model';
 import { ConflictException } from '@nestjs/common';
 
 export class CreateUserCommand {

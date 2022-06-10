@@ -3,10 +3,12 @@ import {
   Field,
   InputType,
   registerEnumType,
+  OmitType,
 } from '@nestjs/graphql';
 import { PostRepository } from '@post/repository/post.repository';
 import { Prisma } from '@prisma/client';
 
+/* Post Base Api Modal */
 @ObjectType()
 export class Author {
   @Field()
@@ -14,90 +16,93 @@ export class Author {
   @Field()
   userName: string;
 }
-
-@ObjectType()
-export class PostDto {
-  @Field()
-  id: string;
-  @Field()
-  title: string;
-  @Field()
-  content: string;
-  @Field()
-  authorId: string;
-  @Field(() => Date)
-  updatedAt: Date;
-  @Field(() => Date)
-  createdAt: Date;
-}
-
 @ObjectType()
 export class Post {
-  @Field()
+  @Field({ name: 'postId', description: 'Post id' })
   id: string;
-  @Field()
+  @Field({ description: 'Post 제목' })
   title: string;
-  @Field()
+  @Field({ description: 'Post 내용' })
   content: string;
-  @Field()
+  @Field({ description: '작성자 User Id' })
   authorId: string;
-  @Field(() => Author)
+  @Field(() => Author, { nullable: true, description: '작성자 정보' })
   author?: Author;
-  @Field(() => Date)
+  @Field(() => Date, { description: '수정 일시' })
   updatedAt: Date;
-  @Field(() => Date)
+  @Field(() => Date, { description: '생성 일시' })
   createdAt: Date;
 }
 
+/* Post Mutate Api Modal */
 @InputType()
 export class CreatePostInput {
-  @Field()
+  @Field({ description: 'Post 제목' })
   title: string;
-  @Field({ nullable: true })
+  @Field({ nullable: true, description: 'Post 내용' })
   content: string;
-  @Field()
+  @Field({ description: '작성자의 User ID' })
   authorId: string;
 }
 
 @InputType()
 export class UpdatePostInput {
-  @Field()
+  @Field({ description: 'Post Id' })
   id: string;
-  @Field()
+  @Field({ description: 'Post 제목' })
   title: string;
-  @Field({ nullable: true })
+  @Field({ nullable: true, description: 'Post 내용' })
   content: string;
 }
 
 @InputType()
 export class DeletePostInput {
-  @Field()
+  @Field({ description: '삭제할 Post id' })
   id: string;
 }
-
 @InputType()
 export class PostByIdInput {
   @Field()
   id: string;
 }
 
-@InputType()
-export class PostOrderByUpdatedAtInput {
-  @Field(() => SortOrder)
-  createdAt: SortOrder;
+@ObjectType()
+export class PostWithoutAuthor extends OmitType(Post, ['author'] as const) {}
+
+/* Post Query Api Modal */
+
+@ObjectType()
+export class Posts {
+  @Field(() => [Post], { description: 'Post 목록' })
+  list: Array<Post>;
+  @Field(() => Number, { description: 'Post 전체 갯수' })
+  totalCount: number;
 }
+
+export type PostsWithAuthor = Prisma.PromiseReturnType<
+  PostRepository['getPosts']
+>;
+
+/* Paging Modal */
+
 @InputType()
-export class Pagenation {
-  @Field()
+export class OffsetPagenation {
+  @Field({ description: '조회시 지정된 Recode 만큼 패스할 갯수' })
   skip: number;
-  @Field()
+  @Field({ description: '가져올 데이터 갯수' })
   take: number;
 }
 
-@InputType()
+@InputType({
+  description: 'Post 조회 Order(정렬) 데이터 타입',
+})
 export class PostsOrder {
-  @Field()
-  orderBy: PostOrderByUpdatedAtInput;
+  @Field(() => SortOrder, {
+    nullable: true,
+    description: '생성일자',
+    defaultValue: 'desc',
+  })
+  createdAt: SortOrder;
 }
 
 export enum SortOrder {
@@ -107,8 +112,13 @@ export enum SortOrder {
 
 registerEnumType(SortOrder, {
   name: 'SortOrder',
+  description: '지원되는 정렬 타입',
+  valuesMap: {
+    asc: {
+      description: '오름차순',
+    },
+    desc: {
+      description: '내림차순',
+    },
+  },
 });
-
-export type PostsWithAuthor = Prisma.PromiseReturnType<
-  PostRepository['getPosts']
->;

@@ -7,12 +7,26 @@ type Author {
   userName: String!
 }
 
-type PostDto {
-  id: String!
+type Post {
+  """Post id"""
+  postId: String!
+
+  """Post 제목"""
   title: String!
+
+  """Post 내용"""
   content: String!
+
+  """작성자 User Id"""
   authorId: String!
+
+  """작성자 정보"""
+  author: Author
+
+  """수정 일시"""
   updatedAt: Timestamp!
+
+  """생성 일시"""
   createdAt: Timestamp!
 }
 
@@ -21,17 +35,35 @@ type PostDto {
 """
 scalar Timestamp
 
-type Post {
-  id: String!
+type PostWithoutAuthor {
+  """Post id"""
+  postId: String!
+
+  """Post 제목"""
   title: String!
+
+  """Post 내용"""
   content: String!
+
+  """작성자 User Id"""
   authorId: String!
-  author: Author!
+
+  """수정 일시"""
   updatedAt: Timestamp!
+
+  """생성 일시"""
   createdAt: Timestamp!
 }
 
-type UserDto {
+type Posts {
+  """Post 목록"""
+  list: [Post!]!
+
+  """Post 전체 갯수"""
+  totalCount: Float!
+}
+
+type User {
   userId: String!
   userName: String!
   role: String!
@@ -39,87 +71,146 @@ type UserDto {
 }
 
 type Query {
-  getUserById(id: String!): UserDto!
+  """User ID로 해당 유저에 대한 정보를 가져온다"""
+  getUserById(id: String!): User!
+
+  """Post Id로 Post 정보를 가져온다"""
   getPostById(
-    """post id로 post 정보를 가져온다"""
+    """Post Id"""
     id: String!
-  ): PostDto!
-  posts(pagination: Pagenation!, order: PostsOrder): [Post!]!
+  ): Post!
+
+  """Post 리스트를 가져온다"""
+  posts(
+    """
+    Offset 기반 Pagenation Parameter 
+          [https://www.prisma.io/docs/concepts/components/prisma-client/pagination#offset-pagination]
+    """
+    pagination: OffsetPagenation!
+
+    """Order(정렬) Parameter(기본값-생성일자-desc)"""
+    orderBy: PostsOrder = {}
+  ): Posts!
 }
 
-input Pagenation {
+input OffsetPagenation {
+  """조회시 지정된 Recode 만큼 패스할 갯수"""
   skip: Float!
+
+  """가져올 데이터 갯수"""
   take: Float!
 }
 
+"""Post 조회 Order(정렬) 데이터 타입"""
 input PostsOrder {
-  orderBy: PostOrderByUpdatedAtInput!
+  """생성일자"""
+  createdAt: SortOrder = desc
 }
 
-input PostOrderByUpdatedAtInput {
-  createdAt: SortOrder!
-}
-
+"""지원되는 정렬 타입"""
 enum SortOrder {
+  """오름차순"""
   asc
+
+  """내림차순"""
   desc
 }
 
 type Mutation {
+  """신규 User를 생성한다"""
   createUser(
-    """유저 생성"""
+    """신규 User 생성 Parameter"""
     user: CreateUserInput!
-  ): UserDto!
+  ): User!
+
+  """User 정보를 업데이트 한다."""
   updateUser(
     """유저 업데이트"""
     user: UpdateUserInput!
-  ): UserDto!
+  ): User!
+
+  """신규 Post를 생성한다"""
   createPost(
-    """CreatePost 데이터"""
+    """신규 Post Parameter"""
     post: CreatePostInput!
-  ): PostDto!
+  ): PostWithoutAuthor!
+
+  """post 정보를 수정한다."""
   updatePost(
     """UpdatePost 데이터"""
     post: UpdatePostInput!
-  ): PostDto!
+  ): PostWithoutAuthor!
+
+  """post id로 post 삭제한다"""
   deletePost(
-    """DeletePost 데이터"""
-    post: DeletePostInput!
-  ): PostDto!
+    """Post Id"""
+    id: DeletePostInput!
+  ): PostWithoutAuthor!
 }
 
 input CreateUserInput {
+  """User 이름"""
   userName: String!
+
+  """User 이메일"""
   userEmail: String!
+
+  """User 비밀번호"""
   password: String!
+
+  """유저 권한"""
   role: Role!
 }
 
+"""유저 권한 타입"""
 enum Role {
+  """일반 유저"""
   USER
+
+  """관리자 유저"""
   ADMIN
 }
 
 input UpdateUserInput {
+  """User Id"""
   userId: String!
+
+  """User 이메일"""
   userEmail: String!
+
+  """User 이름"""
   userName: String!
+
+  """User 비밀번호"""
   password: String!
+
+  """유저 권한"""
   role: Role!
 }
 
 input CreatePostInput {
+  """Post 제목"""
   title: String!
+
+  """Post 내용"""
   content: String
+
+  """작성자의 User ID"""
   authorId: String!
 }
 
 input UpdatePostInput {
+  """Post Id"""
   id: String!
+
+  """Post 제목"""
   title: String!
+
+  """Post 내용"""
   content: String
 }
 
 input DeletePostInput {
+  """삭제할 Post id"""
   id: String!
 }

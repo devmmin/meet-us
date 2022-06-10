@@ -1,10 +1,9 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
-import { DeletePostInput } from '@post/models';
 import { PostRepository } from '@post/repository/post.repository';
 import { Post } from '@prisma/client';
 
 export class DeletePostCommand {
-  constructor(public readonly post: DeletePostInput) {}
+  constructor(public readonly id: string) {}
 }
 
 export class DeletePostResult {
@@ -17,8 +16,8 @@ export class DeletePostHandler
 {
   constructor(private postRepository: PostRepository) {}
   async execute(command: DeletePostCommand) {
-    const { post } = command;
-    const deletedPost = await this.postRepository.deletePost(post.id);
+    const { id } = command;
+    const deletedPost = await this.postRepository.deletePost(id);
     return new DeletePostResult(deletedPost);
   }
 }

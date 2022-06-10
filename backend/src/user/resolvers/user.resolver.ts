@@ -4,8 +4,8 @@ import { CreateUserCommand, UpdateUserCommand } from '@user/commands';
 import {
   CreateUserInput,
   UpdateUserInput,
-  UserDto,
-} from '@user/models/user.model';
+  User,
+} from '@user/models/user-api.model';
 import {
   GetUserByIdQuery,
   GetUserByIdQueryResult,
@@ -18,11 +18,13 @@ export class UserResolver {
     private readonly queryBus: QueryBus,
   ) {}
 
-  @Mutation(() => UserDto)
+  @Mutation(() => User, {
+    description: '신규 User를 생성한다',
+  })
   async createUser(
     @Args({
       name: 'user',
-      description: '유저 생성',
+      description: '신규 User 생성 Parameter',
       type: () => CreateUserInput,
     })
     user: CreateUserInput,
@@ -30,7 +32,9 @@ export class UserResolver {
     return await this.commandBus.execute(new CreateUserCommand(user));
   }
 
-  @Mutation(() => UserDto)
+  @Mutation(() => User, {
+    description: 'User 정보를 업데이트 한다.',
+  })
   async updateUser(
     @Args({
       name: 'user',
@@ -42,7 +46,9 @@ export class UserResolver {
     return await this.commandBus.execute(new UpdateUserCommand(user));
   }
 
-  @Query(() => UserDto)
+  @Query(() => User, {
+    description: 'User ID로 해당 유저에 대한 정보를 가져온다',
+  })
   async getUserById(@Args('id', { type: () => String }) id: string) {
     const { user } = await this.queryBus.execute<
       GetUserByIdQuery,
