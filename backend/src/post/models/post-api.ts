@@ -1,9 +1,9 @@
 import {
-  ObjectType,
   Field,
   InputType,
-  registerEnumType,
+  ObjectType,
   OmitType,
+  registerEnumType,
 } from '@nestjs/graphql';
 import { PostRepository } from '@post/repository/post.repository';
 import { Prisma } from '@prisma/client';
@@ -24,6 +24,8 @@ export class Post {
   title: string;
   @Field({ description: 'Post 내용' })
   content: string;
+  @Field({ description: 'Post 상태' })
+  status: PostStatus;
   @Field({ description: '작성자 User Id' })
   authorId: string;
   @Field(() => Author, { nullable: true, description: '작성자 정보' })
@@ -86,7 +88,7 @@ export type PostsWithAuthor = Prisma.PromiseReturnType<
 /* Paging Modal */
 
 @InputType()
-export class OffsetPagenation {
+export class OffsetPagination {
   @Field({ description: '조회시 지정된 Recode 만큼 패스할 갯수' })
   skip: number;
   @Field({ description: '가져올 데이터 갯수' })
@@ -122,3 +124,8 @@ registerEnumType(SortOrder, {
     },
   },
 });
+
+export enum PostStatus {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+}

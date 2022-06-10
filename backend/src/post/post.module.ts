@@ -8,7 +8,7 @@ import {
   DeletePostHandler,
   UpdatePostHandler,
 } from '@post/commands';
-import { GetPostsHandler, GetPostByIdHandler } from './queries';
+import { GetPostByIdHandler, GetPostsHandler } from './queries';
 
 export const CommandHandlers = [
   CreatePostHandler,

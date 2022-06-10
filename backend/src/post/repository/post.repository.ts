@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   CreatePostInput,
-  OffsetPagenation,
+  OffsetPagination,
   PostsOrder,
   UpdatePostInput,
 } from '@post/models';
@@ -44,6 +44,7 @@ export class PostRepository {
         id: true,
         title: true,
         content: true,
+        status: true,
         createdAt: true,
         updatedAt: true,
         authorId: true,
@@ -59,12 +60,12 @@ export class PostRepository {
   }
   /**
    *
-   * @param pagenation
+   * @param pagination
    * @param order
    * @returns
    */
-  async getPosts(pagenation: OffsetPagenation, order: PostsOrder) {
-    const { skip, take } = pagenation;
+  async getPosts(pagination: OffsetPagination, order: PostsOrder) {
+    const { skip, take } = pagination;
     const { createdAt } = order;
 
     const [list, totalCount] = await this.prismaService.$transaction([
@@ -76,6 +77,7 @@ export class PostRepository {
           id: true,
           title: true,
           content: true,
+          status: true,
           createdAt: true,
           updatedAt: true,
           authorId: true,

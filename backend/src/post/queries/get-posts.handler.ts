@@ -1,10 +1,10 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { OffsetPagenation, PostsOrder, PostsWithAuthor } from '@post/models';
+import { OffsetPagination, PostsOrder, PostsWithAuthor } from '@post/models';
 import { PostRepository } from '@post/repository/post.repository';
 
 export class GetPostsQuery {
   constructor(
-    public readonly pagenation: OffsetPagenation,
+    public readonly pagination: OffsetPagination,
     public readonly order?: PostsOrder,
   ) {}
 }
@@ -19,8 +19,8 @@ export class GetPostsHandler
 {
   constructor(private postRepository: PostRepository) {}
   async execute(query: GetPostsQuery) {
-    const { pagenation, order } = query;
-    const posts = await this.postRepository.getPosts(pagenation, order);
+    const { pagination, order } = query;
+    const posts = await this.postRepository.getPosts(pagination, order);
     return new GetPostsQueryResult(posts);
   }
 }

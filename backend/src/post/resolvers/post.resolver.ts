@@ -11,7 +11,7 @@ import {
 import {
   CreatePostInput,
   DeletePostInput,
-  OffsetPagenation,
+  OffsetPagination,
   Post,
   Posts,
   PostsOrder,
@@ -105,11 +105,11 @@ export class PostResolver {
   public async posts(
     @Args({
       name: 'pagination',
-      type: () => OffsetPagenation,
-      description: `Offset 기반 Pagenation Parameter 
+      type: () => OffsetPagination,
+      description: `Offset 기반 Pagination Parameter 
       [https://www.prisma.io/docs/concepts/components/prisma-client/pagination#offset-pagination]`,
     })
-    pagination: OffsetPagenation,
+    pagination: OffsetPagination,
     @Args({
       name: 'orderBy',
       nullable: true,

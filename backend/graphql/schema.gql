@@ -17,6 +17,9 @@ type Post {
   """Post 내용"""
   content: String!
 
+  """Post 상태"""
+  status: String!
+
   """작성자 User Id"""
   authorId: String!
 
@@ -44,6 +47,9 @@ type PostWithoutAuthor {
 
   """Post 내용"""
   content: String!
+
+  """Post 상태"""
+  status: String!
 
   """작성자 User Id"""
   authorId: String!
@@ -83,17 +89,17 @@ type Query {
   """Post 리스트를 가져온다"""
   posts(
     """
-    Offset 기반 Pagenation Parameter 
+    Offset 기반 Pagination Parameter 
           [https://www.prisma.io/docs/concepts/components/prisma-client/pagination#offset-pagination]
     """
-    pagination: OffsetPagenation!
+    pagination: OffsetPagination!
 
     """Order(정렬) Parameter(기본값-생성일자-desc)"""
     orderBy: PostsOrder = {}
   ): Posts!
 }
 
-input OffsetPagenation {
+input OffsetPagination {
   """조회시 지정된 Recode 만큼 패스할 갯수"""
   skip: Float!
 

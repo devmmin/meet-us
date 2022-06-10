@@ -1,4 +1,4 @@
-import { RefreahTokenJwt, LoginUser, LoginToken } from '@auth/models';
+import { LoginToken, LoginUser, RefreshTokenJwt } from '@auth/models';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
@@ -24,7 +24,7 @@ export class AuthRepository {
     });
   }
 
-  public vaildateAcessToken(token: string) {
+  public validateAccessToken(token: string) {
     return this.jwtService.verify(token, {
       secret: this.configService.get('ACCESS_TOKEN_SECRET'),
     });
@@ -36,9 +36,9 @@ export class AuthRepository {
     const refreshToken = this.createRefreshToken({ user_id: id });
     const accessToken = this.createAccessToken({ user_id: id });
 
-    const jwt: RefreahTokenJwt = this.jwtService.decode(refreshToken, {
+    const jwt: RefreshTokenJwt = this.jwtService.decode(refreshToken, {
       json: true,
-    }) as RefreahTokenJwt;
+    }) as RefreshTokenJwt;
     const expirationDate = jwt.exp * 1000;
 
     await this.prismaService.refreshToken.upsert({
@@ -64,7 +64,7 @@ export class AuthRepository {
 
   public refreshAccessToken(refreshToken: string) {
     try {
-      const jwt = this.jwtService.verify<RefreahTokenJwt>(refreshToken, {
+      const jwt = this.jwtService.verify<RefreshTokenJwt>(refreshToken, {
         secret: this.configService.get('REFRESH_TOKEN_SECRET'),
       });
       if (jwt) {
