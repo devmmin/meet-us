@@ -16,6 +16,7 @@ async function bootstrap() {
         /((?:http(s)?:\/\/)([\w.-])+)?(apollographql\.com)/,
         /localhost/,
         /((?:http(s)?:\/\/)([\w.-])+)?(byeonggi\.synology\.me)/,
+        'https://studio.apollographql.com',
       ],
     },
   });

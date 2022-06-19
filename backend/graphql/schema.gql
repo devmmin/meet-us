@@ -200,9 +200,6 @@ input CreatePostInput {
 
   """Post 내용"""
   content: String
-
-  """작성자의 User ID"""
-  authorId: String!
 }
 
 input UpdatePostInput {

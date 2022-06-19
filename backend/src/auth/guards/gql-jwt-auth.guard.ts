@@ -8,7 +8,6 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
-import { Request } from 'express';
 import {
   JsonWebTokenError,
   NotBeforeError,
@@ -17,13 +16,17 @@ import {
 import { from, map, Observable } from 'rxjs';
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate {
+export class GqlJwtAuthGuard implements CanActivate {
   constructor(private authService: AuthRepository) {}
 
   canActivate(context: ExecutionContext): Observable<boolean> {
-    const request: Request = context.switchToHttp().getRequest();
-    Logger.log('request.headers :', request);
-    const authorization = request?.headers?.authorization;
+    const gql = GqlExecutionContext.create(context);
+    const ctx = gql.getContext();
+    const headers = ctx.req?.headers;
+    const cookies = ctx.req.cookies;
+    Logger.log('Context cookies', cookies);
+    Logger.log('Context headers', headers);
+    const authorization = ctx.req?.headers?.authorization;
     if (!authorization) {
       throw new UnauthorizedException('The token is Empty');
     }
@@ -35,7 +38,7 @@ export class JwtAuthGuard implements CanActivate {
         if (!user) {
           throw new UnauthorizedException('Not Found User');
         }
-        request.user = user;
+        ctx.req.user = user;
         return !!user;
       }),
     );

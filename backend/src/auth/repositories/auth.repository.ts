@@ -1,5 +1,5 @@
 import { LoginToken, LoginUser, RefreshTokenJwt } from '@auth/models';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
@@ -13,7 +13,7 @@ export class AuthRepository {
     private jwtService: JwtService,
   ) {}
 
-  public async findUserByEmailAndPassword(user: LoginUser): Promise<User> {
+  public findUserByEmailAndPassword(user: LoginUser): Promise<User> {
     return this.prismaService.user.findFirst({
       where: {
         AND: {
@@ -72,7 +72,9 @@ export class AuthRepository {
         const accessToken = this.createAccessToken({ user_id });
         return { accessToken, expirationDate: Number(jwt.exp * 1000) };
       }
-    } catch (error) {}
+    } catch (error) {
+      Logger.error(error);
+    }
   }
 
   public createAccessToken(payload) {
@@ -88,6 +90,16 @@ export class AuthRepository {
       subject: 'refresh-token',
       secret: this.configService.get('REFRESH_TOKEN_SECRET'),
       expiresIn: this.configService.get('JWT_REFRESH_TOKEN_EXPIRATION_TIME'),
+    });
+  }
+
+  public getCurrentUser(userId: string) {
+    return this.prismaService.user.findFirst({
+      where: {
+        AND: {
+          id: userId,
+        },
+      },
     });
   }
 }
