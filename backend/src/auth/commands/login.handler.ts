@@ -1,5 +1,5 @@
 import { AuthRepository } from '@auth/repositories/auth.repository';
-import { UnauthorizedException } from '@nestjs/common';
+import { Logger, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { User } from '@prisma/client';
 
@@ -27,6 +27,7 @@ export class LoginHandler
       userEmail,
       userPassword,
     });
+    Logger.log(user);
 
     if (!user) {
       throw new UnauthorizedException('해당 정보로 로그인이 실패했습니다.');

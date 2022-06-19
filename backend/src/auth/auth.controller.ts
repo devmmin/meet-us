@@ -10,11 +10,13 @@ import {
   RefreshTokenInput,
   RefreshTokenResponse,
 } from '@auth/models';
-import { Body, Controller, Logger, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandBus } from '@nestjs/cqrs';
 import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from '@prisma/client';
 import { Request, Response } from 'express';
+import { AuthRole, AuthUser } from './utils';
 
 @ApiTags('Authority')
 @Controller('v1/auth')
@@ -90,5 +92,12 @@ export class AuthController {
       path: '/',
     });
     res.status(200).send({ accessToken });
+  }
+
+  @AuthRole(['ADMIN'])
+  @Get('user')
+  currentUserTest(@AuthUser() currentUser: User) {
+    Logger.log('currentUser', currentUser);
+    return 'hello';
   }
 }

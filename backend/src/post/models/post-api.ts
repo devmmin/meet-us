@@ -43,7 +43,6 @@ export class CreatePostInput {
   title: string;
   @Field({ nullable: true, description: 'Post 내용' })
   content: string;
-  @Field({ description: '작성자의 User ID' })
   authorId: string;
 }
 

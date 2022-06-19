@@ -38,14 +38,15 @@ export class PrismaService
   }
   onApplicationBootstrap() {
     this.$on('query' as any, (e: Prisma.QueryEvent) => {
-      Logger.log('---- SQL >>> ');
+      Logger.log('---- SQL >>> ', e.params);
       const query = format(e.query, {
         indentStyle: 'tabularRight',
         language: 'mariadb',
         useTabs: true,
-        params: eval(e.params),
       });
+
       Logger.log(`\n ${e.timestamp}\n` + query);
+      Logger.log(`\n Parameter` + e.params);
     });
   }
 

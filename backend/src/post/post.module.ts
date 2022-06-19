@@ -9,6 +9,7 @@ import {
   UpdatePostHandler,
 } from '@post/commands';
 import { GetPostByIdHandler, GetPostsHandler } from './queries';
+import { AuthModule } from '@auth/auth.module';
 
 export const CommandHandlers = [
   CreatePostHandler,
@@ -17,7 +18,7 @@ export const CommandHandlers = [
 ];
 export const QueryHandlers = [GetPostsHandler, GetPostByIdHandler];
 @Module({
-  imports: [PrismaModule, CqrsModule],
+  imports: [PrismaModule, CqrsModule, AuthModule],
   providers: [
     PostResolver,
     PostRepository,
