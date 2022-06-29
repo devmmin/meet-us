@@ -47,7 +47,7 @@ model RefreshToken {
 model Post {
   id        String     @id @default(uuid())
   title     String     @db.VarChar(100)
-  content   String     @db.Text
+  content   String?    @db.Text
   status    PostStatus @default(DRAFT)
   authorId  String     @map("author_id")
   author    User       @relation(fields: [authorId], references: [id])
@@ -60,7 +60,7 @@ model Post {
 model Board {
   id        String      @id @default(uuid())
   title     String      @db.VarChar(100)
-  content   String      @db.Text
+  content   String?     @db.Text
   status    BoardStatus @default(DRAFT)
   authorId  String      @map("author_id")
   author    User        @relation(fields: [authorId], references: [id])

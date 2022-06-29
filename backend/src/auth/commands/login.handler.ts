@@ -1,3 +1,4 @@
+import { Unauthorized } from '@auth/constants/error-code.constant';
 import { AuthRepository } from '@auth/repositories/auth.repository';
 import { Logger, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -30,7 +31,10 @@ export class LoginHandler
     Logger.log(user);
 
     if (!user) {
-      throw new UnauthorizedException('해당 정보로 로그인이 실패했습니다.');
+      throw new UnauthorizedException({
+        code: Unauthorized.FailLogin,
+        error: new Error('해당 정보로 로그인이 실패했습니다.'),
+      });
     }
     const { accessToken, refreshToken, expirationDate } =
       await this.authService.createToken(user);

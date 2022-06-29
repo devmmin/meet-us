@@ -1,4 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { JwtErrorCode } from '@auth/constants/error-code.constant';
+import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
 export class LoginInput {
   @ApiProperty({
@@ -57,4 +58,44 @@ export class RefreshTokenResponse {
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
   })
   accessToken: string;
+}
+
+export class JsonWebTokenError extends Error {
+  @ApiProperty({ type: Error })
+  inner: Error;
+}
+
+export class TokenExpiredError extends JsonWebTokenError {
+  @ApiProperty({ type: Date })
+  expiredAt: Date;
+}
+
+/**
+ * Thrown if current time is before the nbf claim.
+ */
+export class NotBeforeError extends JsonWebTokenError {
+  @ApiProperty({ type: Date })
+  date: Date;
+}
+
+@ApiExtraModels(JsonWebTokenError, TokenExpiredError, NotBeforeError)
+export class RefreshTokenErrorResponse {
+  @ApiProperty({
+    type: Number,
+    enum: [
+      JwtErrorCode.TokenInvalid,
+      JwtErrorCode.TokenExpired,
+      JwtErrorCode.NotBefore,
+    ],
+    description: `TokenExpired(만료) = 4000,TokenInvalid(유효하지않은 토큰) = 4001,NotBefore(유효하지않은 토큰)= 4002`,
+  })
+  code: number;
+  @ApiProperty({
+    oneOf: [
+      { $ref: getSchemaPath(JsonWebTokenError) },
+      { $ref: getSchemaPath(TokenExpiredError) },
+      { $ref: getSchemaPath(NotBeforeError) },
+    ],
+  })
+  error: JsonWebTokenError | TokenExpiredError | NotBeforeError;
 }

@@ -7,16 +7,23 @@ import {
 import {
   LoginInput,
   LoginResponse,
+  RefreshTokenErrorResponse,
   RefreshTokenInput,
   RefreshTokenResponse,
 } from '@auth/models';
 import { Body, Controller, Get, Logger, Post, Req, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandBus } from '@nestjs/cqrs';
-import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import {
+  ApiBadRequestResponse,
+  ApiBody,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { AuthRole, AuthUser } from './utils';
+import { OAuth2Pricipal } from './security/security-context';
+import { AuthRole, OAuth2User } from './utils';
 
 @ApiTags('Authority')
 @Controller('v1/auth')
@@ -66,7 +73,8 @@ export class AuthController {
   }
 
   @ApiBody({ type: RefreshTokenInput })
-  @ApiResponse({ type: RefreshTokenResponse })
+  @ApiOkResponse({ type: RefreshTokenResponse })
+  @ApiBadRequestResponse({ type: RefreshTokenErrorResponse })
   @Post('refresh')
   async refresh(
     @Body() refreshTokenInput: RefreshTokenInput,
@@ -94,10 +102,10 @@ export class AuthController {
     res.status(200).send({ accessToken });
   }
 
-  @AuthRole(['ADMIN'])
+  @AuthRole(['ADMIN', 'USER'])
   @Get('user')
-  currentUserTest(@AuthUser() currentUser: User) {
-    Logger.log('currentUser', currentUser);
+  currentUserTest(@OAuth2User() currentUser: OAuth2Pricipal) {
+    Logger.log(currentUser.userEmail, 'currentUser');
     return 'hello';
   }
 }
