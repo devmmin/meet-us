@@ -1,4 +1,7 @@
-import { JwtErrorCode } from '@auth/constants/error-code.constant';
+import {
+  JwtErrorCode,
+  Unauthorized,
+} from '@auth/constants/error-code.constant';
 import { ApiExtraModels, ApiProperty, getSchemaPath } from '@nestjs/swagger';
 
 export class LoginInput {
@@ -25,6 +28,28 @@ export class LoginResponse {
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9',
   })
   refreshToken: string;
+}
+
+export class LoginFailError {
+  @ApiProperty({ type: String, default: 'LoginFailError' })
+  public name = 'LoginFailError';
+  @ApiProperty({ type: String, default: '해당 정보로 로그인이 실패했습니다.' })
+  public message = '해당 정보로 로그인이 실패했습니다.';
+  constructor(message: string) {
+    this.message = message;
+    // this.message = message;
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, LoginFailError);
+    }
+    Object.setPrototypeOf(this, LoginFailError.prototype);
+  }
+}
+
+export class LoginErrorResponse {
+  @ApiProperty({ type: Number, default: 5000 })
+  code: Unauthorized.FailLogin;
+  @ApiProperty()
+  error: LoginFailError;
 }
 
 export interface LoginUser {

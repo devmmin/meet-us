@@ -78,7 +78,8 @@ export class AuthRepository {
         return { accessToken, expirationDate: Number(jwt.exp * 1000) };
       }
     } catch (error) {
-      Logger.error(error);
+      // Logger.error(error);
+      Logger.log(error, 'LOG');
       if (error instanceof TokenExpiredError) {
         throw new BadRequestException({
           code: JwtErrorCode.TokenExpired,

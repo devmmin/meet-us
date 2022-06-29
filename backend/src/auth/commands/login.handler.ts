@@ -1,4 +1,5 @@
 import { Unauthorized } from '@auth/constants/error-code.constant';
+import { LoginFailError } from '@auth/models';
 import { AuthRepository } from '@auth/repositories/auth.repository';
 import { Logger, UnauthorizedException } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
@@ -33,7 +34,7 @@ export class LoginHandler
     if (!user) {
       throw new UnauthorizedException({
         code: Unauthorized.FailLogin,
-        error: new Error('해당 정보로 로그인이 실패했습니다.'),
+        error: new LoginFailError('해당 정보로 로그인이 실패했습니다.'),
       });
     }
     const { accessToken, refreshToken, expirationDate } =
