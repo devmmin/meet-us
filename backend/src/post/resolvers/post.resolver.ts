@@ -1,5 +1,6 @@
 import { GqlJwtAuthGuard } from '@auth/guards/gql-jwt-auth.guard';
-import { AuthUserForGql } from '@auth/utils';
+import { OAuth2Pricipal } from '@auth/security/security-context';
+import { OAuth2UserForGql } from '@auth/utils';
 import { UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
@@ -26,7 +27,6 @@ import {
   GetPostByIdQuery,
   GetPostByIdQueryResult,
 } from '@post/queries/get-post-by-id.handler';
-import { User } from '@prisma/client';
 
 @UseGuards(GqlJwtAuthGuard)
 @Resolver()
@@ -43,9 +43,9 @@ export class PostResolver {
       type: () => CreatePostInput,
     })
     createPostInput: CreatePostInput,
-    @AuthUserForGql() user: User,
+    @OAuth2UserForGql() user: OAuth2Pricipal,
   ) {
-    createPostInput.authorId = user.id;
+    createPostInput.authorId = user.userId;
 
     const { post } = await this.commandBus.execute<
       CreatePostCommand,

@@ -1,3 +1,4 @@
+import { GqlJwtAuthGuard } from '@auth/guards/gql-jwt-auth.guard';
 import { JwtAuthGuard } from '@auth/guards/jwt-auth.guard';
 import { RoleGuard } from '@auth/guards/role.guard';
 import {
@@ -8,22 +9,26 @@ import {
   SetMetadata,
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
+import { Role } from '@prisma/client';
 import { Request } from 'express';
 
-export const AuthUser = createParamDecorator((_, ctx: ExecutionContext) => {
+export const OAuth2User = createParamDecorator((_, ctx: ExecutionContext) => {
   const req: Request = ctx.switchToHttp().getRequest();
-  return req?.user;
+  return req?.securityContext?.principal;
 });
 
-export const AuthRole = (roles: string[]) =>
+export const AuthRole = (roles: Role[]) =>
   applyDecorators(
     SetMetadata('roles', roles),
     UseGuards(JwtAuthGuard, RoleGuard),
   );
 
-export const AuthUserForGql = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
+export const OAuth2UserForGql = createParamDecorator(
+  (_, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req?.user;
+    return ctx.getContext().req?.securityContext;
   },
 );
+
+export const AuthRoleForGql = (roles: Role[]) =>
+  applyDecorators(SetMetadata('roles', roles), UseGuards(GqlJwtAuthGuard));

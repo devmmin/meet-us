@@ -18,8 +18,10 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "typeRoots": [
-      "node_modules/@types"
+      "node_modules/@types",
+      "src/@types"
     ],
+    "types": [],
     "paths": {
       "@core/*": [
         "src/core/*"

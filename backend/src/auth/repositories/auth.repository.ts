@@ -1,10 +1,15 @@
+import { JwtErrorCode } from '@auth/constants/error-code.constant';
 import { LoginToken, LoginUser, RefreshTokenJwt } from '@auth/models';
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
 import { PrismaService } from '@prisma/prisma.service';
-
+import {
+  JsonWebTokenError,
+  NotBeforeError,
+  TokenExpiredError,
+} from 'jsonwebtoken';
 @Injectable()
 export class AuthRepository {
   constructor(
@@ -73,7 +78,24 @@ export class AuthRepository {
         return { accessToken, expirationDate: Number(jwt.exp * 1000) };
       }
     } catch (error) {
-      Logger.error(error);
+      // Logger.error(error);
+      Logger.log(error, 'LOG');
+      if (error instanceof TokenExpiredError) {
+        throw new BadRequestException({
+          code: JwtErrorCode.TokenExpired,
+          error,
+        });
+      } else if (error instanceof JsonWebTokenError) {
+        throw new BadRequestException({
+          code: JwtErrorCode.TokenInvalid,
+          error,
+        });
+      } else if (error instanceof NotBeforeError) {
+        throw new BadRequestException({
+          code: JwtErrorCode.NotBefore,
+          error,
+        });
+      }
     }
   }
 
@@ -99,6 +121,9 @@ export class AuthRepository {
         AND: {
           id: userId,
         },
+      },
+      include: {
+        token: true,
       },
     });
   }
