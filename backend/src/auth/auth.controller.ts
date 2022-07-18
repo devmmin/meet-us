@@ -70,7 +70,7 @@ export class AuthController {
           ? this.LOCALHOST
           : this.configService.get('SERVER_DOMAIN'),
         maxAge: expirationDate,
-        sameSite: 'lax',
+        sameSite: isReqLocalHost ? 'none' : 'lax',
         path: '/',
       });
       res.cookie('refresh-token', refreshToken, {
@@ -80,7 +80,7 @@ export class AuthController {
           ? this.LOCALHOST
           : this.configService.get('SERVER_DOMAIN'),
         maxAge: expirationDate,
-        sameSite: 'lax',
+        sameSite: isReqLocalHost ? 'none' : 'lax',
         path: '/',
       });
       res.status(200).send({ accessToken, refreshToken });
