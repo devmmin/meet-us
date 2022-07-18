@@ -12,6 +12,7 @@ async function bootstrap() {
       credentials: true,
       optionsSuccessStatus: 200,
       origin: [
+        'http://localhost:3000',
         'self',
         /((?:http(s)?:\/\/)([\w.-])+)?(apollographql\.com)/,
         /localhost/,
