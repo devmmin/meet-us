@@ -61,7 +61,7 @@ export class AuthController {
     >(new LoginCommand(userEmail, userPassword));
     Logger.log(loginResult, 'loginResult');
     if (loginResult) {
-      const isReqLocalHost = req?.headers?.host?.includes('localhost');
+      const isReqLocalHost = req?.headers?.origin?.includes('localhost');
       const { accessToken, refreshToken, expirationDate } = loginResult;
       res.cookie('access-token', accessToken, {
         secure: true,
@@ -114,7 +114,7 @@ export class AuthController {
       RefreshAccessTokenResult
     >(new RefreshAccessTokenCommand(refreshToken));
     if (refreshToken) {
-      const isReqLocalHost = req?.headers?.host?.includes('localhost');
+      const isReqLocalHost = req?.headers?.origin?.includes('localhost');
       res.cookie('access-token', refreshToken, {
         secure: true,
         httpOnly: true,
