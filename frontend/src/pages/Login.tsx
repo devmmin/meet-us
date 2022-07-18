@@ -9,20 +9,24 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useState, ChangeEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { postLogin } from '../util';
 
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({ id: '', password: '' });
   const toast = useToast();
-  const loginHandler = () => {
-    const response = postLogin();
-    if (response.code !== 0) {
+  const navigate = useNavigate();
+  const loginHandler = async () => {
+    const response = await postLogin(loginInfo);
+    if (response && response.statusCode !== 200) {
       toast({
-        description: 'ID 또는 비밀번호가 맞지 않습니다. 다시 입력해주세요.',
+        description: response.message,
         status: 'error',
         duration: 9000,
         isClosable: true,
       });
+    } else {
+      navigate('/admin/main');
     }
   };
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
