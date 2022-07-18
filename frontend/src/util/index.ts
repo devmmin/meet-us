@@ -1,5 +1,6 @@
 // TODO: mocking
 // TODO: API 통신 시 UI loading, disabled, skeleton ... 처리 필요
+import axiosInstance from '../axiosConfig';
 import { ListItem } from '../types';
 
 const header = [
@@ -142,11 +143,34 @@ export const deletePost = () => ({
   data: null,
 });
 
-export const postLogin = () => ({
-  code: 1,
-  message: 'ID 또는 비밀번호가 맞지 않습니다. 다시 입력해주세요.',
-  data: null,
-});
+export const postLogin = async (loginInfo: { id: string, password: string }) => {
+  const response = await axiosInstance.post('/v1/auth/login', {
+    userEmail: loginInfo.id,
+    userPassword: loginInfo.password
+  });
+
+  if (response.status === 200) {
+    localStorage.setItem('accessToken', response.data.accessToken);
+    localStorage.setItem('refreshToken', response.data.refreshToken);
+    response.data.statusCode = response.status;
+  }
+
+  return response.data;
+};
+
+export const postRefreshToken = async () => {
+  const response = await axiosInstance.post('/v1/auth/refresh', {
+    refreshToken: localStorage.getItem('refreshToken')
+  });
+
+  if (response.status === 200) {
+    localStorage.setItem('accessToken', response.data.accessToken);
+    localStorage.setItem('refreshToken', response.data.refreshToken);
+    response.data.statusCode = response.status;
+  }
+
+  return response.data;
+};
 
 export const getHeader = () => ({
   code: 0,

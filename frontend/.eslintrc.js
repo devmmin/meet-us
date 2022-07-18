@@ -65,6 +65,7 @@ module.exports = {
       "BinaryExpression[operator='in']",
     ],
     'no-console': ['warn', { allow: ['warn', 'error', 'debug'] }],
+    'no-param-reassign': 'off',
   },
   settings: {
     'import/resolver': {
