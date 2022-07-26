@@ -7,8 +7,8 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-} from '@chakra-ui/react';
-import { MouseEventHandler, ReactNode } from 'react';
+} from "@chakra-ui/react";
+import { MouseEventHandler, ReactNode } from "react";
 
 interface Props {
   children: ReactNode;

@@ -1,8 +1,8 @@
-import { useEffect } from 'react';
-import { useResetRecoilState } from 'recoil';
-import ListLayout from '../layouts/Admin/ListLayout';
-import { pageInfoState } from '../recoil';
-import { getHeader } from '../util';
+import { useEffect } from "react";
+import { useResetRecoilState } from "recoil";
+import ListLayout from "../layouts/Admin/ListLayout";
+import { pageInfoState } from "../recoil";
+import { getHeader } from "../util";
 
 const UserManagement = () => {
   const resetPageInfo = useResetRecoilState(pageInfoState);

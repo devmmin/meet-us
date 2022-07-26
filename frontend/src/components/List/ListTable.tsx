@@ -15,14 +15,14 @@ import {
   MenuList,
   MenuItem,
   IconButton,
-} from '@chakra-ui/react';
-import { ChangeEvent } from 'react';
-import { useRecoilState } from 'recoil';
-import { MdMoreHoriz } from 'react-icons/md';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { checkedListState } from '../../recoil';
-import { ListItem } from '../../types';
-import ListFooter from './ListFooter';
+} from "@chakra-ui/react";
+import { ChangeEvent } from "react";
+import { useRecoilState } from "recoil";
+import { MdMoreHoriz } from "react-icons/md";
+import { useNavigate, useLocation } from "react-router-dom";
+import { checkedListState } from "../../recoil";
+import { ListItem } from "../../types";
+import ListFooter from "./ListFooter";
 
 interface Props {
   list: ListItem[];
@@ -50,7 +50,7 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
         <Thead bg="gray.200">
           <Tr>
             {tableHeader.map((h) => {
-              if (h === 'CHECKBOX') {
+              if (h === "CHECKBOX") {
                 return (
                   <Th key={h}>
                     <Checkbox
@@ -62,7 +62,7 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
                     />
                   </Th>
                 );
-              } else if (h === 'MORE') {
+              } else if (h === "MORE") {
                 return <Th key={h} />;
               }
               return <Th key={h}>{h}</Th>;
@@ -91,9 +91,9 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
               <Td>
                 <Badge
                   variant="solid"
-                  colorScheme={item.status === 'COMPLETED' ? 'green' : 'gray'}
+                  colorScheme={item.status === "COMPLETED" ? "green" : "gray"}
                 >
-                  {item.status === 'COMPLETED'
+                  {item.status === "COMPLETED"
                     ? `${buttonTitle} 발행`
                     : `${buttonTitle} 발행전`}
                 </Badge>
@@ -112,12 +112,12 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
                     icon={<MdMoreHoriz />}
                     bg="white"
                   />
-                  {item.status === 'REQUEST' && (
+                  {item.status === "REQUEST" && (
                     <MenuList minWidth="125px" p="2px">
                       <MenuItem h="25px">{buttonTitle} 발행 취소</MenuItem>
                     </MenuList>
                   )}
-                  {item.status !== 'REQUEST' && (
+                  {item.status !== "REQUEST" && (
                     <MenuList minWidth="125px" p="2px">
                       <MenuItem h="25px">{buttonTitle} 발행</MenuItem>
                       <MenuItem h="25px">{buttonTitle} 수정</MenuItem>
@@ -136,7 +136,7 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
 };
 
 ListTable.defaultProps = {
-  buttonTitle: '',
+  buttonTitle: "",
 };
 
 export default ListTable;

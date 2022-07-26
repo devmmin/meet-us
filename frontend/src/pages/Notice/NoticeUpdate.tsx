@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import { useParams, useNavigate } from 'react-router-dom';
-import UpdateLayout from '../../layouts/Admin/UpdateLayout';
-import { getNoticeItem } from '../../util';
-import { noticeItemState } from '../../recoil';
+import { useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { useParams, useNavigate } from "react-router-dom";
+import UpdateLayout from "../../layouts/Admin/UpdateLayout";
+import { getNoticeItem } from "../../util";
+import { noticeItemState } from "../../recoil";
 
 const NoticeUpdate = () => {
   const params = useParams();

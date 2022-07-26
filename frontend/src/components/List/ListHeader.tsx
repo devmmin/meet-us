@@ -1,6 +1,6 @@
-import { Heading, Button, Flex } from '@chakra-ui/react';
-import { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Heading, Button, Flex } from "@chakra-ui/react";
+import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 interface Props {
   children: ReactNode;
@@ -16,7 +16,7 @@ const ListHeader = ({
   isToggle,
   buttonTitle,
   onOpen,
-  toPath = '',
+  toPath = "",
 }: Props) => (
   <>
     <Flex h="70px">
@@ -25,7 +25,7 @@ const ListHeader = ({
     <Flex h="50px" alignItems="center" justifyContent="flex-end">
       {children}
       <Button
-        bg={isToggle ? 'red.500' : 'blue.600'}
+        bg={isToggle ? "red.500" : "blue.600"}
         color="white"
         size="sm"
         disabled={!buttonTitle}
@@ -42,8 +42,8 @@ const ListHeader = ({
 );
 
 ListHeader.defaultProps = {
-  buttonTitle: '',
-  toPath: '',
+  buttonTitle: "",
+  toPath: "",
 };
 
 export default ListHeader;
