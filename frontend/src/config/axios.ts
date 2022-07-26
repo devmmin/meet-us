@@ -1,5 +1,5 @@
 import axios from "axios";
-import { postRefreshToken } from "../util";
+import { postRefreshToken, logout } from "../util";
 import ERROR from "./error";
 
 const instance = axios.create({
@@ -33,10 +33,10 @@ instance.interceptors.response.use(
       if (localStorage.getItem("refresh-token")) {
         postRefreshToken(error.response.config);
       } else {
-        window.location.href = "/admin/login";
+        logout();
       }
     } else if (error.response.data.code === ERROR.INVALID_TOKEN) {
-      window.location.href = "/admin/login?loginRequire=1";
+      logout("loginRequire=1");
     }
     return error.response;
   }

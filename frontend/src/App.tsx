@@ -1,5 +1,5 @@
-import { Box, Flex } from "@chakra-ui/react";
-import { useRoutes } from "react-router-dom";
+import { Flex } from "@chakra-ui/react";
+import { Navigate, useRoutes } from "react-router-dom";
 import Login from "./pages/Login";
 import AdminLayout from "./layouts/AdminLayout";
 import Blog from "./pages/Blog";
@@ -10,6 +10,14 @@ import Setting from "./pages/Setting";
 import PostUpdate from "./pages/Blog/BlogUpdate";
 import NoticeUpdate from "./pages/Notice/NoticeUpdate";
 import Auth from "./components/Auth";
+
+/* eslint-disable no-undef */
+const LoginCheck = ({ children }: { children: JSX.Element }) => {
+  if (localStorage.getItem("access-token")) {
+    return <Navigate to="/admin/main" replace />;
+  }
+  return children;
+};
 
 const App = () => {
   const routes = [
@@ -117,17 +125,24 @@ const App = () => {
             </Auth>
           ),
         },
-        {
-          path: "*",
-          element: (
-            <Box p="50px" bg="gray.50" minH="100%">
-              404 Not Found
-            </Box>
-          ),
-        },
       ],
     },
-    { path: "/admin/login", element: <Login /> },
+    {
+      path: "/admin/login",
+      element: (
+        <LoginCheck>
+          <Login />
+        </LoginCheck>
+      ),
+    },
+    {
+      path: "*",
+      element: localStorage.getItem("access-token") ? (
+        <Navigate to="/admin/main" replace />
+      ) : (
+        <Navigate to="/admin/login" replace />
+      ),
+    },
   ];
   return <Flex className="App">{useRoutes(routes)}</Flex>;
 };
