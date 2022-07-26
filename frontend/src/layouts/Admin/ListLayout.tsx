@@ -1,11 +1,11 @@
-import { Box, useDisclosure, Text, useToast } from '@chakra-ui/react';
-import { useRecoilValue } from 'recoil';
-import ConfirmModal from '../../components/Modal/confirmModal';
-import ListHeader from '../../components/List/ListHeader';
-import ListTable from '../../components/List/ListTable';
-import { checkedListState } from '../../recoil';
-import { ListItem } from '../../types/index';
-import { deletePost } from '../../util';
+import { Box, useDisclosure, Text, useToast } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
+import ConfirmModal from "../../components/Modal/confirmModal";
+import ListHeader from "../../components/List/ListHeader";
+import ListTable from "../../components/List/ListTable";
+import { checkedListState } from "../../recoil";
+import { ListItem } from "../../types/index";
+import { deletePost } from "../../util";
 
 interface Props {
   title: string;
@@ -20,7 +20,7 @@ const ListLayout = ({
   buttonTitle,
   list = [],
   tableHeader = [],
-  toPath = '',
+  toPath = "",
 }: Props) => {
   const checkedList = useRecoilValue(checkedListState);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -28,8 +28,8 @@ const ListLayout = ({
   const modalClickHandler = () => {
     const response = deletePost();
     toast({
-      description: `삭제를 ${response.code === 0 ? '완료' : '실패'}했습니다.`,
-      status: response.code === 0 ? 'success' : 'error',
+      description: `삭제를 ${response.code === 0 ? "완료" : "실패"}했습니다.`,
+      status: response.code === 0 ? "success" : "error",
       duration: 9000,
       isClosable: true,
     });
@@ -69,8 +69,8 @@ const ListLayout = ({
 
 ListLayout.defaultProps = {
   list: [],
-  buttonTitle: '',
-  toPath: '',
+  buttonTitle: "",
+  toPath: "",
 };
 
 export default ListLayout;

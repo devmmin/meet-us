@@ -14,7 +14,21 @@ interface Page {
   totalPage: number;
 }
 
+interface UserInfo {
+  id: string;
+  password: string;
+  nickName: string;
+}
+
+interface NavLinkItem {
+  name: string;
+  to: string;
+  icon: string;
+}
+
 export type {
   ListItem,
-  Page
+  Page,
+  UserInfo,
+  NavLinkItem
 };

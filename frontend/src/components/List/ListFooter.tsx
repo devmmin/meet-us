@@ -1,9 +1,9 @@
-import { Flex, Box, Select, IconButton } from '@chakra-ui/react';
-import { ChangeEvent, MouseEvent } from 'react';
-import { MdChevronLeft, MdChevronRight } from 'react-icons/md';
-import { useRecoilState } from 'recoil';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { pageInfoState } from '../../recoil';
+import { Flex, Box, Select, IconButton } from "@chakra-ui/react";
+import { ChangeEvent, MouseEvent } from "react";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { useRecoilState } from "recoil";
+import { useNavigate, useLocation } from "react-router-dom";
+import { pageInfoState } from "../../recoil";
 
 const offsetList = [5, 10, 15, 20, 30];
 
@@ -27,22 +27,22 @@ const ListFooter = () => {
     type: string,
     button: string
   ) => {
-    if (type === 'page') {
+    if (type === "page") {
       if (
-        (button === 'left' && pageInfo.page <= 1) ||
-        (button === 'right' && pageInfo.page >= pageInfo.totalPage)
+        (button === "left" && pageInfo.page <= 1) ||
+        (button === "right" && pageInfo.page >= pageInfo.totalPage)
       ) {
         return;
       }
       setPageInfo((prev) => {
-        const page = button === 'left' ? prev[type] - 1 : prev[type] + 1;
+        const page = button === "left" ? prev[type] - 1 : prev[type] + 1;
         navigate(`../${location.pathname}?page=${page}&offset=${prev.offset}`);
         return {
           ...prev,
           [type]: page,
         };
       });
-    } else if (type === 'offset') {
+    } else if (type === "offset") {
       const { value } = e.target as HTMLSelectElement;
       setPageInfo((prev) => {
         navigate(`../${location.pathname}?page=${1}&offset=${value}`);
@@ -72,7 +72,7 @@ const ListFooter = () => {
             borderRadius="6px"
             value={pageInfo.offset}
             onChange={(e) => {
-              paginationHandler(e, 'offset', '');
+              paginationHandler(e, "offset", "");
             }}
           >
             {offsetList.map((v) => (
@@ -90,7 +90,7 @@ const ListFooter = () => {
           size="sm"
           ml="24px"
           onClick={(e) => {
-            paginationHandler(e, 'page', 'left');
+            paginationHandler(e, "page", "left");
           }}
           icon={<MdChevronLeft />}
           aria-label="left"
@@ -101,7 +101,7 @@ const ListFooter = () => {
           size="sm"
           ml="8px"
           onClick={(e) => {
-            paginationHandler(e, 'page', 'right');
+            paginationHandler(e, "page", "right");
           }}
           icon={<MdChevronRight />}
           aria-label="right"

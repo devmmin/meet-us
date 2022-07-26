@@ -5,21 +5,21 @@ import {
   Input,
   useToast,
   useDisclosure,
-} from '@chakra-ui/react';
-import { MdChevronLeft } from 'react-icons/md';
-import { Link, useParams } from 'react-router-dom';
-import '@toast-ui/editor/dist/toastui-editor.css';
-import { Editor } from '@toast-ui/react-editor';
+} from "@chakra-ui/react";
+import { MdChevronLeft } from "react-icons/md";
+import { Link, useParams } from "react-router-dom";
+import "@toast-ui/editor/dist/toastui-editor.css";
+import { Editor } from "@toast-ui/react-editor";
 import {
   ChangeEvent,
   useRef,
   MutableRefObject,
   MouseEvent,
   useEffect,
-} from 'react';
-import { EditorType } from '@toast-ui/editor';
-import { postUpdate, deletePost } from '../../util';
-import ConfirmModal from '../../components/Modal/confirmModal';
+} from "react";
+import { EditorType } from "@toast-ui/editor";
+import { postUpdate, deletePost } from "../../util";
+import ConfirmModal from "../../components/Modal/confirmModal";
 
 interface Props {
   title: string;
@@ -42,7 +42,7 @@ const UpdateLayout = ({
   title,
   buttonTitle,
   toPath,
-  item: { subject = '', content = '', status = '' },
+  item: { subject = "", content = "", status = "" },
   updateItem,
 }: Props) => {
   const params = useParams();
@@ -55,8 +55,8 @@ const UpdateLayout = ({
   const modalClickHandler = () => {
     const response = deletePost();
     toast({
-      description: `삭제를 ${response.code === 0 ? '완료' : '실패'}했습니다.`,
-      status: response.code === 0 ? 'success' : 'error',
+      description: `삭제를 ${response.code === 0 ? "완료" : "실패"}했습니다.`,
+      status: response.code === 0 ? "success" : "error",
       duration: 9000,
       isClosable: true,
     });
@@ -84,17 +84,17 @@ const UpdateLayout = ({
     updateItem((prev: EditItem) => ({
       ...prev,
       content:
-        eventType === 'markdown'
+        eventType === "markdown"
           ? editorRef.current.getInstance().getMarkdown()
           : editorRef.current.getInstance().getHTML(),
     }));
   };
 
   const clickHandler = (event: MouseEvent<HTMLButtonElement>, type: string) => {
-    if (subject.trim() === '' || content.trim() === '') {
+    if (subject.trim() === "" || content.trim() === "") {
       toast({
-        description: '입력된 값을 확인해주세요.',
-        status: 'error',
+        description: "입력된 값을 확인해주세요.",
+        status: "error",
         duration: 9000,
         isClosable: true,
       });
@@ -102,10 +102,10 @@ const UpdateLayout = ({
     }
     const response = postUpdate();
     toast({
-      description: `${type === 'save' ? '저장' : '발행'}을 ${
-        response.code === 0 ? '완료' : '실패'
+      description: `${type === "save" ? "저장" : "발행"}을 ${
+        response.code === 0 ? "완료" : "실패"
       }했습니다.`,
-      status: response.code === 0 ? 'success' : 'error',
+      status: response.code === 0 ? "success" : "error",
       duration: 9000,
       isClosable: true,
     });
@@ -128,43 +128,43 @@ const UpdateLayout = ({
           </Button>
         </Link>
         <Box>
-          {id && status !== 'COMPLETED' && (
+          {id && status !== "COMPLETED" && (
             <Button colorScheme="red" size="sm" onClick={onOpen}>
               {buttonTitle} 삭제
             </Button>
           )}
-          {status !== 'COMPLETED' && (
+          {status !== "COMPLETED" && (
             <Button
               variant="outline"
               bg="white"
               size="sm"
-              ml={id ? '10px' : '0px'}
+              ml={id ? "10px" : "0px"}
               onClick={(event) => {
-                clickHandler(event, 'save');
+                clickHandler(event, "save");
               }}
             >
-              {buttonTitle} {id ? '수정' : '저장'}
+              {buttonTitle} {id ? "수정" : "저장"}
             </Button>
           )}
-          {status !== 'COMPLETED' && (
+          {status !== "COMPLETED" && (
             <Button
               colorScheme="green"
               size="sm"
               ml="10px"
               onClick={(event) => {
-                clickHandler(event, 'regist');
+                clickHandler(event, "regist");
               }}
             >
               {buttonTitle} 발행
             </Button>
           )}
-          {status === 'COMPLETED' && (
+          {status === "COMPLETED" && (
             <Button
               colorScheme="green"
               size="sm"
               ml="10px"
               onClick={(event) => {
-                clickHandler(event, 'regist');
+                clickHandler(event, "regist");
               }}
             >
               {buttonTitle} 발행 취소
@@ -178,7 +178,7 @@ const UpdateLayout = ({
           bg="white"
           value={subject}
           onChange={(event) => {
-            changeHandler(event, 'subject');
+            changeHandler(event, "subject");
           }}
         />
         <Box mt="15px" minH="100%" bg="white">
