@@ -1,0 +1,219 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Author {
+  id: String!
+  userName: String!
+}
+
+type Post {
+  """Post id"""
+  postId: String!
+
+  """Post 제목"""
+  title: String!
+
+  """Post 내용"""
+  content: String!
+
+  """Post 상태"""
+  status: String!
+
+  """작성자 User Id"""
+  authorId: String!
+
+  """작성자 정보"""
+  author: Author
+
+  """수정 일시"""
+  updatedAt: Timestamp!
+
+  """생성 일시"""
+  createdAt: Timestamp!
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type PostWithoutAuthor {
+  """Post id"""
+  postId: String!
+
+  """Post 제목"""
+  title: String!
+
+  """Post 내용"""
+  content: String!
+
+  """Post 상태"""
+  status: String!
+
+  """작성자 User Id"""
+  authorId: String!
+
+  """수정 일시"""
+  updatedAt: Timestamp!
+
+  """생성 일시"""
+  createdAt: Timestamp!
+}
+
+type Posts {
+  """Post 목록"""
+  list: [Post!]!
+
+  """Post 전체 갯수"""
+  totalCount: Float!
+}
+
+type User {
+  userId: String!
+  userName: String!
+  role: String!
+  createAt: Timestamp!
+}
+
+type Query {
+  """User ID로 해당 유저에 대한 정보를 가져온다"""
+  getUserById(id: String!): User!
+
+  """Post Id로 Post 정보를 가져온다"""
+  getPostById(
+    """Post Id"""
+    id: String!
+  ): Post!
+
+  """Post 리스트를 가져온다"""
+  posts(
+    """
+    Offset 기반 Pagination Parameter 
+          [https://www.prisma.io/docs/concepts/components/prisma-client/pagination#offset-pagination]
+    """
+    pagination: OffsetPagination!
+
+    """Order(정렬) Parameter(기본값-생성일자-desc)"""
+    orderBy: PostsOrder = {}
+  ): Posts!
+}
+
+input OffsetPagination {
+  """조회시 지정된 Recode 만큼 패스할 갯수"""
+  skip: Float!
+
+  """가져올 데이터 갯수"""
+  take: Float!
+}
+
+"""Post 조회 Order(정렬) 데이터 타입"""
+input PostsOrder {
+  """생성일자"""
+  createdAt: SortOrder = desc
+}
+
+"""지원되는 정렬 타입"""
+enum SortOrder {
+  """오름차순"""
+  asc
+
+  """내림차순"""
+  desc
+}
+
+type Mutation {
+  """신규 User를 생성한다"""
+  createUser(
+    """신규 User 생성 Parameter"""
+    user: CreateUserInput!
+  ): User!
+
+  """User 정보를 업데이트 한다."""
+  updateUser(
+    """유저 업데이트"""
+    user: UpdateUserInput!
+  ): User!
+
+  """신규 Post를 생성한다"""
+  createPost(
+    """신규 Post Parameter"""
+    post: CreatePostInput!
+  ): PostWithoutAuthor!
+
+  """post 정보를 수정한다."""
+  updatePost(
+    """UpdatePost 데이터"""
+    post: UpdatePostInput!
+  ): PostWithoutAuthor!
+
+  """post id로 post 삭제한다"""
+  deletePost(
+    """Post Id"""
+    id: DeletePostInput!
+  ): PostWithoutAuthor!
+}
+
+input CreateUserInput {
+  """User 이름"""
+  userName: String!
+
+  """User 이메일"""
+  userEmail: String!
+
+  """User 비밀번호"""
+  password: String!
+
+  """유저 권한"""
+  role: Role!
+}
+
+"""유저 권한 타입"""
+enum Role {
+  """일반 유저"""
+  USER
+
+  """관리자 유저"""
+  ADMIN
+}
+
+input UpdateUserInput {
+  """User Id"""
+  userId: String!
+
+  """User 이메일"""
+  userEmail: String!
+
+  """User 이름"""
+  userName: String!
+
+  """User 비밀번호"""
+  password: String!
+
+  """유저 권한"""
+  role: Role!
+}
+
+input CreatePostInput {
+  """Post 제목"""
+  title: String!
+
+  """Post 내용"""
+  content: String
+}
+
+input UpdatePostInput {
+  """Post Id"""
+  id: String!
+
+  """Post 제목"""
+  title: String!
+
+  """Post 내용"""
+  content: String
+}
+
+input DeletePostInput {
+  """삭제할 Post id"""
+  id: String!
+}
