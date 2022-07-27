@@ -24,7 +24,7 @@ export class Post {
   title: string;
   @Field({ description: 'Post 내용' })
   content: string;
-  @Field({ description: 'Post 상태' })
+  @Field(() => PostStatus, { description: 'Post 상태' })
   status: PostStatus;
   @Field({ description: '작성자 User Id' })
   authorId: string;
@@ -128,3 +128,16 @@ export enum PostStatus {
   DRAFT = 'DRAFT',
   PUBLISHED = 'PUBLISHED',
 }
+
+registerEnumType(PostStatus, {
+  name: 'PostStatus',
+  description: '지원되는 정렬 타입',
+  valuesMap: {
+    DRAFT: {
+      description: 'DRAFT - 임시저장',
+    },
+    PUBLISHED: {
+      description: 'PUBLISHED - 발행됨',
+    },
+  },
+});
