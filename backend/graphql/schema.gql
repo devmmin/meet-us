@@ -18,7 +18,7 @@ type Post {
   content: String!
 
   """Post 상태"""
-  status: String!
+  status: PostStatus!
 
   """작성자 User Id"""
   authorId: String!
@@ -31,6 +31,15 @@ type Post {
 
   """생성 일시"""
   createdAt: Timestamp!
+}
+
+"""지원되는 정렬 타입"""
+enum PostStatus {
+  """DRAFT - 임시저장"""
+  DRAFT
+
+  """PUBLISHED - 발행됨"""
+  PUBLISHED
 }
 
 """
@@ -49,7 +58,7 @@ type PostWithoutAuthor {
   content: String!
 
   """Post 상태"""
-  status: String!
+  status: PostStatus!
 
   """작성자 User Id"""
   authorId: String!
