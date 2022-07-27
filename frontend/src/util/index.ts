@@ -179,5 +179,5 @@ export const logout = (query = "") => {
   localStorage.removeItem("access-token");
   localStorage.removeItem("refresh-token");
   const loginUrl = "/admin/login";
-  window.location.href = query ? loginUrl.concat(query) : loginUrl;
+  window.location.href = query ? loginUrl.concat(`?${query}`) : loginUrl;
 };
