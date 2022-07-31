@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { useRecoilState } from "recoil";
 import { gql, useQuery } from "@apollo/client";
+import { useRecoilState } from "recoil";
 import { useParams, useNavigate } from "react-router-dom";
 import UpdateLayout from "../../layouts/Admin/UpdateLayout";
-import { noticeItemState } from "../../recoil";
+import { postItemState } from "../../recoil";
 
 interface PostVariable {
-  noticeId: string;
+  postId: string;
 }
 
 interface PostResponse {
@@ -25,9 +25,9 @@ interface PostResponse {
   };
 }
 
-const GET_NOTICE = gql`
-  query GetPostById($noticeId: String!) {
-    getPostById(id: $noticeId) {
+const GET_POST = gql`
+  query GetPostById($postId: String!) {
+    getPostById(id: $postId) {
       postId
       title
       content
@@ -43,24 +43,24 @@ const GET_NOTICE = gql`
   }
 `;
 
-const NoticeUpdate = () => {
+const PostUpdate = () => {
   const params = useParams();
   const navigate = useNavigate();
-  const [notice, updateNotice] = useRecoilState(noticeItemState);
-  const noticeId = (params && params.id) || "";
+  const [post, updatePost] = useRecoilState(postItemState);
+  const postId = (params && params.id) || "";
 
-  const { loading, data } = useQuery<PostResponse, PostVariable>(GET_NOTICE, {
+  const { loading, data } = useQuery<PostResponse, PostVariable>(GET_POST, {
     variables: {
-      noticeId,
+      postId,
     },
   });
 
   useEffect(() => {
-    if (!noticeId) {
+    if (!postId) {
       navigate(-1);
     } else {
       if (!loading && data) {
-        const newNotice = {
+        const newPost = {
           id: data.getPostById.postId,
           subject: data.getPostById.title,
           content: data.getPostById.content,
@@ -69,19 +69,19 @@ const NoticeUpdate = () => {
             data.getPostById.author.id + data.getPostById.author.userName,
           createdAt: new Date(data.getPostById.createdAt).toLocaleString(),
         };
-        updateNotice(newNotice);
+        updatePost(newPost);
       }
     }
-  }, [noticeId, navigate, updateNotice, loading, data]);
+  }, [postId, navigate, updatePost, loading, data]);
   return (
     <UpdateLayout
-      title="공지사항"
-      buttonTitle="공지사항"
-      toPath="/admin/notice"
-      item={notice}
-      updateItem={updateNotice}
+      title="블로그"
+      buttonTitle="포스트"
+      toPath="/admin/blog"
+      item={post}
+      updateItem={updatePost}
     />
   );
 };
 
-export default NoticeUpdate;
+export default PostUpdate;

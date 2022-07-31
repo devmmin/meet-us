@@ -1,24 +1,105 @@
+import { gql, useQuery } from "@apollo/client";
 import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { useResetRecoilState, useRecoilState } from "recoil";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { checkedListState, pageInfoState } from "../recoil";
-import { getNoticeList } from "../util";
+import { ListItem } from "../types";
+import { getNoticeHeaderList } from "../util";
+
+interface NoticeVariable {
+  pagination: {
+    skip: number;
+    take: number;
+  };
+  orderBy: {
+    createdAt: string;
+  };
+}
+
+interface NoticeItem {
+  authorId: string;
+  content: string;
+  createdAt: number;
+  postId: string;
+  status: string;
+  title: string;
+  updatedAt: number;
+}
+
+interface NoticeResponse {
+  posts: { list: NoticeItem[]; totalCount: number };
+}
+
+const GET_POSTS = gql`
+  query GET_POSTS($pagination: OffsetPagination!, $orderBy: PostsOrder) {
+    posts(pagination: $pagination, orderBy: $orderBy) {
+      list {
+        postId
+        title
+        content
+        status
+        authorId
+        author {
+          id
+          userName
+        }
+        updatedAt
+        createdAt
+      }
+      totalCount
+    }
+  }
+`;
 
 const Notice = () => {
-  const setPageInfo = useSetRecoilState(pageInfoState);
+  const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
   const resetCheckedList = useResetRecoilState(checkedListState);
-  const [params] = useSearchParams();
+
   const {
-    data: { list, header, pageInfo },
-  } = getNoticeList({
-    page: params.get("page") ? Number(params.get("page")) : 1,
-    offset: params.get("offset") ? Number(params.get("offset")) : 10,
-  });
+    data: { header },
+  } = getNoticeHeaderList();
+
+  let list: ListItem[] = [];
+  const { loading, error, data } = useQuery<NoticeResponse, NoticeVariable>(
+    GET_POSTS,
+    {
+      variables: {
+        pagination: {
+          skip: pageInfo.offset * (pageInfo.page - 1),
+          take: pageInfo.offset,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    }
+  );
+
+  if (loading || error) {
+    list = [];
+  }
+
+  let totalCount = 0;
+
+  if (data) {
+    list = data.posts.list.map((item) => ({
+      ...item,
+      id: item.postId,
+      subject: item.title,
+      register: item.authorId,
+      createdAt: new Date(item.createdAt).toLocaleString(),
+    }));
+    totalCount = data.posts.totalCount;
+  }
+
   useEffect(() => {
-    setPageInfo(pageInfo);
+    setPageInfo((prev) => ({
+      ...prev,
+      totalCount,
+      totalPage: totalCount / prev.offset,
+    }));
     resetCheckedList();
-  }, [pageInfo, setPageInfo, resetCheckedList]);
+  }, [setPageInfo, resetCheckedList, totalCount]);
   return (
     <ListLayout
       title="공지사항"

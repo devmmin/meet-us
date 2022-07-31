@@ -35,8 +35,8 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
   const location = useLocation();
   const [checkedList, setCheckedList] = useRecoilState(checkedListState);
   const allChecked = list.length > 0 && checkedList.length === list.length;
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: number) => {
-    if (id === 0) {
+  const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: string) => {
+    if (id === "") {
       setCheckedList(event.target.checked ? list.map((v) => v.id) : []);
     } else if (event.target.checked) {
       setCheckedList((prev) => [...prev, id]);
@@ -57,7 +57,7 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
                       bg="white"
                       isChecked={allChecked}
                       onChange={(event) => {
-                        changeHandler(event, 0);
+                        changeHandler(event, "");
                       }}
                     />
                   </Th>
@@ -105,7 +105,11 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
                 </Flex>
               </Td>
               <Td>{item.createdAt}</Td>
-              <Td>
+              <Td
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 <Menu>
                   <MenuButton
                     as={IconButton}

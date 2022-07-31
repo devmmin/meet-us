@@ -1,5 +1,5 @@
 interface ListItem {
-  id: number;
+  id: string;
   subject: string;
   content: string;
   status: string;
@@ -26,9 +26,21 @@ interface NavLinkItem {
   icon: string;
 }
 
+interface ErrorResponseType {
+  code: number;
+  error: { message: string; };
+}
+
+interface SuccessResponseType {
+  data: any;
+}
+
+type ResponseType = ErrorResponseType & SuccessResponseType;
+
 export type {
   ListItem,
   Page,
   UserInfo,
-  NavLinkItem
+  NavLinkItem,
+  ResponseType
 };
