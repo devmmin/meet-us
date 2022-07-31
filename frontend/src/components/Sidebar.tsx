@@ -3,11 +3,9 @@ import {
   Divider,
   Heading,
   Icon,
-  Stack,
   Text,
   useColorModeValue,
   Flex,
-  Avatar,
   Breadcrumb,
   BreadcrumbItem,
 } from "@chakra-ui/react";
@@ -16,55 +14,18 @@ import { FaBullhorn, FaBlog, FaUsersCog } from "react-icons/fa";
 import { SiChakraui } from "react-icons/si";
 import { NavLink } from "react-router-dom";
 import { useLayoutEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-// import { gql, useQuery } from "@apollo/client";
+import { useRecoilState } from "recoil";
 import { getNavLinks } from "../util";
-import { userInfoState, navLinksState } from "../recoil";
+import { navLinksState } from "../recoil";
+import UserInfo from "./Sidebar/UserInfo";
 
 const Sidebar = () => {
   const [navLinks, setNavLinks] = useRecoilState(navLinksState);
-  const userInfo = useRecoilValue(userInfoState);
-
-  const getNavLinkList = () => {
-    const { data } = getNavLinks();
-    setNavLinks(data);
-  };
-
-  // TODO
-  // const GET_USER = gql`
-  //   query ExampleQuery($userId: String!, $postId: String!) {
-  //     getUserById(id: $userId) {
-  //       userId
-  //       userName
-  //       role
-  //       createAt
-  //     }
-  //     getPostById(id: $postId) {
-  //       postId
-  //       title
-  //       content
-  //       status
-  //       authorId
-  //       author {
-  //         id
-  //         userName
-  //       }
-  //       updatedAt
-  //       createdAt
-  //     }
-  //   }
-  // `;
-  // const { loading, error, data } = useQuery(GET_USER, {
-  //   variables: { userId: "test001@test.com", postId: "1" },
-  // });
-
-  // console.log("loading", loading);
-  // console.log("error", error);
-  // console.log("data", data);
 
   useLayoutEffect(() => {
-    getNavLinkList();
-  }, []);
+    const { data } = getNavLinks();
+    setNavLinks(data);
+  }, [setNavLinks]);
   return (
     <Flex
       as="aside"
@@ -117,16 +78,7 @@ const Sidebar = () => {
           </BreadcrumbItem>
         ))}
       </Breadcrumb>
-      <Box>
-        <Divider />
-        <Flex p="18px 14px">
-          <Avatar mr="10px" />
-          <Stack>
-            <Text fontSize="14px">{userInfo.nickName}</Text>
-            <Text fontSize="14px">{userInfo.id}</Text>
-          </Stack>
-        </Flex>
-      </Box>
+      <UserInfo />
     </Flex>
   );
 };

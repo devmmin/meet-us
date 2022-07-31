@@ -67,6 +67,7 @@ module.exports = {
     "no-console": "off",
     "no-param-reassign": "off",
     quotes: ["error", "double"],
+    "no-lonely-if": "off",
   },
   settings: {
     "import/resolver": {

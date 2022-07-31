@@ -4,14 +4,14 @@ import { ListItem, NavLinkItem, Page, UserInfo } from "../types";
 const ATOM_KEYS = {
   checkedListState: "checkedListState",
   pageInfoState: "pageInfoState",
-  blogItemState: "blogItemState",
+  postItemState: "postItemState",
   noticeItemState: "noticeItemState",
   userInfoState: "userInfoState",
   isAuthState: "isAuthState",
   navLinksState: "navLinksState"
 };
 
-export const checkedListState = atom<number[]>({
+export const checkedListState = atom<string[]>({
   key: ATOM_KEYS.checkedListState,
   default: [],
 });
@@ -21,14 +21,14 @@ export const pageInfoState = atom<Page>({
   default: { page: 1, totalCount: 0, totalPage: 0, offset: 10 }
 });
 
-export const blogItemState = atom<ListItem>({
-  key: ATOM_KEYS.blogItemState,
-  default: { id: 0, subject: "", content: "", status: "NONE", register: "", createdAt: "" }
+export const postItemState = atom<ListItem>({
+  key: ATOM_KEYS.postItemState,
+  default: { id: "", subject: "", content: "", status: "NONE", register: "", createdAt: "" }
 });
 
 export const noticeItemState = atom<ListItem>({
   key: ATOM_KEYS.noticeItemState,
-  default: { id: 0, subject: "", content: "", status: "NONE", register: "", createdAt: "" }
+  default: { id: "", subject: "", content: "", status: "NONE", register: "", createdAt: "" }
 });
 
 export const userInfoState = atom<UserInfo>({
