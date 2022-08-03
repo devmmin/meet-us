@@ -6,6 +6,7 @@ import { Editor } from "@toast-ui/react-editor";
 import { ChangeEvent, useRef, MutableRefObject, useEffect } from "react";
 import { EditorType } from "@toast-ui/editor";
 import ConfirmModal from "../../components/Modal/confirmModal";
+import { ListItem } from "../../types/store";
 
 interface Props {
   title: string;
@@ -15,15 +16,6 @@ interface Props {
   updateItem: Function;
   buttonHandler: Function;
   modalClickHandler: Function;
-}
-
-interface EditItem {
-  id: string;
-  subject: string;
-  content: string;
-  status: string;
-  register: string;
-  createdAt: string;
 }
 
 const UpdateLayout = ({
@@ -43,7 +35,7 @@ const UpdateLayout = ({
 
   // TODO: 상태관리 필요없으면 ref로 코드 수정
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
-    updateItem((prev: EditItem) => ({
+    updateItem((prev: ListItem) => ({
       ...prev,
       [key]: event.target.value,
     }));
@@ -62,7 +54,7 @@ const UpdateLayout = ({
       return;
     }
     // TODO: 상태관리 필요없으면 ref로 코드 수정
-    updateItem((prev: EditItem) => ({
+    updateItem((prev: ListItem) => ({
       ...prev,
       content:
         eventType === "markdown"

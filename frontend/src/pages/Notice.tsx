@@ -1,44 +1,39 @@
 import { useQuery } from "@apollo/client";
 import { useEffect } from "react";
-import { useResetRecoilState, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { GET_NOTICES } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
-import { checkedListState, pageInfoState } from "../recoil";
+import { pageInfoState } from "../recoil";
 import { NoticeListResponse, NoticeListVariable } from "../types/api";
 import { ListItem } from "../types/store";
 import { getNoticeHeaderList } from "../util";
 
+const {
+  data: { header },
+} = getNoticeHeaderList();
+
 const Notice = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
-  const resetCheckedList = useResetRecoilState(checkedListState);
-
-  const {
-    data: { header },
-  } = getNoticeHeaderList();
 
   let list: ListItem[] = [];
-  const { loading, error, data } = useQuery<
-    NoticeListResponse,
-    NoticeListVariable
-  >(GET_NOTICES, {
-    variables: {
-      pagination: {
-        skip: pageInfo.offset * (pageInfo.page - 1),
-        take: pageInfo.offset,
+  const { loading, data } = useQuery<NoticeListResponse, NoticeListVariable>(
+    GET_NOTICES,
+    {
+      variables: {
+        pagination: {
+          skip: pageInfo.offset * (pageInfo.page - 1),
+          take: pageInfo.offset,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
-      orderBy: {
-        createdAt: "desc",
-      },
-    },
-  });
-
-  if (loading || error) {
-    list = [];
-  }
+    }
+  );
 
   let totalCount = 0;
 
-  if (data) {
+  if (!loading && data) {
     list = data.posts.list.map((item) => ({
       ...item,
       id: item.postId,
@@ -55,8 +50,7 @@ const Notice = () => {
       totalCount,
       totalPage: totalCount / prev.offset,
     }));
-    resetCheckedList();
-  }, [setPageInfo, resetCheckedList, totalCount]);
+  }, [setPageInfo, totalCount]);
   return (
     <ListLayout
       title="공지사항"

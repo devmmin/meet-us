@@ -1,8 +1,13 @@
 import { useEffect } from "react";
-import { useSetRecoilState, useRecoilState } from "recoil";
+import { useSetRecoilState, useRecoilState, useResetRecoilState } from "recoil";
 import { useQuery } from "@apollo/client";
 import { Flex, Spinner, Text } from "@chakra-ui/react";
-import { isAuthState, userInfoState } from "../recoil";
+import {
+  checkedListState,
+  isAuthState,
+  pageInfoState,
+  userInfoState,
+} from "../recoil";
 import { GET_USER } from "../gql";
 import { UserResponse, UserVariable } from "../types/api";
 
@@ -10,11 +15,10 @@ import { UserResponse, UserVariable } from "../types/api";
 const Auth = ({ component }: { component: JSX.Element }) => {
   const [isAuth, setIsAuth] = useRecoilState(isAuthState);
   const setUserInfo = useSetRecoilState(userInfoState);
+  const resetPageInfo = useResetRecoilState(pageInfoState);
+  const resetChckedList = useResetRecoilState(checkedListState);
 
-  const { loading, data = { getUserById: { userName: "" } } } = useQuery<
-    UserResponse,
-    UserVariable
-  >(GET_USER, {
+  const { loading, data } = useQuery<UserResponse, UserVariable>(GET_USER, {
     variables: {
       userId: "ddf79a8f-812f-405f-b054-b87187a185a1",
     },
@@ -29,9 +33,11 @@ const Auth = ({ component }: { component: JSX.Element }) => {
         nickName: data.getUserById.userName,
         password: "",
       }));
+      resetPageInfo();
+      resetChckedList();
       setIsAuth(true);
     }
-  }, [setUserInfo, setIsAuth, loading, data]);
+  }, [setUserInfo, setIsAuth, loading, data, resetPageInfo, resetChckedList]);
 
   return !isAuth ? (
     <Flex justifyContent="center" alignItems="center" flex="1">
