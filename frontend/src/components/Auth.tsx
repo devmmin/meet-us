@@ -18,6 +18,7 @@ const Auth = ({ component }: { component: JSX.Element }) => {
   const resetPageInfo = useResetRecoilState(pageInfoState);
   const resetChckedList = useResetRecoilState(checkedListState);
 
+  // TODO: 로그인 완료 시 userId API response로 주거나, userId값이 로그인한 아이디 값이게 변경 필요
   const { loading, data } = useQuery<UserResponse, UserVariable>(GET_USER, {
     variables: {
       userId: "ddf79a8f-812f-405f-b054-b87187a185a1",
@@ -26,7 +27,7 @@ const Auth = ({ component }: { component: JSX.Element }) => {
 
   useEffect(() => {
     if (!loading && data) {
-      // TODO: data.getUserBydId.userEmail 필드 요청하기
+      // TODO: data.getUserBydId.userEmail (id) 필드 요청하기
       setUserInfo((prev) => ({
         ...prev,
         id: "test001@test.com",
