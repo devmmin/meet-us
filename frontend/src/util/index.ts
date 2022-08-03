@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from "axios";
 import axios from "../config/axios";
-import { ResponseType } from "../types/api";
 
 const header = [
   "CHECKBOX",
@@ -27,16 +26,13 @@ export const getNoticeHeaderList = () => ({
   },
 });
 
-export const getUserInfo = async () => {
-  const response: ResponseType = await axios.get("/v1/auth/user");
-  if (response && !response.code) {
-    response.data = {
-      id: "test001@test.com",
-      nickName: "TEST001"
-    };
-  }
-  return response.data;
-};
+export const getHeader = () => ({
+  code: 0,
+  message: "",
+  data: {
+    header,
+  },
+});
 
 export const getNavLinks = () => ({
   code: 0,
@@ -48,18 +44,6 @@ export const getNavLinks = () => ({
     { name: "유저 관리", to: "/admin/user-management", icon: "user" },
     { name: "설정", to: "/admin/setting", icon: "setting" },
   ],
-});
-
-export const postUpdate = () => ({
-  code: 0,
-  message: "",
-  data: null,
-});
-
-export const deletePost = () => ({
-  code: 0,
-  message: "",
-  data: null,
 });
 
 export const postLogin = async (loginInfo: { id: string, password: string }) => {
@@ -90,14 +74,6 @@ export const postRefreshToken = async (beforeRequestConfig: AxiosRequestConfig) 
 
   return response.data;
 };
-
-export const getHeader = () => ({
-  code: 0,
-  message: "",
-  data: {
-    header,
-  },
-});
 
 export const logout = (query = "") => {
   localStorage.removeItem("access-token");

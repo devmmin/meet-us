@@ -1,14 +1,3 @@
-interface ErrorResponseType {
-  code: number;
-  error: { message: string; };
-}
-
-interface SuccessResponseType {
-  data: any;
-}
-
-type ResponseType = ErrorResponseType & SuccessResponseType;
-
 interface PostVariable {
   postId: string;
 }
@@ -108,7 +97,6 @@ interface UserVariable {
 }
 
 export type {
-  ResponseType,
   PostVariable,
   PostResponse,
   NoticeVariable,
