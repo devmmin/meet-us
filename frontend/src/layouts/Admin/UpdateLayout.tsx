@@ -1,24 +1,10 @@
-import {
-  Box,
-  Button,
-  Flex,
-  Input,
-  useToast,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Input, useDisclosure } from "@chakra-ui/react";
 import { MdChevronLeft } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
-import {
-  ChangeEvent,
-  useRef,
-  MutableRefObject,
-  MouseEvent,
-  useEffect,
-} from "react";
+import { ChangeEvent, useRef, MutableRefObject, useEffect } from "react";
 import { EditorType } from "@toast-ui/editor";
-import { postUpdate, deletePost } from "../../util";
 import ConfirmModal from "../../components/Modal/confirmModal";
 
 interface Props {
@@ -27,10 +13,12 @@ interface Props {
   toPath: string;
   item: { subject: string; content: string; status: string };
   updateItem: Function;
+  buttonHandler: Function;
+  modalClickHandler: Function;
 }
 
 interface EditItem {
-  id: number;
+  id: string;
   subject: string;
   content: string;
   status: string;
@@ -44,23 +32,14 @@ const UpdateLayout = ({
   toPath,
   item: { subject = "", content = "", status = "" },
   updateItem,
+  buttonHandler,
+  modalClickHandler,
 }: Props) => {
   const params = useParams();
-  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const editorRef = useRef() as MutableRefObject<Editor>;
 
   const id = (params && params.id) || null;
-
-  const modalClickHandler = () => {
-    const response = deletePost();
-    toast({
-      description: `삭제를 ${response.code === 0 ? "완료" : "실패"}했습니다.`,
-      status: response.code === 0 ? "success" : "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
     updateItem((prev: EditItem) => ({
@@ -90,32 +69,14 @@ const UpdateLayout = ({
     }));
   };
 
-  const clickHandler = (event: MouseEvent<HTMLButtonElement>, type: string) => {
-    if (subject.trim() === "" || content.trim() === "") {
-      toast({
-        description: "입력된 값을 확인해주세요.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
-      return;
-    }
-    const response = postUpdate();
-    toast({
-      description: `${type === "save" ? "저장" : "발행"}을 ${
-        response.code === 0 ? "완료" : "실패"
-      }했습니다.`,
-      status: response.code === 0 ? "success" : "error",
-      duration: 9000,
-      isClosable: true,
-    });
-  };
   return (
     <Box p="50px" bg="gray.50" minH="100%">
       <ConfirmModal
         title={`${title} 글 삭제`}
         buttonText="삭제"
-        clickHandler={modalClickHandler}
+        clickHandler={() => {
+          modalClickHandler({ id, subject, content });
+        }}
         isOpen={isOpen}
         onClose={onClose}
       >
@@ -140,7 +101,7 @@ const UpdateLayout = ({
               size="sm"
               ml={id ? "10px" : "0px"}
               onClick={(event) => {
-                clickHandler(event, "save");
+                buttonHandler(event, { id, subject, content }, "save");
               }}
             >
               {buttonTitle} {id ? "수정" : "저장"}
@@ -152,7 +113,7 @@ const UpdateLayout = ({
               size="sm"
               ml="10px"
               onClick={(event) => {
-                clickHandler(event, "regist");
+                buttonHandler(event, { id, subject, content }, "regist");
               }}
             >
               {buttonTitle} 발행
@@ -164,7 +125,7 @@ const UpdateLayout = ({
               size="sm"
               ml="10px"
               onClick={(event) => {
-                clickHandler(event, "regist");
+                buttonHandler(event, { id, subject, content }, "regist");
               }}
             >
               {buttonTitle} 발행 취소
