@@ -1,3 +1,10 @@
+interface Page {
+  page: number;
+  offset: number;
+  totalCount: number;
+  totalPage: number;
+}
+
 interface ListItem {
   id: string;
   subject: string;
@@ -5,13 +12,6 @@ interface ListItem {
   status: string;
   register: string;
   createdAt: string;
-}
-
-interface Page {
-  page: number;
-  offset: number;
-  totalCount: number;
-  totalPage: number;
 }
 
 interface UserInfo {
@@ -26,21 +26,9 @@ interface NavLinkItem {
   icon: string;
 }
 
-interface ErrorResponseType {
-  code: number;
-  error: { message: string; };
-}
-
-interface SuccessResponseType {
-  data: any;
-}
-
-type ResponseType = ErrorResponseType & SuccessResponseType;
-
 export type {
   ListItem,
   Page,
   UserInfo,
   NavLinkItem,
-  ResponseType
 };

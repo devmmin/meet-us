@@ -1,90 +1,12 @@
 import { MouseEvent, useEffect } from "react";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRecoilState } from "recoil";
 import { useToast } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
 import UpdateLayout from "../../layouts/Admin/UpdateLayout";
 import { postItemState } from "../../recoil";
-
-interface PostVariable {
-  postId: string;
-}
-
-interface PostResponse {
-  getPostById: {
-    postId: string;
-    title: string;
-    content: string;
-    status: string;
-    authorId: string;
-    author: {
-      id: string;
-      userName: string;
-    };
-    updatedAt: number;
-    createdAt: number;
-  };
-}
-
-const GET_POST = gql`
-  query GetPostById($postId: String!) {
-    getPostById(id: $postId) {
-      postId
-      title
-      content
-      status
-      authorId
-      author {
-        id
-        userName
-      }
-      updatedAt
-      createdAt
-    }
-  }
-`;
-
-const CREATE_POST = gql`
-  mutation Mutation($post: CreatePostInput!) {
-    createPost(post: $post) {
-      postId
-      title
-      content
-      status
-      authorId
-      updatedAt
-      createdAt
-    }
-  }
-`;
-
-const UPDATE_POST = gql`
-  mutation Mutation($post: UpdatePostInput!) {
-    updatePost(post: $post) {
-      postId
-      title
-      content
-      status
-      authorId
-      updatedAt
-      createdAt
-    }
-  }
-`;
-
-const DELETE_POST = gql`
-  mutation Mutation($post: DeletePostInput!) {
-    deletePost(id: $post) {
-      postId
-      title
-      content
-      status
-      authorId
-      updatedAt
-      createdAt
-    }
-  }
-`;
+import { CREATE_POST, DELETE_POST, GET_POST, UPDATE_POST } from "../../gql";
+import { PostResponse, PostVariable } from "../../types/api";
 
 const PostUpdate = () => {
   const params = useParams();

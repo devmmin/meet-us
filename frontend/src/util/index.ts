@@ -1,6 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import axios from "../config/axios";
-import { ResponseType } from "../types";
+import { ResponseType } from "../types/api";
 
 const header = [
   "CHECKBOX",

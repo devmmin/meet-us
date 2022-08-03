@@ -1,29 +1,10 @@
 import { useEffect } from "react";
 import { useSetRecoilState, useRecoilState } from "recoil";
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { Flex, Spinner, Text } from "@chakra-ui/react";
 import { isAuthState, userInfoState } from "../recoil";
-
-interface UserResponse {
-  getUserById: {
-    userName: string;
-  };
-}
-
-interface UserVariable {
-  userId: string;
-}
-
-const GET_USER = gql`
-  query GET_USER($userId: String!) {
-    getUserById(id: $userId) {
-      userId
-      userName
-      role
-      createAt
-    }
-  }
-`;
+import { GET_USER } from "../gql";
+import { UserResponse, UserVariable } from "../types/api";
 
 /* eslint-disable no-undef */
 const Auth = ({ component }: { component: JSX.Element }) => {

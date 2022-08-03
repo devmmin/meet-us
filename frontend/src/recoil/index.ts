@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { ListItem, NavLinkItem, Page, UserInfo } from "../types";
+import { ListItem, NavLinkItem, Page, UserInfo } from "../types/store";
 
 const ATOM_KEYS = {
   checkedListState: "checkedListState",

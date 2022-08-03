@@ -4,7 +4,7 @@ import ConfirmModal from "../../components/Modal/confirmModal";
 import ListHeader from "../../components/List/ListHeader";
 import ListTable from "../../components/List/ListTable";
 import { checkedListState } from "../../recoil";
-import { ListItem } from "../../types/index";
+import { ListItem } from "../../types/store";
 import { deletePost } from "../../util";
 
 interface Props {

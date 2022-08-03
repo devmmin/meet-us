@@ -1,55 +1,12 @@
-import { gql, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { useEffect } from "react";
 import { useResetRecoilState, useRecoilState } from "recoil";
+import { GET_POSTS } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { checkedListState, pageInfoState } from "../recoil";
-import { ListItem } from "../types";
+import { PostListResponse, PostListVariable } from "../types/api";
+import { ListItem } from "../types/store";
 import { getPostHeaderList } from "../util";
-
-interface PostVariable {
-  pagination: {
-    skip: number;
-    take: number;
-  };
-  orderBy: {
-    createdAt: string;
-  };
-}
-
-interface PostItem {
-  authorId: string;
-  content: string;
-  createdAt: number;
-  postId: string;
-  status: string;
-  title: string;
-  updatedAt: number;
-}
-
-interface PostResponse {
-  posts: { list: PostItem[]; totalCount: number };
-}
-
-const GET_POSTS = gql`
-  query Posts($pagination: OffsetPagination!, $orderBy: PostsOrder) {
-    posts(pagination: $pagination, orderBy: $orderBy) {
-      list {
-        postId
-        title
-        content
-        status
-        authorId
-        author {
-          id
-          userName
-        }
-        updatedAt
-        createdAt
-      }
-      totalCount
-    }
-  }
-`;
 
 const Blog = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
@@ -60,7 +17,7 @@ const Blog = () => {
   } = getPostHeaderList();
 
   let list: ListItem[] = [];
-  const { loading, error, data } = useQuery<PostResponse, PostVariable>(
+  const { loading, error, data } = useQuery<PostListResponse, PostListVariable>(
     GET_POSTS,
     {
       variables: {

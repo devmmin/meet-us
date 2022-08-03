@@ -41,6 +41,7 @@ const UpdateLayout = ({
 
   const id = (params && params.id) || null;
 
+  // TODO: 상태관리 필요없으면 ref로 코드 수정
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
     updateItem((prev: EditItem) => ({
       ...prev,
@@ -60,6 +61,7 @@ const UpdateLayout = ({
     if (!editorRef.current) {
       return;
     }
+    // TODO: 상태관리 필요없으면 ref로 코드 수정
     updateItem((prev: EditItem) => ({
       ...prev,
       content:

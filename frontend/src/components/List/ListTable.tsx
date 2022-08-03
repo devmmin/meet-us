@@ -21,7 +21,7 @@ import { useRecoilState } from "recoil";
 import { MdMoreHoriz } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { checkedListState } from "../../recoil";
-import { ListItem } from "../../types";
+import { ListItem } from "../../types/store";
 import ListFooter from "./ListFooter";
 
 interface Props {
