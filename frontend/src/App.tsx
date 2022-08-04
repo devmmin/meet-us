@@ -10,6 +10,7 @@ import Setting from "./pages/Setting";
 import PostUpdate from "./pages/Blog/PostUpdate";
 import NoticeUpdate from "./pages/Notice/NoticeUpdate";
 import Auth from "./components/Auth";
+import ConfirmModal from "./components/Modal/ConfirmModal";
 
 /* eslint-disable no-undef */
 const LoginCheck = ({ component }: { component: JSX.Element }) => {
@@ -22,6 +23,7 @@ const LoginCheck = ({ component }: { component: JSX.Element }) => {
 
 const App = () => (
   <Flex className="App">
+    <ConfirmModal />
     <Routes>
       <Route path="/admin" element={<Auth component={<AdminLayout />} />}>
         <Route path="main" element={<Main />} />

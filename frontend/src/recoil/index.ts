@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { ListItem, NavLinkItem, Page, UserInfo } from "../types/store";
+import { ListItem, ModalProps, NavLinkItem, Page, UserInfo } from "../types/store";
 
 const ATOM_KEYS = {
   checkedListState: "checkedListState",
@@ -8,7 +8,8 @@ const ATOM_KEYS = {
   noticeItemState: "noticeItemState",
   userInfoState: "userInfoState",
   isAuthState: "isAuthState",
-  navLinksState: "navLinksState"
+  navLinksState: "navLinksState",
+  modalState: "modalState"
 };
 
 export const checkedListState = atom<string[]>({
@@ -44,4 +45,9 @@ export const isAuthState = atom<boolean>({
 export const navLinksState = atom<NavLinkItem[]>({
   key: ATOM_KEYS.navLinksState,
   default: []
+});
+
+export const modalState = atom<ModalProps>({
+  key: ATOM_KEYS.modalState,
+  default: { title: "", children: "", confirmText: "", cancelText: "", onOpen: () => { }, onClose: () => { }, onConfirm: () => { }, onCancel: () => { } },
 });

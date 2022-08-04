@@ -109,11 +109,7 @@ const NoticeUpdate = () => {
     });
   };
 
-  const modalClickHandler = (item: {
-    id: string;
-    subject: string;
-    content: string;
-  }) => {
+  const confirm = (item: { id: string; subject: string; content: string }) => {
     deleteNotice({
       variables: {
         notice: {
@@ -144,7 +140,7 @@ const NoticeUpdate = () => {
       item={notice}
       updateItem={setNotice}
       buttonHandler={buttonHandler}
-      modalClickHandler={modalClickHandler}
+      confirm={confirm}
     />
   );
 };

@@ -92,7 +92,7 @@ const PostUpdate = () => {
 
     updatePost({
       variables: {
-        notice: {
+        post: {
           id: item.id,
           title: item.subject,
           content: item.content,
@@ -101,14 +101,10 @@ const PostUpdate = () => {
     });
   };
 
-  const modalClickHandler = (item: {
-    id: string;
-    subject: string;
-    content: string;
-  }) => {
+  const confirm = (item: { id: string }) => {
     deletePost({
       variables: {
-        notice: {
+        post: {
           id: item.id,
         },
       },
@@ -136,7 +132,7 @@ const PostUpdate = () => {
       item={post}
       updateItem={setPost}
       buttonHandler={buttonHandler}
-      modalClickHandler={modalClickHandler}
+      confirm={confirm}
     />
   );
 };

@@ -1,12 +1,12 @@
-import { Box, Button, Flex, Input, useDisclosure } from "@chakra-ui/react";
+import { Box, Button, Flex, Input } from "@chakra-ui/react";
 import { MdChevronLeft } from "react-icons/md";
 import { Link, useParams } from "react-router-dom";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import { ChangeEvent, useRef, MutableRefObject, useEffect } from "react";
 import { EditorType } from "@toast-ui/editor";
-import ConfirmModal from "../../components/Modal/confirmModal";
 import { ListItem } from "../../types/store";
+import useModal from "../../hook/useModal";
 
 interface Props {
   title: string;
@@ -15,7 +15,7 @@ interface Props {
   item: { subject: string; content: string; status: string };
   updateItem: Function;
   buttonHandler: Function;
-  modalClickHandler: Function;
+  confirm: Function;
 }
 
 const UpdateLayout = ({
@@ -25,10 +25,9 @@ const UpdateLayout = ({
   item: { subject = "", content = "", status = "" },
   updateItem,
   buttonHandler,
-  modalClickHandler,
+  confirm,
 }: Props) => {
   const params = useParams();
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const editorRef = useRef() as MutableRefObject<Editor>;
 
   const id = (params && params.id) || null;
@@ -63,19 +62,26 @@ const UpdateLayout = ({
     }));
   };
 
+  const { showModal, hideModal } = useModal();
+  const onOpen = () => {
+    showModal({
+      title: `${title} 글 삭제`,
+      children: `정말로 ${title} 글을 삭제하시겠습니까?`,
+      confirmText: "삭제",
+      cancelText: "취소",
+      onCancel: () => {
+        console.log("onCancel...");
+        hideModal();
+      },
+      onConfirm: () => {
+        console.log("onConfirm...");
+        confirm({ id });
+      },
+    });
+  };
+
   return (
     <Box p="50px" bg="gray.50" minH="100%">
-      <ConfirmModal
-        title={`${title} 글 삭제`}
-        buttonText="삭제"
-        clickHandler={() => {
-          modalClickHandler({ id, subject, content });
-        }}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        정말로 {title} 글을 삭제하시겠습니까?
-      </ConfirmModal>
       <Flex h="88px" justifyContent="space-between">
         <Link to={toPath}>
           <Button leftIcon={<MdChevronLeft />} variant="ghost">

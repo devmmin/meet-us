@@ -1,3 +1,5 @@
+import { MouseEventHandler, ReactNode } from "react";
+
 interface Page {
   page: number;
   offset: number;
@@ -26,9 +28,31 @@ interface NavLinkItem {
   icon: string;
 }
 
+interface ModalProps {
+  title: string;
+  children: ReactNode;
+  confirmText: string;
+  cancelText: string;
+  onOpen: Function;
+  onClose: Function;
+  onCancel: MouseEventHandler<HTMLButtonElement>;
+  onConfirm: MouseEventHandler<HTMLButtonElement>;
+}
+
+interface NewModalProps {
+  title: string;
+  children: ReactNode;
+  confirmText: string;
+  cancelText: string;
+  onCancel?: MouseEventHandler<HTMLButtonElement>;
+  onConfirm: MouseEventHandler<HTMLButtonElement>;
+}
+
 export type {
   ListItem,
   Page,
   UserInfo,
   NavLinkItem,
+  ModalProps,
+  NewModalProps
 };
