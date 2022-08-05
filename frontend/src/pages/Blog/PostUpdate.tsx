@@ -22,59 +22,48 @@ const PostUpdate = () => {
   });
 
   // TODO: 저장과 발행의 차이는 무엇인지 확인하기
-  const [updatePost, { error: updateError, data: updateData }] = useMutation(
-    postId ? UPDATE_POST : CREATE_POST,
-    {
-      onCompleted: () => {
-        const type = "save";
-        const success = updateData && !updateError;
-        toast({
-          description: `${type === "save" ? "저장" : "발행"}을 ${
-            success ? "완료" : "실패"
-          }했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-      onError: () => {
-        const type = "save";
-        const success = updateData && !updateError;
-        toast({
-          description: `${type === "save" ? "저장" : "발행"}을 ${
-            success ? "완료" : "실패"
-          }했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const [updatePost] = useMutation(postId ? UPDATE_POST : CREATE_POST, {
+    onCompleted: (response) => {
+      const type = "save";
+      const success = response;
+      toast({
+        description: `${type === "save" ? "저장" : "발행"}을 ${
+          success ? "완료" : "실패"
+        }했습니다.`,
+        status: success ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "저장을 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
-  const [deletePost, { error: deleteError, data: deleteData }] = useMutation(
-    DELETE_POST,
-    {
-      onCompleted: () => {
-        const success = deleteData && deleteData.deletePost && !deleteError;
-        toast({
-          description: `삭제를 ${success === 0 ? "완료" : "실패"}했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-      onError: () => {
-        const success = deleteData && deleteData.deletePost && !deleteError;
-        toast({
-          description: `삭제를 ${success === 0 ? "완료" : "실패"}했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+  // TODO: onCompleted, onError 공통처리
+  const [deletePost] = useMutation(DELETE_POST, {
+    onCompleted: (response) => {
+      toast({
+        description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
+        status: response ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "삭제를 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
   const buttonHandler = (
     event: MouseEvent<HTMLButtonElement>,
@@ -101,7 +90,7 @@ const PostUpdate = () => {
     });
   };
 
-  const confirm = (item: { id: string }) => {
+  const confirm = (item: { id: string | Array<string> }) => {
     deletePost({
       variables: {
         post: {

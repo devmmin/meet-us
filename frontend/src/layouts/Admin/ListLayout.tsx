@@ -12,6 +12,7 @@ interface Props {
   list?: Array<ListItem>;
   tableHeader: Array<string>;
   toPath?: string;
+  confirm?: Function;
 }
 
 const ListLayout = ({
@@ -20,6 +21,7 @@ const ListLayout = ({
   list = [],
   tableHeader = [],
   toPath = "",
+  confirm,
 }: Props) => {
   const checkedList = useRecoilValue(checkedListState);
   const { showModal, hideModal } = useModal();
@@ -30,11 +32,15 @@ const ListLayout = ({
       confirmText: "삭제",
       cancelText: "취소",
       onCancel: () => {
-        console.log("onCancel...");
         hideModal();
       },
       onConfirm: () => {
-        console.log("onConfirm...");
+        if (confirm) {
+          confirm({ id: checkedList });
+          hideModal();
+        } else {
+          hideModal();
+        }
       },
     });
   };
@@ -66,6 +72,7 @@ ListLayout.defaultProps = {
   list: [],
   buttonTitle: "",
   toPath: "",
+  confirm: () => {},
 };
 
 export default ListLayout;

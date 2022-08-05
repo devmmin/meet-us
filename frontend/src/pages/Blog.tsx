@@ -1,7 +1,8 @@
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
+import { useToast } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { GET_POSTS } from "../gql";
+import { DELETE_POST, GET_POSTS } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
 import { PostListResponse, PostListVariable } from "../types/api";
@@ -14,6 +15,7 @@ const {
 
 const Blog = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
+  const toast = useToast();
 
   let list: ListItem[] = [];
   const { loading, data } = useQuery<PostListResponse, PostListVariable>(
@@ -44,6 +46,35 @@ const Blog = () => {
     totalCount = data.posts.totalCount;
   }
 
+  const [deletePost] = useMutation(DELETE_POST, {
+    onCompleted: (response) => {
+      toast({
+        description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
+        status: response ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "삭제를 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
+
+  const confirm = (item: { id: string }) => {
+    deletePost({
+      variables: {
+        post: {
+          id: item.id,
+        },
+      },
+    });
+  };
+
   useEffect(() => {
     setPageInfo((prev) => ({
       ...prev,
@@ -58,6 +89,7 @@ const Blog = () => {
       tableHeader={header}
       buttonTitle="포스트"
       toPath="/admin/blog/update"
+      confirm={confirm}
     />
   );
 };

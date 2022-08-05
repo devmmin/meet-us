@@ -70,11 +70,9 @@ const UpdateLayout = ({
       confirmText: "삭제",
       cancelText: "취소",
       onCancel: () => {
-        console.log("onCancel...");
         hideModal();
       },
       onConfirm: () => {
-        console.log("onConfirm...");
         confirm({ id });
       },
     });
