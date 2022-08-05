@@ -30,59 +30,47 @@ const NoticeUpdate = () => {
   );
 
   // TODO: 저장과 발행의 차이는 무엇인지 확인하기
-  const [updateNotice, { error: updateError, data: updateData }] = useMutation(
-    noticeId ? UPDATE_NOTICE : CREATE_NOTICE,
-    {
-      onCompleted: () => {
-        const type = "save";
-        const success = updateData && !updateError;
-        toast({
-          description: `${type === "save" ? "저장" : "발행"}을 ${
-            success ? "완료" : "실패"
-          }했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-      onError: () => {
-        const type = "save";
-        const success = updateData && !updateError;
-        toast({
-          description: `${type === "save" ? "저장" : "발행"}을 ${
-            success ? "완료" : "실패"
-          }했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const [updateNotice] = useMutation(noticeId ? UPDATE_NOTICE : CREATE_NOTICE, {
+    onCompleted: (response) => {
+      const type = "save";
+      toast({
+        description: `${type === "save" ? "저장" : "발행"}을 ${
+          response ? "완료" : "실패"
+        }했습니다.`,
+        status: response ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      const type = "save";
+      toast({
+        description: `${type === "save" ? "저장" : "발행"}을 실패했습니다.`,
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
-  const [deleteNotice, { error: deleteError, data: deleteData }] = useMutation(
-    DELETE_NOTICE,
-    {
-      onCompleted: () => {
-        const success = deleteData && deleteData.deletePost && !deleteError;
-        toast({
-          description: `삭제를 ${success === 0 ? "완료" : "실패"}했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-      onError: () => {
-        const success = deleteData && deleteData.deletePost && !deleteError;
-        toast({
-          description: `삭제를 ${success === 0 ? "완료" : "실패"}했습니다.`,
-          status: success ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const [deleteNotice] = useMutation(DELETE_NOTICE, {
+    onCompleted: (response) => {
+      toast({
+        description: `삭제를 ${response === 0 ? "완료" : "실패"}했습니다.`,
+        status: response ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "삭제를 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
   const buttonHandler = (
     event: MouseEvent<HTMLButtonElement>,
