@@ -6,10 +6,33 @@ import {
   Grid,
   GridItem,
   Heading,
+  Image,
+  Text,
 } from '@chakra-ui/react';
 import { Header } from '@components/Header';
 import SEO from '@components/seo';
 import type { NextPage } from 'next';
+
+const BlogCard = () => (
+  <Box
+    maxWidth={'2xl'}
+    borderRadius="20px"
+    background="whiteAlpha.200"
+    overflow="hidden"
+  >
+    <Image src={'/images/empty.png'} background="gray.100" padding="6" />
+    <Box padding="6">
+      <Heading size="md">
+        프론트엔드에서 AR 구현하기 시리즈 - 이것만 하면 다된다.
+      </Heading>
+      <Text>
+        프론트엔드에서 AR 구현하기 시리즈 - 이것만 하면 다된다. 역시 거짓말이다.
+        이것만 하면 다될 것처럼 한건 낚시엿다. 사실 AR 다루기 비법은 아주 쉽지
+        않다. 그냥 어렵다. 하고 싶으면 유니티엔진을 다루어라... 우문 현답이네.
+      </Text>
+    </Box>
+  </Box>
+);
 
 const HomePage: NextPage = () => (
   <>
@@ -49,7 +72,7 @@ const HomePage: NextPage = () => (
             <Grid
               height="3xs"
               borderRadius="xl"
-              border="solid 1px gray"
+              gridGap="6"
               gridTemplateColumns={{
                 sm: 'repeat(1, 100%)',
                 md: 'repeat(2, 1fr)',
@@ -57,9 +80,15 @@ const HomePage: NextPage = () => (
                 xl: 'repeat(3, 1fr)',
               }}
             >
-              <GridItem border="solid 1px blue">테스트</GridItem>
-              <GridItem border="solid 1px blue">테스트</GridItem>
-              <GridItem border="solid 1px blue">테스트</GridItem>
+              <GridItem>
+                <BlogCard></BlogCard>
+              </GridItem>
+              <GridItem>
+                <BlogCard></BlogCard>
+              </GridItem>
+              <GridItem>
+                <BlogCard></BlogCard>
+              </GridItem>
               <GridItem border="solid 1px blue">테스트</GridItem>
               <GridItem border="solid 1px blue">테스트</GridItem>
               <GridItem border="solid 1px blue">테스트</GridItem>
