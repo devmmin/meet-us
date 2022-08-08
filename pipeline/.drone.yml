@@ -20,6 +20,11 @@ volumes:
   temp:
     medium: memory
 
+trigger:
+  branch: 
+  - develop
+  event:
+  - push
 
 ---
 kind: pipeline
@@ -52,3 +57,9 @@ volumes:
 - name: cache
   temp:
     medium: memory
+
+trigger:
+  branch: 
+  - develop
+  event:
+  - push    
