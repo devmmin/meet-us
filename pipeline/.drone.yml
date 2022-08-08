@@ -21,10 +21,12 @@ volumes:
     medium: memory
 
 trigger:
-  branch: 
-  - develop
+  branch:
+    include:
+      - "develop"
   event:
-  - push
+      include:
+        - "push"
 
 ---
 kind: pipeline
@@ -59,7 +61,9 @@ volumes:
     medium: memory
 
 trigger:
-  branch: 
-  - develop
+  branch:
+    include:
+      - "develop"
   event:
-  - push    
+      include:
+        - "push"
