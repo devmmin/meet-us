@@ -26,7 +26,7 @@ export const AuthRole = (roles: Role[]) =>
 export const OAuth2UserForGql = createParamDecorator(
   (_, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);
-    return ctx.getContext().req?.securityContext;
+    return ctx.getContext().req?.securityContext?.principal;
   },
 );
 
