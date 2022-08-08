@@ -1,3 +1,4 @@
+import { Logger } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { PostRepository } from '@post/repository/post.repository';
 import { Post } from '@prisma/client';
