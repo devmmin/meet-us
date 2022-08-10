@@ -12,7 +12,6 @@ import NoticeUpdate from "./pages/Notice/NoticeUpdate";
 import Auth from "./components/Auth";
 import ConfirmModal from "./components/Modal/ConfirmModal";
 
-/* eslint-disable no-undef */
 const LoginCheck = ({ component }: { component: JSX.Element }) => {
   if (localStorage.getItem("access-token")) {
     return <Navigate to="/admin/main" replace />;

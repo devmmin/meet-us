@@ -86,14 +86,14 @@ interface PostListResponse {
   posts: { list: PostItem[]; totalCount: number };
 }
 
+interface UserVariable {
+  userId: string;
+}
+
 interface UserResponse {
   getUserById: {
     userName: string;
   };
-}
-
-interface UserVariable {
-  userId: string;
 }
 
 export type {

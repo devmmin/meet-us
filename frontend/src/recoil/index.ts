@@ -1,53 +1,42 @@
 import { atom } from "recoil";
-import { ListItem, ModalProps, NavLinkItem, Page, UserInfo } from "../types/store";
-
-const ATOM_KEYS = {
-  checkedListState: "checkedListState",
-  pageInfoState: "pageInfoState",
-  postItemState: "postItemState",
-  noticeItemState: "noticeItemState",
-  userInfoState: "userInfoState",
-  isAuthState: "isAuthState",
-  navLinksState: "navLinksState",
-  modalState: "modalState"
-};
+import { ListItem, ModalProps, NavLinkItem, Page, UserInfo } from "../types/global";
 
 export const checkedListState = atom<string[]>({
-  key: ATOM_KEYS.checkedListState,
+  key: "checkedListState",
   default: [],
 });
 
 export const pageInfoState = atom<Page>({
-  key: ATOM_KEYS.pageInfoState,
+  key: "pageInfoState",
   default: { page: 1, totalCount: 0, totalPage: 0, offset: 10 }
 });
 
 export const postItemState = atom<ListItem>({
-  key: ATOM_KEYS.postItemState,
+  key: "postItemState",
   default: { id: "", subject: "", content: "", status: "NONE", register: "", createdAt: "" }
 });
 
 export const noticeItemState = atom<ListItem>({
-  key: ATOM_KEYS.noticeItemState,
+  key: "noticeItemState",
   default: { id: "", subject: "", content: "", status: "NONE", register: "", createdAt: "" }
 });
 
 export const userInfoState = atom<UserInfo>({
-  key: ATOM_KEYS.userInfoState,
-  default: { id: "", password: "", nickName: "" }
+  key: "userInfoState",
+  default: { id: "", nickName: "" }
 });
 
 export const isAuthState = atom<boolean>({
-  key: ATOM_KEYS.isAuthState,
+  key: "isAuthState",
   default: false
 });
 
 export const navLinksState = atom<NavLinkItem[]>({
-  key: ATOM_KEYS.navLinksState,
+  key: "navLinksState",
   default: []
 });
 
 export const modalState = atom<ModalProps>({
-  key: ATOM_KEYS.modalState,
+  key: "modalState",
   default: { title: "", children: "", confirmText: "", cancelText: "", onOpen: () => { }, onClose: () => { }, onConfirm: () => { }, onCancel: () => { } },
 });

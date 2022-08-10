@@ -5,8 +5,8 @@ import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import { ChangeEvent, useRef, MutableRefObject, useEffect } from "react";
 import { EditorType } from "@toast-ui/editor";
-import { ListItem } from "../../types/store";
-import useModal from "../../hook/useModal";
+import { ListItem } from "../../types/global";
+import useModal from "../../hooks/useModal";
 
 interface Props {
   title: string;

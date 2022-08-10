@@ -16,12 +16,12 @@ import {
   MenuItem,
   IconButton,
 } from "@chakra-ui/react";
-import { ChangeEvent } from "react";
+import { ChangeEvent, memo } from "react";
 import { useRecoilState } from "recoil";
 import { MdMoreHoriz } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
 import { checkedListState } from "../../recoil";
-import { ListItem } from "../../types/store";
+import { ListItem } from "../../types/global";
 import ListFooter from "./ListFooter";
 
 interface Props {
@@ -29,6 +29,41 @@ interface Props {
   tableHeader: string[];
   buttonTitle?: string;
 }
+
+const ListTableHead = memo(
+  ({
+    tableHeader,
+    allChecked,
+    changeHandler,
+  }: {
+    tableHeader: string[];
+    allChecked: boolean;
+    changeHandler: Function;
+  }) => (
+    <Thead bg="gray.200">
+      <Tr>
+        {tableHeader.map((h) => {
+          if (h === "CHECKBOX") {
+            return (
+              <Th key={h}>
+                <Checkbox
+                  bg="white"
+                  isChecked={allChecked}
+                  onChange={(event) => {
+                    changeHandler(event, "");
+                  }}
+                />
+              </Th>
+            );
+          } else if (h === "MORE") {
+            return <Th key={h} />;
+          }
+          return <Th key={h}>{h}</Th>;
+        })}
+      </Tr>
+    </Thead>
+  )
+);
 
 const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
   const navigate = useNavigate();
@@ -47,28 +82,11 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
   return (
     <TableContainer borderRadius="6px 6px 0px 0px">
       <Table>
-        <Thead bg="gray.200">
-          <Tr>
-            {tableHeader.map((h) => {
-              if (h === "CHECKBOX") {
-                return (
-                  <Th key={h}>
-                    <Checkbox
-                      bg="white"
-                      isChecked={allChecked}
-                      onChange={(event) => {
-                        changeHandler(event, "");
-                      }}
-                    />
-                  </Th>
-                );
-              } else if (h === "MORE") {
-                return <Th key={h} />;
-              }
-              return <Th key={h}>{h}</Th>;
-            })}
-          </Tr>
-        </Thead>
+        <ListTableHead
+          tableHeader={tableHeader}
+          allChecked={allChecked}
+          changeHandler={changeHandler}
+        />
         <Tbody bg="white">
           {list.map((item) => (
             <Tr

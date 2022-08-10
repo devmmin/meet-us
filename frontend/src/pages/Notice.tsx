@@ -5,8 +5,8 @@ import { useRecoilState } from "recoil";
 import { DELETE_NOTICE, GET_NOTICES } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
-import { NoticeListResponse, NoticeListVariable } from "../types/api";
-import { ListItem } from "../types/store";
+import { NoticeListResponse, NoticeListVariable } from "../types/server";
+import { ListItem } from "../types/global";
 import { getNoticeHeaderList } from "../util";
 
 const {

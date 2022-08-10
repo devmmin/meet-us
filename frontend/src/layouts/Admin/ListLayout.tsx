@@ -2,9 +2,9 @@ import { Box, Text } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
 import ListHeader from "../../components/List/ListHeader";
 import ListTable from "../../components/List/ListTable";
-import useModal from "../../hook/useModal";
+import useModal from "../../hooks/useModal";
 import { checkedListState } from "../../recoil";
-import { ListItem } from "../../types/store";
+import { ListItem } from "../../types/global";
 
 interface Props {
   title: string;

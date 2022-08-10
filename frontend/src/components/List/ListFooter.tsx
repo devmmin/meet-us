@@ -1,5 +1,5 @@
 import { Flex, Box, Select, IconButton } from "@chakra-ui/react";
-import { ChangeEvent, MouseEvent } from "react";
+import { ChangeEvent, MouseEvent, memo } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 import { useRecoilState } from "recoil";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -7,7 +7,7 @@ import { pageInfoState } from "../../recoil";
 
 const offsetList = [5, 10, 15, 20, 30];
 
-const ListFooter = () => {
+const ListFooter = memo(() => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
   const location = useLocation();
   const navigate = useNavigate();
@@ -110,6 +110,6 @@ const ListFooter = () => {
       </Box>
     </Flex>
   );
-};
+});
 
 export default ListFooter;

@@ -9,9 +9,8 @@ import {
   userInfoState,
 } from "../recoil";
 import { GET_USER } from "../gql";
-import { UserResponse, UserVariable } from "../types/api";
+import { UserResponse, UserVariable } from "../types/server";
 
-/* eslint-disable no-undef */
 const Auth = ({ component }: { component: JSX.Element }) => {
   const [isAuth, setIsAuth] = useRecoilState(isAuthState);
   const setUserInfo = useSetRecoilState(userInfoState);
@@ -32,7 +31,6 @@ const Auth = ({ component }: { component: JSX.Element }) => {
         ...prev,
         id: "test001@test.com",
         nickName: data.getUserById.userName,
-        password: "",
       }));
       resetPageInfo();
       resetChckedList();

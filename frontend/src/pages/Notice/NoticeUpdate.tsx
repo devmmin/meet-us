@@ -11,7 +11,7 @@ import {
   GET_NOTICE,
   UPDATE_NOTICE,
 } from "../../gql";
-import { NoticeResponse, NoticeVariable } from "../../types/api";
+import { NoticeResponse, NoticeVariable } from "../../types/server";
 
 const NoticeUpdate = () => {
   const params = useParams();

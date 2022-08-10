@@ -18,7 +18,6 @@ interface ListItem {
 
 interface UserInfo {
   id: string;
-  password: string;
   nickName: string;
 }
 
@@ -28,15 +27,9 @@ interface NavLinkItem {
   icon: string;
 }
 
-interface ModalProps {
-  title: string;
-  children: ReactNode;
-  confirmText: string;
-  cancelText: string;
+interface DefaultModalProps {
   onOpen: Function;
   onClose: Function;
-  onCancel: MouseEventHandler<HTMLButtonElement>;
-  onConfirm: MouseEventHandler<HTMLButtonElement>;
 }
 
 interface NewModalProps {
@@ -47,6 +40,8 @@ interface NewModalProps {
   onCancel?: MouseEventHandler<HTMLButtonElement>;
   onConfirm: MouseEventHandler<HTMLButtonElement>;
 }
+
+type ModalProps = NewModalProps & DefaultModalProps
 
 export type {
   ListItem,

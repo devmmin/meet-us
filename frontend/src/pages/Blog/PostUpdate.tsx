@@ -6,7 +6,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import UpdateLayout from "../../layouts/Admin/UpdateLayout";
 import { postItemState } from "../../recoil";
 import { CREATE_POST, DELETE_POST, GET_POST, UPDATE_POST } from "../../gql";
-import { PostResponse, PostVariable } from "../../types/api";
+import { PostResponse, PostVariable } from "../../types/server";
 
 const PostUpdate = () => {
   const params = useParams();

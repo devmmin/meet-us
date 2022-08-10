@@ -5,8 +5,8 @@ import { useRecoilState } from "recoil";
 import { DELETE_POST, GET_POSTS } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
-import { PostListResponse, PostListVariable } from "../types/api";
-import { ListItem } from "../types/store";
+import { PostListResponse, PostListVariable } from "../types/server";
+import { ListItem } from "../types/global";
 import { getPostHeaderList } from "../util";
 
 const {
