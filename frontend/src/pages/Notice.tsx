@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { DELETE_NOTICE, GET_NOTICES } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
 import { NoticeListResponse, NoticeListVariable } from "../types/server";
-import { ListItem } from "../types/global";
 import { getNoticeHeaderList } from "../util";
 
 const {
@@ -17,8 +16,7 @@ const Notice = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
   const toast = useToast();
 
-  let list: ListItem[] = [];
-  const { loading, data } = useQuery<NoticeListResponse, NoticeListVariable>(
+  const { data } = useQuery<NoticeListResponse, NoticeListVariable>(
     GET_NOTICES,
     {
       variables: {
@@ -33,18 +31,21 @@ const Notice = () => {
     }
   );
 
-  let totalCount = 0;
-
-  if (!loading && data) {
-    list = data.posts.list.map((item) => ({
-      ...item,
-      id: item.postId,
-      subject: item.title,
-      register: item.authorId,
-      createdAt: new Date(item.createdAt).toLocaleString(),
-    }));
-    totalCount = data.posts.totalCount;
-  }
+  const totalCount = useMemo(() => data?.posts.totalCount || 0, [data]);
+  const list = useMemo(
+    () =>
+      data?.posts.list.map(
+        (item) =>
+          ({
+            ...item,
+            id: item.postId,
+            subject: item.title,
+            register: item.authorId,
+            createdAt: new Date(item.createdAt).toLocaleString(),
+          } || [])
+      ),
+    [data]
+  );
 
   const [deleteNotice] = useMutation(DELETE_NOTICE, {
     onCompleted: (response) => {

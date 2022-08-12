@@ -12,6 +12,7 @@ module.exports = {
     "plugin:react/recommended",
     "airbnb",
     "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -21,7 +22,7 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["react", "@typescript-eslint"],
+  plugins: ["react", "react-hooks", "@typescript-eslint"],
   rules: {
     "react/jsx-filename-extension": [
       "error",

@@ -1,12 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { useToast } from "@chakra-ui/react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { DELETE_POST, GET_POSTS } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
 import { PostListResponse, PostListVariable } from "../types/server";
-import { ListItem } from "../types/global";
 import { getPostHeaderList } from "../util";
 
 const {
@@ -17,34 +16,33 @@ const Blog = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
   const toast = useToast();
 
-  let list: ListItem[] = [];
-  const { loading, data } = useQuery<PostListResponse, PostListVariable>(
-    GET_POSTS,
-    {
-      variables: {
-        pagination: {
-          skip: pageInfo.offset * (pageInfo.page - 1),
-          take: pageInfo.offset,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
+  const { data } = useQuery<PostListResponse, PostListVariable>(GET_POSTS, {
+    variables: {
+      pagination: {
+        skip: pageInfo.offset * (pageInfo.page - 1),
+        take: pageInfo.offset,
       },
-    }
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+  });
+
+  const totalCount = useMemo(() => data?.posts.totalCount || 0, [data]);
+  const list = useMemo(
+    () =>
+      data?.posts.list.map(
+        (item) =>
+          ({
+            ...item,
+            id: item.postId,
+            subject: item.title,
+            register: item.authorId,
+            createdAt: new Date(item.createdAt).toLocaleString(),
+          } || [])
+      ),
+    [data]
   );
-
-  let totalCount = 0;
-
-  if (!loading && data) {
-    list = data.posts.list.map((item) => ({
-      ...item,
-      id: item.postId,
-      subject: item.title,
-      register: item.authorId,
-      createdAt: new Date(item.createdAt).toLocaleString(),
-    }));
-    totalCount = data.posts.totalCount;
-  }
 
   const [deletePost] = useMutation(DELETE_POST, {
     onCompleted: (response) => {

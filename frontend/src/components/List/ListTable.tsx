@@ -16,7 +16,7 @@ import {
   MenuItem,
   IconButton,
 } from "@chakra-ui/react";
-import { ChangeEvent, memo } from "react";
+import { ChangeEvent, memo, useCallback, useMemo } from "react";
 import { useRecoilState } from "recoil";
 import { MdMoreHoriz } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -69,16 +69,22 @@ const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [checkedList, setCheckedList] = useRecoilState(checkedListState);
-  const allChecked = list.length > 0 && checkedList.length === list.length;
-  const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: string) => {
-    if (id === "") {
-      setCheckedList(event.target.checked ? list.map((v) => v.id) : []);
-    } else if (event.target.checked) {
-      setCheckedList((prev) => [...prev, id]);
-    } else {
-      setCheckedList((prev) => prev.filter((v) => v !== id));
-    }
-  };
+  const allChecked = useMemo(
+    () => list.length > 0 && checkedList.length === list.length,
+    [list, checkedList]
+  );
+  const changeHandler = useCallback(
+    (event: ChangeEvent<HTMLInputElement>, id: string) => {
+      if (id === "") {
+        setCheckedList(event.target.checked ? list.map((v) => v.id) : []);
+      } else if (event.target.checked) {
+        setCheckedList((prev) => [...prev, id]);
+      } else {
+        setCheckedList((prev) => prev.filter((v) => v !== id));
+      }
+    },
+    [list, setCheckedList]
+  );
   return (
     <TableContainer borderRadius="6px 6px 0px 0px">
       <Table>
