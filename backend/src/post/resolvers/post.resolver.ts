@@ -1,7 +1,7 @@
 import { GqlJwtAuthGuard } from '@auth/guards/gql-jwt-auth.guard';
 import { OAuth2Pricipal } from '@auth/security/security-context';
 import { OAuth2UserForGql } from '@auth/utils';
-import { UseGuards } from '@nestjs/common';
+import { Logger, UseGuards } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 import {
@@ -80,12 +80,12 @@ export class PostResolver {
       description: 'Post Id',
       type: () => DeletePostInput,
     })
-    id: string,
+    deletePostInput: DeletePostInput,
   ) {
     const { post } = await this.commandBus.execute<
       DeletePostCommand,
       DeletePostResult
-    >(new DeletePostCommand(id));
+    >(new DeletePostCommand(deletePostInput.id));
     return post;
   }
 

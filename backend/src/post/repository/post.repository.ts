@@ -33,7 +33,7 @@ export class PostRepository {
   deletePost(id: string) {
     return this.prismaService.post.delete({
       where: {
-        id: id,
+        id,
       },
     });
   }
