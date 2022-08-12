@@ -1,11 +1,10 @@
-import { Box, useDisclosure, Text, useToast } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { useRecoilValue } from "recoil";
-import ConfirmModal from "../../components/Modal/confirmModal";
 import ListHeader from "../../components/List/ListHeader";
 import ListTable from "../../components/List/ListTable";
+import useModal from "../../hooks/useModal";
 import { checkedListState } from "../../recoil";
-import { ListItem } from "../../types/index";
-import { deletePost } from "../../util";
+import { ListItem } from "../../types/global";
 
 interface Props {
   title: string;
@@ -13,6 +12,7 @@ interface Props {
   list?: Array<ListItem>;
   tableHeader: Array<string>;
   toPath?: string;
+  confirm?: Function;
 }
 
 const ListLayout = ({
@@ -21,30 +21,31 @@ const ListLayout = ({
   list = [],
   tableHeader = [],
   toPath = "",
+  confirm,
 }: Props) => {
   const checkedList = useRecoilValue(checkedListState);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const toast = useToast();
-  const modalClickHandler = () => {
-    const response = deletePost();
-    toast({
-      description: `삭제를 ${response.code === 0 ? "완료" : "실패"}했습니다.`,
-      status: response.code === 0 ? "success" : "error",
-      duration: 9000,
-      isClosable: true,
+  const { showModal, hideModal } = useModal();
+  const onOpen = () => {
+    showModal({
+      title: `${title} 글 삭제`,
+      children: `정말로 ${checkedList.length}건의 ${title} 글을 삭제하시겠습니까?`,
+      confirmText: "삭제",
+      cancelText: "취소",
+      onCancel: () => {
+        hideModal();
+      },
+      onConfirm: () => {
+        if (confirm) {
+          confirm({ id: checkedList });
+          hideModal();
+        } else {
+          hideModal();
+        }
+      },
     });
   };
   return (
     <Box p="50px" bg="gray.50" minH="100%">
-      <ConfirmModal
-        title={`${title} 글 삭제`}
-        buttonText="삭제"
-        clickHandler={modalClickHandler}
-        isOpen={isOpen}
-        onClose={onClose}
-      >
-        정말로 {checkedList.length}건의 {title} 글을 삭제하시겠습니까?
-      </ConfirmModal>
       <ListHeader
         title={title}
         isToggle={checkedList.length > 0}
@@ -71,6 +72,7 @@ ListLayout.defaultProps = {
   list: [],
   buttonTitle: "",
   toPath: "",
+  confirm: () => {},
 };
 
 export default ListLayout;

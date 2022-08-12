@@ -1,96 +1,77 @@
-import { gql, useQuery } from "@apollo/client";
-import { useEffect } from "react";
-import { useResetRecoilState, useRecoilState } from "recoil";
+import { useMutation, useQuery } from "@apollo/client";
+import { useToast } from "@chakra-ui/react";
+import { useEffect, useMemo } from "react";
+import { useRecoilState } from "recoil";
+import { DELETE_POST, GET_POSTS } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
-import { checkedListState, pageInfoState } from "../recoil";
-import { ListItem } from "../types";
+import { pageInfoState } from "../recoil";
+import { PostListResponse, PostListVariable } from "../types/server";
 import { getPostHeaderList } from "../util";
 
-interface PostVariable {
-  pagination: {
-    skip: number;
-    take: number;
-  };
-  orderBy: {
-    createdAt: string;
-  };
-}
-
-interface PostItem {
-  authorId: string;
-  content: string;
-  createdAt: number;
-  postId: string;
-  status: string;
-  title: string;
-  updatedAt: number;
-}
-
-interface PostResponse {
-  posts: { list: PostItem[]; totalCount: number };
-}
-
-const GET_POSTS = gql`
-  query Posts($pagination: OffsetPagination!, $orderBy: PostsOrder) {
-    posts(pagination: $pagination, orderBy: $orderBy) {
-      list {
-        postId
-        title
-        content
-        status
-        authorId
-        author {
-          id
-          userName
-        }
-        updatedAt
-        createdAt
-      }
-      totalCount
-    }
-  }
-`;
+const {
+  data: { header },
+} = getPostHeaderList();
 
 const Blog = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
-  const resetCheckedList = useResetRecoilState(checkedListState);
+  const toast = useToast();
 
-  const {
-    data: { header },
-  } = getPostHeaderList();
-
-  let list: ListItem[] = [];
-  const { loading, error, data } = useQuery<PostResponse, PostVariable>(
-    GET_POSTS,
-    {
-      variables: {
-        pagination: {
-          skip: pageInfo.offset * (pageInfo.page - 1),
-          take: pageInfo.offset,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
+  const { data } = useQuery<PostListResponse, PostListVariable>(GET_POSTS, {
+    variables: {
+      pagination: {
+        skip: pageInfo.offset * (pageInfo.page - 1),
+        take: pageInfo.offset,
       },
-    }
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+  });
+
+  const totalCount = useMemo(() => data?.posts.totalCount || 0, [data]);
+  const list = useMemo(
+    () =>
+      data?.posts.list.map(
+        (item) =>
+          ({
+            ...item,
+            id: item.postId,
+            subject: item.title,
+            register: item.authorId,
+            createdAt: new Date(item.createdAt).toLocaleString(),
+          } || [])
+      ),
+    [data]
   );
 
-  if (loading || error) {
-    list = [];
-  }
+  const [deletePost] = useMutation(DELETE_POST, {
+    onCompleted: (response) => {
+      toast({
+        description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
+        status: response ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "삭제를 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
-  let totalCount = 0;
-
-  if (data) {
-    list = data.posts.list.map((item) => ({
-      ...item,
-      id: item.postId,
-      subject: item.title,
-      register: item.authorId,
-      createdAt: new Date(item.createdAt).toLocaleString(),
-    }));
-    totalCount = data.posts.totalCount;
-  }
+  const confirm = (item: { id: string }) => {
+    deletePost({
+      variables: {
+        post: {
+          id: item.id,
+        },
+      },
+    });
+  };
 
   useEffect(() => {
     setPageInfo((prev) => ({
@@ -98,8 +79,7 @@ const Blog = () => {
       totalCount,
       totalPage: totalCount / prev.offset,
     }));
-    resetCheckedList();
-  }, [setPageInfo, resetCheckedList, totalCount]);
+  }, [setPageInfo, totalCount]);
   return (
     <ListLayout
       title="블로그"
@@ -107,6 +87,7 @@ const Blog = () => {
       tableHeader={header}
       buttonTitle="포스트"
       toPath="/admin/blog/update"
+      confirm={confirm}
     />
   );
 };

@@ -19,11 +19,12 @@ import { getNavLinks } from "../util";
 import { navLinksState } from "../recoil";
 import UserInfo from "./Sidebar/UserInfo";
 
+// TODO: API fetch
+const { data } = getNavLinks();
+
 const Sidebar = () => {
   const [navLinks, setNavLinks] = useRecoilState(navLinksState);
-
   useLayoutEffect(() => {
-    const { data } = getNavLinks();
     setNavLinks(data);
   }, [setNavLinks]);
   return (

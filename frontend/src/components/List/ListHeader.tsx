@@ -1,5 +1,5 @@
 import { Heading, Button, Flex } from "@chakra-ui/react";
-import { ReactNode } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 import { Link } from "react-router-dom";
 
 interface Props {
@@ -7,7 +7,7 @@ interface Props {
   title: string;
   isToggle: boolean;
   buttonTitle?: string;
-  onOpen: () => void;
+  onOpen: MouseEventHandler<HTMLButtonElement>;
   toPath?: string;
 }
 const ListHeader = ({

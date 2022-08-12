@@ -1,67 +1,23 @@
-import { gql, useQuery } from "@apollo/client";
-import { useEffect } from "react";
-import { useResetRecoilState, useRecoilState } from "recoil";
+import { useMutation, useQuery } from "@apollo/client";
+import { useToast } from "@chakra-ui/react";
+import { useEffect, useMemo } from "react";
+import { useRecoilState } from "recoil";
+import { DELETE_NOTICE, GET_NOTICES } from "../gql";
 import ListLayout from "../layouts/Admin/ListLayout";
-import { checkedListState, pageInfoState } from "../recoil";
-import { ListItem } from "../types";
+import { pageInfoState } from "../recoil";
+import { NoticeListResponse, NoticeListVariable } from "../types/server";
 import { getNoticeHeaderList } from "../util";
 
-interface NoticeVariable {
-  pagination: {
-    skip: number;
-    take: number;
-  };
-  orderBy: {
-    createdAt: string;
-  };
-}
-
-interface NoticeItem {
-  authorId: string;
-  content: string;
-  createdAt: number;
-  postId: string;
-  status: string;
-  title: string;
-  updatedAt: number;
-}
-
-interface NoticeResponse {
-  posts: { list: NoticeItem[]; totalCount: number };
-}
-
-const GET_POSTS = gql`
-  query GET_POSTS($pagination: OffsetPagination!, $orderBy: PostsOrder) {
-    posts(pagination: $pagination, orderBy: $orderBy) {
-      list {
-        postId
-        title
-        content
-        status
-        authorId
-        author {
-          id
-          userName
-        }
-        updatedAt
-        createdAt
-      }
-      totalCount
-    }
-  }
-`;
+const {
+  data: { header },
+} = getNoticeHeaderList();
 
 const Notice = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
-  const resetCheckedList = useResetRecoilState(checkedListState);
+  const toast = useToast();
 
-  const {
-    data: { header },
-  } = getNoticeHeaderList();
-
-  let list: ListItem[] = [];
-  const { loading, error, data } = useQuery<NoticeResponse, NoticeVariable>(
-    GET_POSTS,
+  const { data } = useQuery<NoticeListResponse, NoticeListVariable>(
+    GET_NOTICES,
     {
       variables: {
         pagination: {
@@ -75,22 +31,50 @@ const Notice = () => {
     }
   );
 
-  if (loading || error) {
-    list = [];
-  }
+  const totalCount = useMemo(() => data?.posts.totalCount || 0, [data]);
+  const list = useMemo(
+    () =>
+      data?.posts.list.map(
+        (item) =>
+          ({
+            ...item,
+            id: item.postId,
+            subject: item.title,
+            register: item.authorId,
+            createdAt: new Date(item.createdAt).toLocaleString(),
+          } || [])
+      ),
+    [data]
+  );
 
-  let totalCount = 0;
+  const [deleteNotice] = useMutation(DELETE_NOTICE, {
+    onCompleted: (response) => {
+      toast({
+        description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
+        status: response ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "삭제를 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
-  if (data) {
-    list = data.posts.list.map((item) => ({
-      ...item,
-      id: item.postId,
-      subject: item.title,
-      register: item.authorId,
-      createdAt: new Date(item.createdAt).toLocaleString(),
-    }));
-    totalCount = data.posts.totalCount;
-  }
+  const confirm = (item: { id: string }) => {
+    deleteNotice({
+      variables: {
+        post: {
+          id: item.id,
+        },
+      },
+    });
+  };
 
   useEffect(() => {
     setPageInfo((prev) => ({
@@ -98,8 +82,7 @@ const Notice = () => {
       totalCount,
       totalPage: totalCount / prev.offset,
     }));
-    resetCheckedList();
-  }, [setPageInfo, resetCheckedList, totalCount]);
+  }, [setPageInfo, totalCount]);
   return (
     <ListLayout
       title="공지사항"
@@ -107,6 +90,7 @@ const Notice = () => {
       tableHeader={header}
       buttonTitle="공지사항"
       toPath="/admin/notice/update"
+      confirm={confirm}
     />
   );
 };

@@ -1,53 +1,176 @@
-import { useEffect } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { MouseEvent, useEffect, ChangeEvent, memo } from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import { useRecoilState } from "recoil";
-import { useParams, useNavigate } from "react-router-dom";
-import UpdateLayout from "../../layouts/Admin/UpdateLayout";
+import { Box, Button, Flex, Input, useToast } from "@chakra-ui/react";
+import { MdChevronLeft } from "react-icons/md";
+import { useParams, Link } from "react-router-dom";
 import { postItemState } from "../../recoil";
+import { CREATE_POST, DELETE_POST, GET_POST, UPDATE_POST } from "../../gql";
+import { PostResponse, PostVariable } from "../../types/server";
+import { ListItem } from "../../types/global";
+import useModal from "../../hooks/useModal";
+import useEditor from "../../hooks/useEditor";
 
-interface PostVariable {
-  postId: string;
-}
+const propsAreEqual = (
+  prevProps: { post: { id: string; status: string } },
+  nextProps: { post: { id: string; status: string } }
+) =>
+  prevProps.post.id === nextProps.post.id &&
+  prevProps.post.status === nextProps.post.status;
 
-interface PostResponse {
-  getPostById: {
-    postId: string;
-    title: string;
-    content: string;
-    status: string;
-    authorId: string;
-    author: {
-      id: string;
-      userName: string;
+const PostUpdateHeader = memo(
+  ({
+    post,
+    updatePost,
+  }: {
+    post: { id: string; subject: string; content: string; status: string };
+    updatePost: Function;
+  }) => {
+    const toast = useToast();
+    // TODO: onCompleted, onError 공통처리
+    const [deletePost] = useMutation(DELETE_POST, {
+      onCompleted: (response) => {
+        toast({
+          description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
+          status: response ? "success" : "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      },
+      onError: () => {
+        toast({
+          description: "삭제를 실패했습니다.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+      },
+    });
+
+    const confirm = (item: { id: string | Array<string> }) => {
+      deletePost({
+        variables: {
+          post: {
+            id: item.id,
+          },
+        },
+      });
     };
-    updatedAt: number;
-    createdAt: number;
-  };
-}
 
-const GET_POST = gql`
-  query GetPostById($postId: String!) {
-    getPostById(id: $postId) {
-      postId
-      title
-      content
-      status
-      authorId
-      author {
-        id
-        userName
+    const buttonHandler = (
+      event: MouseEvent<HTMLButtonElement>,
+      item: { id: string; subject: string; content: string }
+    ) => {
+      if (item.subject.trim() === "" || item.content.trim() === "") {
+        toast({
+          description: "입력된 값을 확인해주세요.",
+          status: "error",
+          duration: 9000,
+          isClosable: true,
+        });
+        return;
       }
-      updatedAt
-      createdAt
-    }
-  }
-`;
+
+      updatePost({
+        variables: {
+          post: {
+            id: item.id,
+            title: item.subject,
+            content: item.content,
+          },
+        },
+      });
+    };
+
+    const title = "블로그";
+    const toPath = "/admin/blog";
+
+    const { showModal, hideModal } = useModal();
+    const onOpen = () => {
+      showModal({
+        title: `${title} 글 삭제`,
+        children: `정말로 ${title} 글을 삭제하시겠습니까?`,
+        confirmText: "삭제",
+        cancelText: "취소",
+        onCancel: () => {
+          hideModal();
+        },
+        onConfirm: () => {
+          confirm({ id: post.id });
+        },
+      });
+    };
+    return (
+      <Flex h="88px" justifyContent="space-between">
+        <Link to={toPath}>
+          <Button leftIcon={<MdChevronLeft />} variant="ghost">
+            이전 메뉴
+          </Button>
+        </Link>
+        <Box>
+          {post.id && post.status !== "COMPLETED" && (
+            <Button colorScheme="red" size="sm" onClick={onOpen}>
+              {title} 삭제
+            </Button>
+          )}
+          {post.status !== "COMPLETED" && (
+            <Button
+              variant="outline"
+              bg="white"
+              size="sm"
+              ml={post.id ? "10px" : "0px"}
+              onClick={(event) => {
+                buttonHandler(event, post);
+              }}
+            >
+              {title} {post.id ? "수정" : "저장"}
+            </Button>
+          )}
+          {post.status !== "COMPLETED" && (
+            <Button
+              colorScheme="green"
+              size="sm"
+              ml="10px"
+              onClick={(event) => {
+                buttonHandler(event, post);
+              }}
+            >
+              {title} 발행
+            </Button>
+          )}
+          {post.status === "COMPLETED" && (
+            <Button
+              colorScheme="green"
+              size="sm"
+              ml="10px"
+              onClick={(event) => {
+                buttonHandler(event, post);
+              }}
+            >
+              {title} 발행 취소
+            </Button>
+          )}
+        </Box>
+      </Flex>
+    );
+  },
+  propsAreEqual
+);
 
 const PostUpdate = () => {
   const params = useParams();
-  const navigate = useNavigate();
-  const [post, updatePost] = useRecoilState(postItemState);
+  const toast = useToast();
+  const [post, setPost] = useRecoilState(postItemState);
   const postId = (params && params.id) || "";
+
+  const update = (content: string) => {
+    setPost((prev) => ({
+      ...prev,
+      content,
+    }));
+  };
+
+  const { renderEditor } = useEditor({ content: post.content, update });
 
   const { loading, data } = useQuery<PostResponse, PostVariable>(GET_POST, {
     variables: {
@@ -55,32 +178,69 @@ const PostUpdate = () => {
     },
   });
 
+  // TODO: 저장과 발행의 차이는 무엇인지 확인하기
+  const [updatePost] = useMutation(postId ? UPDATE_POST : CREATE_POST, {
+    onCompleted: (response) => {
+      const type = "save";
+      const success = response;
+      toast({
+        description: `${type === "save" ? "저장" : "발행"}을 ${
+          success ? "완료" : "실패"
+        }했습니다.`,
+        status: success ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "저장을 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
+
   useEffect(() => {
-    if (!postId) {
-      navigate(-1);
-    } else {
-      if (!loading && data) {
-        const newPost = {
-          id: data.getPostById.postId,
-          subject: data.getPostById.title,
-          content: data.getPostById.content,
-          status: data.getPostById.status,
-          register:
-            data.getPostById.author.id + data.getPostById.author.userName,
-          createdAt: new Date(data.getPostById.createdAt).toLocaleString(),
-        };
-        updatePost(newPost);
-      }
+    if (!loading && data) {
+      const newPost = {
+        id: data.getPostById.postId,
+        subject: data.getPostById.title,
+        content: data.getPostById.content,
+        status: data.getPostById.status,
+        register: data.getPostById.author.id + data.getPostById.author.userName,
+        createdAt: new Date(data.getPostById.createdAt).toLocaleString(),
+      };
+      setPost(newPost);
     }
-  }, [postId, navigate, updatePost, loading, data]);
+  }, [loading, data, setPost]);
+
+  const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
+    setPost((prev: ListItem) => ({
+      ...prev,
+      [key]: event.target.value,
+    }));
+  };
+
   return (
-    <UpdateLayout
-      title="블로그"
-      buttonTitle="포스트"
-      toPath="/admin/blog"
-      item={post}
-      updateItem={updatePost}
-    />
+    <Box p="50px" bg="gray.50" minH="100%">
+      <PostUpdateHeader post={post} updatePost={updatePost} />
+      <Flex flexDirection="column">
+        <Input
+          placeholder="제목을 입력하세요."
+          bg="white"
+          value={post.subject}
+          onChange={(event) => {
+            changeHandler(event, "subject");
+          }}
+        />
+        <Box mt="15px" minH="100%" bg="white">
+          {renderEditor()}
+        </Box>
+      </Flex>
+      <Box />
+    </Box>
   );
 };
 
