@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_NOTICE = gql`
-  query GetPostById($noticeId: String!) {
+  query GetNoticeById($noticeId: String!) {
     getPostById(id: $noticeId) {
       postId
       title

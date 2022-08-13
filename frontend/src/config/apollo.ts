@@ -39,6 +39,11 @@ const client = new ApolloClient({
   link: from([authMiddleware, errorLink, httpLink]),
   cache: new InMemoryCache(),
   credentials: "include",
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "cache-and-network",
+    },
+  },
 });
 
 export default client;
