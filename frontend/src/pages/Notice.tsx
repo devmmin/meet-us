@@ -47,6 +47,14 @@ const Notice = () => {
     [data]
   );
 
+  useEffect(() => {
+    setPageInfo((prev) => ({
+      ...prev,
+      totalCount,
+      totalPage: totalCount / prev.offset,
+    }));
+  }, [setPageInfo, totalCount]);
+
   const [deleteNotice] = useMutation(DELETE_NOTICE, {
     onCompleted: (response) => {
       toast({
@@ -75,14 +83,6 @@ const Notice = () => {
       },
     });
   };
-
-  useEffect(() => {
-    setPageInfo((prev) => ({
-      ...prev,
-      totalCount,
-      totalPage: totalCount / prev.offset,
-    }));
-  }, [setPageInfo, totalCount]);
   return (
     <ListLayout
       title="공지사항"

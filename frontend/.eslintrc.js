@@ -6,6 +6,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
+  plugins: ["react", "react-hooks", "@typescript-eslint"],
   extends: [
     "react-app",
     "react-app/jest",
@@ -22,14 +23,8 @@ module.exports = {
     ecmaVersion: "latest",
     sourceType: "module",
   },
-  plugins: ["react", "react-hooks", "@typescript-eslint"],
   rules: {
-    "react/jsx-filename-extension": [
-      "error",
-      {
-        extensions: [".js", ".jsx", ".ts", ".tsx"],
-      },
-    ],
+    "import/prefer-default-export": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -39,21 +34,21 @@ module.exports = {
         js: "never",
       },
     ],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
+      },
+    ],
     "react/function-component-definition": [
       2,
       {
         namedComponents: "arrow-function",
       },
     ],
-    "comma-dangle": "off",
-    "object-curly-newline": "off",
+    "react/jsx-curly-newline": "off",
     "react/jsx-curr": "off",
     "react/jsx-one-expression-per-line": "off",
-    "implicit-arrow-linebreak": "off",
-    "react/jsx-curly-newline": "off",
-    "no-else-return": ["error", { allowElseIf: true }],
-    "operator-linebreak": "off",
-    "linebreak-style": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": [
       "warn",
@@ -61,7 +56,12 @@ module.exports = {
         additionalHooks: "useRecoilCallback",
       },
     ],
-    "import/prefer-default-export": "off",
+    "comma-dangle": "off",
+    "object-curly-newline": "off",
+    "implicit-arrow-linebreak": "off",
+    "no-else-return": ["error", { allowElseIf: true }],
+    "operator-linebreak": "off",
+    "linebreak-style": "off",
     "no-restricted-syntax": [
       "error",
       "FunctionExpression",
