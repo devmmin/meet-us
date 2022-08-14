@@ -1,21 +1,25 @@
 import { MouseEvent, useEffect, ChangeEvent } from "react";
-import { useMutation, useQuery } from "@apollo/client";
 import { useRecoilState } from "recoil";
-import { Box, Button, Flex, Input, useToast } from "@chakra-ui/react";
-import { MdChevronLeft } from "react-icons/md";
-import { useParams, Link } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { Box, Flex, Input, useToast } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
 import { postItemState } from "../../recoil";
 import { CREATE_POST, DELETE_POST, GET_POST, UPDATE_POST } from "../../gql";
 import { PostResponse, PostVariable } from "../../types/server";
 import { ListItem } from "../../types/global";
-import useModal from "../../hooks/useModal";
 import useEditor from "../../hooks/useEditor";
+import UpdateHeader from "../../components/Update/UpdateHeader";
 
-const PostUpdateHeader = ({
-  post,
-}: {
-  post: { id: string; subject: string; content: string; status: string };
-}) => {
+interface Props {
+  post: {
+    id: string;
+    subject: string;
+    content: string;
+    status: string;
+  };
+}
+
+const PostUpdateHeader = ({ post }: Props) => {
   const toast = useToast();
   // TODO: onCompleted, onError 공통처리
   const [deletePost] = useMutation(DELETE_POST, {
@@ -99,73 +103,14 @@ const PostUpdateHeader = ({
   const title = "블로그";
   const toPath = "/admin/blog";
 
-  const { showModal, hideModal } = useModal();
-  const onOpen = () => {
-    showModal({
-      title: `${title} 글 삭제`,
-      children: `정말로 ${title} 글을 삭제하시겠습니까?`,
-      confirmText: "삭제",
-      cancelText: "취소",
-      onCancel: () => {
-        hideModal();
-      },
-      onConfirm: () => {
-        confirm({ id: post.id });
-      },
-    });
-  };
   return (
-    <Flex h="88px" justifyContent="space-between">
-      <Link to={toPath}>
-        <Button leftIcon={<MdChevronLeft />} variant="ghost">
-          이전 메뉴
-        </Button>
-      </Link>
-      <Box>
-        {post.id && post.status !== "COMPLETED" && (
-          <Button colorScheme="red" size="sm" onClick={onOpen}>
-            {title} 삭제
-          </Button>
-        )}
-        {post.status !== "COMPLETED" && (
-          <Button
-            variant="outline"
-            bg="white"
-            size="sm"
-            ml={post.id ? "10px" : "0px"}
-            onClick={(event) => {
-              buttonHandler(event, post);
-            }}
-          >
-            {title} {post.id ? "수정" : "저장"}
-          </Button>
-        )}
-        {post.status !== "COMPLETED" && (
-          <Button
-            colorScheme="green"
-            size="sm"
-            ml="10px"
-            onClick={(event) => {
-              buttonHandler(event, post);
-            }}
-          >
-            {title} 발행
-          </Button>
-        )}
-        {post.status === "COMPLETED" && (
-          <Button
-            colorScheme="green"
-            size="sm"
-            ml="10px"
-            onClick={(event) => {
-              buttonHandler(event, post);
-            }}
-          >
-            {title} 발행 취소
-          </Button>
-        )}
-      </Box>
-    </Flex>
+    <UpdateHeader
+      title={title}
+      item={post}
+      confirm={confirm}
+      toPath={toPath}
+      buttonHandler={buttonHandler}
+    />
   );
 };
 
@@ -180,15 +125,6 @@ const PostUpdate = () => {
     },
   });
 
-  const update = (content: string) => {
-    setPost((prev) => ({
-      ...prev,
-      content,
-    }));
-  };
-
-  const { renderEditor } = useEditor({ content: post.content, update });
-
   useEffect(() => {
     if (data) {
       setPost({
@@ -201,6 +137,15 @@ const PostUpdate = () => {
       });
     }
   }, [data, setPost]);
+
+  const update = (content: string) => {
+    setPost((prev) => ({
+      ...prev,
+      content,
+    }));
+  };
+
+  const { renderEditor } = useEditor({ content: post.content, update });
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
     setPost((prev: ListItem) => ({

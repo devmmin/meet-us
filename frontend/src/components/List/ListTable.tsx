@@ -16,7 +16,7 @@ import {
   MenuItem,
   IconButton,
 } from "@chakra-ui/react";
-import { ChangeEvent, memo, useCallback, useMemo } from "react";
+import { ChangeEvent } from "react";
 import { useRecoilState } from "recoil";
 import { MdMoreHoriz } from "react-icons/md";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -30,61 +30,53 @@ interface Props {
   buttonTitle?: string;
 }
 
-const ListTableHead = memo(
-  ({
-    tableHeader,
-    allChecked,
-    changeHandler,
-  }: {
-    tableHeader: string[];
-    allChecked: boolean;
-    changeHandler: Function;
-  }) => (
-    <Thead bg="gray.200">
-      <Tr>
-        {tableHeader.map((h) => {
-          if (h === "CHECKBOX") {
-            return (
-              <Th key={h}>
-                <Checkbox
-                  bg="white"
-                  isChecked={allChecked}
-                  onChange={(event) => {
-                    changeHandler(event, "");
-                  }}
-                />
-              </Th>
-            );
-          } else if (h === "MORE") {
-            return <Th key={h} />;
-          }
-          return <Th key={h}>{h}</Th>;
-        })}
-      </Tr>
-    </Thead>
-  )
+const ListTableHead = ({
+  tableHeader,
+  allChecked,
+  changeHandler,
+}: {
+  tableHeader: string[];
+  allChecked: boolean;
+  changeHandler: Function;
+}) => (
+  <Thead bg="gray.200">
+    <Tr>
+      {tableHeader.map((h) => {
+        if (h === "CHECKBOX") {
+          return (
+            <Th key={h}>
+              <Checkbox
+                bg="white"
+                isChecked={allChecked}
+                onChange={(event) => {
+                  changeHandler(event, "");
+                }}
+              />
+            </Th>
+          );
+        } else if (h === "MORE") {
+          return <Th key={h} />;
+        }
+        return <Th key={h}>{h}</Th>;
+      })}
+    </Tr>
+  </Thead>
 );
 
 const ListTable = ({ list, tableHeader, buttonTitle }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [checkedList, setCheckedList] = useRecoilState(checkedListState);
-  const allChecked = useMemo(
-    () => list.length > 0 && checkedList.length === list.length,
-    [list, checkedList]
-  );
-  const changeHandler = useCallback(
-    (event: ChangeEvent<HTMLInputElement>, id: string) => {
-      if (id === "") {
-        setCheckedList(event.target.checked ? list.map((v) => v.id) : []);
-      } else if (event.target.checked) {
-        setCheckedList((prev) => [...prev, id]);
-      } else {
-        setCheckedList((prev) => prev.filter((v) => v !== id));
-      }
-    },
-    [list, setCheckedList]
-  );
+  const allChecked = list.length > 0 && checkedList.length === list.length;
+  const changeHandler = (event: ChangeEvent<HTMLInputElement>, id: string) => {
+    if (id === "") {
+      setCheckedList(event.target.checked ? list.map((v) => v.id) : []);
+    } else if (event.target.checked) {
+      setCheckedList((prev) => [...prev, id]);
+    } else {
+      setCheckedList((prev) => prev.filter((v) => v !== id));
+    }
+  };
   return (
     <TableContainer borderRadius="6px 6px 0px 0px">
       <Table>

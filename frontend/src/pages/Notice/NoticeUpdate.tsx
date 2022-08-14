@@ -1,9 +1,8 @@
 import { ChangeEvent, MouseEvent, useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { MdChevronLeft } from "react-icons/md";
 import { useMutation, useQuery } from "@apollo/client";
-import { Box, Button, Flex, Input, useToast } from "@chakra-ui/react";
-import { useParams, Link } from "react-router-dom";
+import { Box, Flex, Input, useToast } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
 import { noticeItemState } from "../../recoil";
 import {
   CREATE_NOTICE,
@@ -13,14 +12,19 @@ import {
 } from "../../gql";
 import { NoticeResponse, NoticeVariable } from "../../types/server";
 import { ListItem } from "../../types/global";
-import useModal from "../../hooks/useModal";
 import useEditor from "../../hooks/useEditor";
+import UpdateHeader from "../../components/Update/UpdateHeader";
 
-const NoticeUpdateHeader = ({
-  notice,
-}: {
-  notice: { id: string; subject: string; content: string; status: string };
-}) => {
+interface Props {
+  notice: {
+    id: string;
+    subject: string;
+    content: string;
+    status: string;
+  };
+}
+
+const NoticeUpdateHeader = ({ notice }: Props) => {
   const toast = useToast();
   const [deleteNotice] = useMutation(DELETE_NOTICE, {
     onCompleted: (response) => {
@@ -106,74 +110,14 @@ const NoticeUpdateHeader = ({
   const title = "공지사항";
   const toPath = "/admin/notice";
 
-  const { showModal, hideModal } = useModal();
-  const onOpen = () => {
-    showModal({
-      title: `${title} 글 삭제`,
-      children: `정말로 ${title} 글을 삭제하시겠습니까?`,
-      confirmText: "삭제",
-      cancelText: "취소",
-      onCancel: () => {
-        hideModal();
-      },
-      onConfirm: () => {
-        confirm({ id: notice.id });
-      },
-    });
-  };
-
   return (
-    <Flex h="88px" justifyContent="space-between">
-      <Link to={toPath}>
-        <Button leftIcon={<MdChevronLeft />} variant="ghost">
-          이전 메뉴
-        </Button>
-      </Link>
-      <Box>
-        {notice.id && notice.status !== "COMPLETED" && (
-          <Button colorScheme="red" size="sm" onClick={onOpen}>
-            {title} 삭제
-          </Button>
-        )}
-        {notice.status !== "COMPLETED" && (
-          <Button
-            variant="outline"
-            bg="white"
-            size="sm"
-            ml={notice.id ? "10px" : "0px"}
-            onClick={(event) => {
-              buttonHandler(event, notice);
-            }}
-          >
-            {title} {notice.id ? "수정" : "저장"}
-          </Button>
-        )}
-        {notice.status !== "COMPLETED" && (
-          <Button
-            colorScheme="green"
-            size="sm"
-            ml="10px"
-            onClick={(event) => {
-              buttonHandler(event, notice);
-            }}
-          >
-            {title} 발행
-          </Button>
-        )}
-        {notice.status === "COMPLETED" && (
-          <Button
-            colorScheme="green"
-            size="sm"
-            ml="10px"
-            onClick={(event) => {
-              buttonHandler(event, notice);
-            }}
-          >
-            {title} 발행 취소
-          </Button>
-        )}
-      </Box>
-    </Flex>
+    <UpdateHeader
+      title={title}
+      item={notice}
+      toPath={toPath}
+      confirm={confirm}
+      buttonHandler={buttonHandler}
+    />
   );
 };
 
@@ -188,15 +132,6 @@ const NoticeUpdate = () => {
     },
   });
 
-  const update = (content: string) => {
-    setNotice((prev) => ({
-      ...prev,
-      content,
-    }));
-  };
-
-  const { renderEditor } = useEditor({ content: notice.content, update });
-
   useEffect(() => {
     if (data) {
       setNotice({
@@ -209,6 +144,15 @@ const NoticeUpdate = () => {
       });
     }
   }, [data, setNotice]);
+
+  const update = (content: string) => {
+    setNotice((prev) => ({
+      ...prev,
+      content,
+    }));
+  };
+
+  const { renderEditor } = useEditor({ content: notice.content, update });
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
     setNotice((prev: ListItem) => ({
