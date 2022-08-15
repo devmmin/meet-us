@@ -31,7 +31,7 @@ export class GqlJwtAuthGuard implements CanActivate {
     const cookies = ctx.req.cookies;
     Logger.log('Context cookies', cookies);
     Logger.log('Context headers', headers);
-    const authorization = ctx.req?.headers?.authorization;
+    const authorization = headers?.authorization || cookies['access-token'];
     if (!authorization) {
       throw new UnauthorizedException({
         code: JwtErrorCode.TokenInvalid,

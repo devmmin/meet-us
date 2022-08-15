@@ -11,8 +11,18 @@ import {
   RefreshTokenErrorResponse,
   RefreshTokenInput,
   RefreshTokenResponse,
+  TokenExpiredError,
 } from '@auth/models';
-import { Body, Controller, Get, Logger, Post, Req, Res } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Post,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { CommandBus } from '@nestjs/cqrs';
 import {
@@ -23,6 +33,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { JwtErrorCode } from './constants/error-code.constant';
 import { OAuth2Pricipal } from './security/security-context';
 import { AuthRole, OAuth2User } from './utils';
 
@@ -106,28 +117,53 @@ export class AuthController {
     if (req.cookies['refresh-token']) {
       Logger.log(req.cookies['refresh-token'], '쿠키에 토큰 검사');
     }
-
     const { refreshToken } = refreshTokenInput;
     Logger.log(refreshToken, 'refreshToken');
-    const { accessToken, expirationDate } = await this.commandBus.execute<
-      RefreshAccessTokenCommand,
-      RefreshAccessTokenResult
-    >(new RefreshAccessTokenCommand(refreshToken));
-    if (refreshToken) {
-      const isReqLocalHost = req?.headers?.origin?.includes('localhost');
-      res.cookie('access-token', refreshToken, {
-        secure: true,
-        httpOnly: true,
-        domain: isReqLocalHost
-          ? this.LOCALHOST
-          : this.configService.get('SERVER_DOMAIN'),
-        maxAge: expirationDate,
-        sameSite: 'lax',
-        path: '/',
-      });
+    try {
+      const { accessToken, expirationDate } = await this.commandBus.execute<
+        RefreshAccessTokenCommand,
+        RefreshAccessTokenResult
+      >(new RefreshAccessTokenCommand(refreshToken));
+      if (accessToken) {
+        const isReqLocalHost = req?.headers?.origin?.includes('localhost');
+        res.cookie('access-token', accessToken, {
+          secure: true,
+          httpOnly: true,
+          domain: isReqLocalHost
+            ? this.LOCALHOST
+            : this.configService.get('SERVER_DOMAIN'),
+          maxAge: expirationDate,
+          sameSite: 'lax',
+          path: '/',
+        });
+        res.status(200).send({ accessToken });
+      }
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        const isReqLocalHost = req?.headers?.origin?.includes('localhost');
+        res.cookie('access-token', '', {
+          secure: true,
+          httpOnly: true,
+          domain: isReqLocalHost
+            ? this.LOCALHOST
+            : this.configService.get('SERVER_DOMAIN'),
+          maxAge: 0,
+          sameSite: 'lax',
+          path: '/',
+        });
+        res.cookie('refresh-token', '', {
+          secure: true,
+          httpOnly: true,
+          domain: isReqLocalHost
+            ? this.LOCALHOST
+            : this.configService.get('SERVER_DOMAIN'),
+          maxAge: 0,
+          sameSite: 'lax',
+          path: '/',
+        });
+        throw error;
+      }
     }
-
-    res.status(200).send({ accessToken });
   }
 
   @AuthRole(['ADMIN', 'USER'])

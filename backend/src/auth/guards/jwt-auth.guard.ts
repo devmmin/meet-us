@@ -23,8 +23,9 @@ export class JwtAuthGuard implements CanActivate {
 
   canActivate(context: ExecutionContext): Observable<boolean> {
     const request: Request = context.switchToHttp().getRequest();
-    Logger.log('request.headers :', request);
-    const authorization = request?.headers?.authorization;
+    Logger.log('request.headers :', request.cookies);
+    const authorization =
+      request?.headers?.authorization || request.cookies['access-token'];
     if (!authorization) {
       throw new UnauthorizedException('The token is Empty');
     }

@@ -3,17 +3,17 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { setupSwagger } from 'src/config/swagger';
 import { setPrisma } from '@config/prisma';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 // import * as csurf from 'csurf';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: {
       credentials: true,
       optionsSuccessStatus: 200,
       origin: [
         'http://localhost:3000',
-        'self',
         /((?:http(s)?:\/\/)([\w.-])+)?(apollographql\.com)/,
         /localhost/,
         /((?:http(s)?:\/\/)([\w.-])+)?(byeonggi\.synology\.me)/,
