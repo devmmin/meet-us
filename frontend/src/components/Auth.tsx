@@ -1,6 +1,8 @@
 import { useSetRecoilState, useRecoilState, useResetRecoilState } from "recoil";
 import { useQuery } from "@apollo/client";
 import { Flex, Spinner, Text } from "@chakra-ui/react";
+import { useState } from "react";
+import { Navigate } from "react-router-dom";
 import {
   checkedListState,
   isAuthState,
@@ -10,8 +12,10 @@ import {
 import { GET_USER } from "../gql";
 import { UserResponse, UserVariable } from "../types/server";
 import { logout } from "../util";
+import Main from "../pages/Main";
 
-const Auth = ({ component }: { component: JSX.Element }) => {
+const Auth = ({ component = <Main /> }: { component?: JSX.Element }) => {
+  const [isLoading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useRecoilState(isAuthState);
   const setUserInfo = useSetRecoilState(userInfoState);
   const resetPageInfo = useResetRecoilState(pageInfoState);
@@ -32,20 +36,28 @@ const Auth = ({ component }: { component: JSX.Element }) => {
       resetPageInfo();
       resetChckedList();
       setIsAuth(true);
+      setLoading(false);
     },
     onError: () => {
+      setLoading(false);
       logout();
     },
   });
 
-  return !isAuth ? (
+  return isLoading ? (
     <Flex justifyContent="center" alignItems="center" flex="1">
       <Spinner />
       <Text ml="10px">Loading...</Text>
     </Flex>
-  ) : (
+  ) : isAuth ? (
     component
+  ) : (
+    <Navigate to="/admin/login" />
   );
+};
+
+Auth.defaultProps = {
+  component: <Main />,
 };
 
 export default Auth;

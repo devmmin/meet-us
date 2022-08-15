@@ -1,6 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import Login from "./pages/Login";
+import { Route, Routes } from "react-router-dom";
 import AdminLayout from "./layouts/AdminLayout";
 import Blog from "./pages/Blog";
 import Notice from "./pages/Notice";
@@ -11,14 +10,6 @@ import PostUpdate from "./pages/Blog/PostUpdate";
 import NoticeUpdate from "./pages/Notice/NoticeUpdate";
 import Auth from "./components/Auth";
 import ConfirmModal from "./components/Modal/ConfirmModal";
-
-const LoginCheck = ({ component }: { component: JSX.Element }) => {
-  if (localStorage.getItem("access-token")) {
-    return <Navigate to="/admin/main" replace />;
-  }
-
-  return component;
-};
 
 const App = () => (
   <Flex className="App">
@@ -39,20 +30,8 @@ const App = () => (
         <Route path="user-management" element={<UserManagement />} />
         <Route path="setting" element={<Setting />} />
       </Route>
-      <Route
-        path="/admin/login"
-        element={<LoginCheck component={<Login />} />}
-      />
-      <Route
-        path="*"
-        element={
-          localStorage.getItem("access-token") ? (
-            <Navigate to="/admin/main" replace />
-          ) : (
-            <Navigate to="/admin/login" replace />
-          )
-        }
-      />
+      <Route path="/admin/login" element={<Auth />} />
+      <Route path="*" element={<Auth />} />
     </Routes>
   </Flex>
 );
