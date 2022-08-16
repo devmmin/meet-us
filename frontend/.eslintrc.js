@@ -72,6 +72,7 @@ module.exports = {
     "no-param-reassign": "off",
     quotes: ["error", "double"],
     "no-lonely-if": "off",
+    "no-nested-ternary": "off",
   },
   settings: {
     "import/resolver": {

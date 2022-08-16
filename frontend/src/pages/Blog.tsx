@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useToast } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
+import ListHeader from "../components/List/ListHeader";
+import ListTable from "../components/List/ListTable";
 import { DELETE_POST, GET_POSTS } from "../gql";
-import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
 import { PostListResponse, PostListVariable } from "../types/server";
 import { getPostHeaderList } from "../util";
@@ -28,21 +29,30 @@ const Blog = () => {
     },
   });
 
-  const totalCount = useMemo(() => data?.posts.totalCount || 0, [data]);
+  const totalCount = useMemo(
+    () => data?.posts.totalCount || 0,
+    [data?.posts.totalCount]
+  );
+
   const list = useMemo(
     () =>
-      data?.posts.list.map(
-        (item) =>
-          ({
-            ...item,
-            id: item.postId,
-            subject: item.title,
-            register: item.authorId,
-            createdAt: new Date(item.createdAt).toLocaleString(),
-          } || [])
-      ),
+      data?.posts.list.map((item) => ({
+        ...item,
+        id: item.postId,
+        subject: item.title,
+        register: item.authorId,
+        createdAt: new Date(item.createdAt).toLocaleString(),
+      })) || [],
     [data]
   );
+
+  useEffect(() => {
+    setPageInfo((prev) => ({
+      ...prev,
+      totalCount,
+      totalPage: totalCount / prev.offset,
+    }));
+  }, [setPageInfo, totalCount]);
 
   const [deletePost] = useMutation(DELETE_POST, {
     onCompleted: (response) => {
@@ -73,22 +83,20 @@ const Blog = () => {
     });
   };
 
-  useEffect(() => {
-    setPageInfo((prev) => ({
-      ...prev,
-      totalCount,
-      totalPage: totalCount / prev.offset,
-    }));
-  }, [setPageInfo, totalCount]);
+  const title = "블로그";
+  const buttonTitle = "포스트";
+  const toPath = "/admin/blog/update";
+
   return (
-    <ListLayout
-      title="블로그"
-      list={list}
-      tableHeader={header}
-      buttonTitle="포스트"
-      toPath="/admin/blog/update"
-      confirm={confirm}
-    />
+    <Box p="50px" bg="gray.50" minH="100%">
+      <ListHeader
+        title={title}
+        buttonTitle={buttonTitle}
+        toPath={toPath}
+        confirm={confirm}
+      />
+      <ListTable list={list} tableHeader={header} buttonTitle={buttonTitle} />
+    </Box>
   );
 };
 

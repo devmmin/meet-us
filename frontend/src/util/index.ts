@@ -52,23 +52,13 @@ export const postLogin = async (loginInfo: { id: string, password: string }) => 
     userPassword: loginInfo.password
   });
 
-  if (response.status === 200) {
-    localStorage.setItem("access-token", response.data.accessToken);
-    localStorage.setItem("refresh-token", response.data.refreshToken);
-  }
-
   return response.data;
 };
 
 export const postRefreshToken = async (beforeRequestConfig: AxiosRequestConfig) => {
-  const response = await axios.post("/v1/auth/refresh", {
-    refreshToken: localStorage.getItem("refresh-token")
-  });
+  const response = await axios.post("/v1/auth/refresh");
 
   if (response.status === 200) {
-    localStorage.setItem("access-token", response.data.accessToken);
-    localStorage.removeItem("refresh-token");
-
     axios(beforeRequestConfig);
   }
 
@@ -76,8 +66,6 @@ export const postRefreshToken = async (beforeRequestConfig: AxiosRequestConfig) 
 };
 
 export const logout = (query = "") => {
-  localStorage.removeItem("access-token");
-  localStorage.removeItem("refresh-token");
   const loginUrl = "/admin/login";
   window.location.href = query ? loginUrl.concat(`?${query}`) : loginUrl;
 };

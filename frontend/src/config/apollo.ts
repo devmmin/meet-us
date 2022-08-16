@@ -1,20 +1,8 @@
-import { ApolloClient, InMemoryCache, from, ApolloLink, HttpLink } from "@apollo/client";
+import { ApolloClient, InMemoryCache, from, HttpLink } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 import { logout } from "../util";
 
 // ref : https://www.apollographql.com/docs/react/networking/advanced-http-networking
-const authMiddleware = new ApolloLink((operation, forward) => {
-  // add the authorization to the headers
-  operation.setContext(({ headers = {} }) => ({
-    headers: {
-      ...headers,
-      authorization: localStorage.getItem("access-token") || null,
-    }
-  }));
-
-  return forward(operation);
-});
-
 const httpLink = new HttpLink({
   uri: "https://meet-us-api.byeonggi.synology.me/graphql",
 });
@@ -36,7 +24,7 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // ref: https://www.apollographql.com/docs/react/api/link/introduction/
 const client = new ApolloClient({
-  link: from([authMiddleware, errorLink, httpLink]),
+  link: from([errorLink, httpLink]),
   cache: new InMemoryCache(),
   credentials: "include",
   defaultOptions: {

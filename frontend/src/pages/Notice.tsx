@@ -1,9 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useToast } from "@chakra-ui/react";
+import { Box, useToast } from "@chakra-ui/react";
 import { useEffect, useMemo } from "react";
 import { useRecoilState } from "recoil";
+import ListHeader from "../components/List/ListHeader";
+import ListTable from "../components/List/ListTable";
 import { DELETE_NOTICE, GET_NOTICES } from "../gql";
-import ListLayout from "../layouts/Admin/ListLayout";
 import { pageInfoState } from "../recoil";
 import { NoticeListResponse, NoticeListVariable } from "../types/server";
 import { getNoticeHeaderList } from "../util";
@@ -31,19 +32,20 @@ const Notice = () => {
     }
   );
 
-  const totalCount = useMemo(() => data?.posts.totalCount || 0, [data]);
+  const totalCount = useMemo(
+    () => data?.posts.totalCount || 0,
+    [data?.posts.totalCount]
+  );
+
   const list = useMemo(
     () =>
-      data?.posts.list.map(
-        (item) =>
-          ({
-            ...item,
-            id: item.postId,
-            subject: item.title,
-            register: item.authorId,
-            createdAt: new Date(item.createdAt).toLocaleString(),
-          } || [])
-      ),
+      data?.posts.list.map((item) => ({
+        ...item,
+        id: item.postId,
+        subject: item.title,
+        register: item.authorId,
+        createdAt: new Date(item.createdAt).toLocaleString(),
+      })) || [],
     [data]
   );
 
@@ -83,15 +85,21 @@ const Notice = () => {
       },
     });
   };
+
+  const title = "공지사항";
+  const buttonTitle = "공지사항";
+  const toPath = "/admin/notice/update";
+
   return (
-    <ListLayout
-      title="공지사항"
-      list={list}
-      tableHeader={header}
-      buttonTitle="공지사항"
-      toPath="/admin/notice/update"
-      confirm={confirm}
-    />
+    <Box p="50px" bg="gray.50" minH="100%">
+      <ListHeader
+        title={title}
+        buttonTitle={buttonTitle}
+        toPath={toPath}
+        confirm={confirm}
+      />
+      <ListTable list={list} tableHeader={header} buttonTitle={buttonTitle} />
+    </Box>
   );
 };
 
