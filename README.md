@@ -10,8 +10,8 @@
 
 ## 🛠 기술 스택
 
-- Backend : Nest.js, Prisma, Apollo Server - Graphql, MariaDB, Typescript, Docker, Eslint, Prettier
-- Frontend : React.js, Apollo Client - Graphql, Typescript, Eslint, Prettier, Recoil, Chakra-ui, Axios
+- BackEnd : Nest.js, Prisma, Apollo Server - Graphql, MariaDB, Typescript, Docker, Eslint, Prettier
+- FrontEnd : React.js, Apollo Client - Graphql, Typescript, Eslint, Prettier, Recoil, Chakra-ui, Axios
 
 ## 🗂 backend Directory 구조
 
@@ -186,3 +186,8 @@
  ┣ 📜reportWebVitals.ts
  ┗ 📜setupTests.ts
 ```
+
+## 👨‍👨‍👧‍👧 팀원
+
+BackEnd [ByeongGi](https://github.com/ByeongGi)  
+FrontEnd [devmmin](https://github.com/devmmin)
