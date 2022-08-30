@@ -10,7 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { postLogin } from "../util";
+
+import { postLogin } from "../../util";
 
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({ id: "", password: "" });

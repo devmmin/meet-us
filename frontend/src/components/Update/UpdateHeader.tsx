@@ -1,6 +1,7 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { MdChevronLeft } from "react-icons/md";
 import { Link } from "react-router-dom";
+
 import useModal from "../../hooks/useModal";
 
 interface Props {

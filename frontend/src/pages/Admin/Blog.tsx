@@ -1,53 +1,44 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Box, useToast } from "@chakra-ui/react";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import ListHeader from "../components/List/ListHeader";
-import ListTable from "../components/List/ListTable";
-import { DELETE_NOTICE, GET_NOTICES } from "../gql";
-import { pageInfoState } from "../recoil";
-import { NoticeListResponse, NoticeListVariable } from "../types/server";
-import { getNoticeHeaderList } from "../util";
+
+import ListHeader from "../../components/List/ListHeader";
+import ListTable from "../../components/List/ListTable";
+import { DELETE_POST, GET_POSTS } from "../../gql";
+import { pageInfoState } from "../../recoil";
+import { PostListResponse, PostListVariable } from "../../types/server";
+import { getPostHeaderList } from "../../util";
 
 const {
   data: { header },
-} = getNoticeHeaderList();
+} = getPostHeaderList();
 
-const Notice = () => {
+const Blog = () => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
   const toast = useToast();
 
-  const { data } = useQuery<NoticeListResponse, NoticeListVariable>(
-    GET_NOTICES,
-    {
-      variables: {
-        pagination: {
-          skip: pageInfo.offset * (pageInfo.page - 1),
-          take: pageInfo.offset,
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
+  const { data } = useQuery<PostListResponse, PostListVariable>(GET_POSTS, {
+    variables: {
+      pagination: {
+        skip: pageInfo.offset * (pageInfo.page - 1),
+        take: pageInfo.offset,
       },
-    }
-  );
+      orderBy: {
+        createdAt: "desc",
+      },
+    },
+  });
 
-  const totalCount = useMemo(
-    () => data?.posts.totalCount || 0,
-    [data?.posts.totalCount]
-  );
+  const totalCount = data?.posts.totalCount || 0;
 
-  const list = useMemo(
-    () =>
-      data?.posts.list.map((item) => ({
-        ...item,
-        id: item.postId,
-        subject: item.title,
-        register: item.authorId,
-        createdAt: new Date(item.createdAt).toLocaleString(),
-      })) || [],
-    [data]
-  );
+  const list = data?.posts.list.map((item) => ({
+    ...item,
+    id: item.postId,
+    subject: item.title,
+    register: item.authorId,
+    createdAt: new Date(item.createdAt).toLocaleString(),
+  })) || [];
 
   useEffect(() => {
     setPageInfo((prev) => ({
@@ -57,7 +48,7 @@ const Notice = () => {
     }));
   }, [setPageInfo, totalCount]);
 
-  const [deleteNotice] = useMutation(DELETE_NOTICE, {
+  const [deletePost] = useMutation(DELETE_POST, {
     onCompleted: (response) => {
       toast({
         description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
@@ -77,7 +68,7 @@ const Notice = () => {
   });
 
   const confirm = (item: { id: string }) => {
-    deleteNotice({
+    deletePost({
       variables: {
         post: {
           id: item.id,
@@ -86,9 +77,9 @@ const Notice = () => {
     });
   };
 
-  const title = "공지사항";
-  const buttonTitle = "공지사항";
-  const toPath = "/admin/notice/update";
+  const title = "블로그";
+  const buttonTitle = "포스트";
+  const toPath = "/admin/blog/update";
 
   return (
     <Box p="50px" bg="gray.50" minH="100%">
@@ -103,4 +94,4 @@ const Notice = () => {
   );
 };
 
-export default Notice;
+export default Blog;

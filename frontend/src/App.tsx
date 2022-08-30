@@ -1,16 +1,17 @@
 import { Flex } from "@chakra-ui/react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import AdminLayout from "./layouts/AdminLayout";
-import Blog from "./pages/Blog";
-import Notice from "./pages/Notice";
-import Main from "./pages/Main";
-import UserManagement from "./pages/UserManagement";
-import Setting from "./pages/Setting";
-import PostUpdate from "./pages/Blog/PostUpdate";
-import NoticeUpdate from "./pages/Notice/NoticeUpdate";
+
 import Auth from "./components/Auth";
 import ConfirmModal from "./components/Modal/ConfirmModal";
-import Login from "./pages/Login";
+import AdminLayout from "./layouts/AdminLayout";
+import Blog from "./pages/Admin/Blog";
+import PostUpdate from "./pages/Admin/Blog/PostUpdate";
+import Login from "./pages/Admin/Login";
+import Main from "./pages/Admin/Main";
+import Notice from "./pages/Admin/Notice";
+import NoticeUpdate from "./pages/Admin/Notice/NoticeUpdate";
+import Setting from "./pages/Admin/Setting";
+import UserManagement from "./pages/Admin/UserManagement";
 
 const App = () => (
   <Flex className="App">

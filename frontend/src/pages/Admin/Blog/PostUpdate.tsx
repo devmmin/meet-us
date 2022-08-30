@@ -1,22 +1,18 @@
-import { ChangeEvent, MouseEvent, useEffect } from "react";
-import { useRecoilState } from "recoil";
 import { useMutation, useQuery } from "@apollo/client";
 import { Box, Flex, Input, useToast } from "@chakra-ui/react";
+import { ChangeEvent, MouseEvent, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { noticeItemState } from "../../recoil";
-import {
-  CREATE_NOTICE,
-  DELETE_NOTICE,
-  GET_NOTICE,
-  UPDATE_NOTICE,
-} from "../../gql";
-import { NoticeResponse, NoticeVariable } from "../../types/server";
-import { ListItem } from "../../types/global";
-import useEditor from "../../hooks/useEditor";
-import UpdateHeader from "../../components/Update/UpdateHeader";
+import { useRecoilState } from "recoil";
+
+import UpdateHeader from "../../../components/Update/UpdateHeader";
+import { CREATE_POST, DELETE_POST, GET_POST, UPDATE_POST } from "../../../gql";
+import useEditor from "../../../hooks/useEditor";
+import { postItemState } from "../../../recoil";
+import { ListItem } from "../../../types/global";
+import { PostResponse, PostVariable } from "../../../types/server";
 
 interface Props {
-  notice: {
+  post: {
     id: string;
     subject: string;
     content: string;
@@ -24,12 +20,13 @@ interface Props {
   };
 }
 
-const NoticeUpdateHeader = ({ notice }: Props) => {
+const PostUpdateHeader = ({ post }: Props) => {
   const toast = useToast();
-  const [deleteNotice] = useMutation(DELETE_NOTICE, {
+  // TODO: onCompleted, onError 공통처리
+  const [deletePost] = useMutation(DELETE_POST, {
     onCompleted: (response) => {
       toast({
-        description: `삭제를 ${response === 0 ? "완료" : "실패"}했습니다.`,
+        description: `삭제를 ${response ? "완료" : "실패"}했습니다.`,
         status: response ? "success" : "error",
         duration: 9000,
         isClosable: true,
@@ -46,36 +43,33 @@ const NoticeUpdateHeader = ({ notice }: Props) => {
   });
 
   // TODO: 저장과 발행의 차이는 무엇인지 확인하기
-  const [updateNotice] = useMutation(
-    notice.id ? UPDATE_NOTICE : CREATE_NOTICE,
-    {
-      onCompleted: (response) => {
-        const type = "save";
-        toast({
-          description: `${type === "save" ? "저장" : "발행"}을 ${
-            response ? "완료" : "실패"
-          }했습니다.`,
-          status: response ? "success" : "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-      onError: () => {
-        const type = "save";
-        toast({
-          description: `${type === "save" ? "저장" : "발행"}을 실패했습니다.`,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
-      },
-    }
-  );
+  const [updatePost] = useMutation(post.id ? UPDATE_POST : CREATE_POST, {
+    onCompleted: (response) => {
+      const type = "save";
+      const success = response;
+      toast({
+        description: `${type === "save" ? "저장" : "발행"}을 ${
+          success ? "완료" : "실패"
+        }했습니다.`,
+        status: success ? "success" : "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: () => {
+      toast({
+        description: "저장을 실패했습니다.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
-  const confirm = (item: { id: string }) => {
-    deleteNotice({
+  const confirm = (item: { id: string | Array<string> }) => {
+    deletePost({
       variables: {
-        notice: {
+        post: {
           id: item.id,
         },
       },
@@ -96,9 +90,9 @@ const NoticeUpdateHeader = ({ notice }: Props) => {
       return;
     }
 
-    updateNotice({
+    updatePost({
       variables: {
-        notice: {
+        post: {
           id: item.id,
           title: item.subject,
           content: item.content,
@@ -107,34 +101,34 @@ const NoticeUpdateHeader = ({ notice }: Props) => {
     });
   };
 
-  const title = "공지사항";
-  const toPath = "/admin/notice";
+  const title = "블로그";
+  const toPath = "/admin/blog";
 
   return (
     <UpdateHeader
       title={title}
-      item={notice}
-      toPath={toPath}
+      item={post}
       confirm={confirm}
+      toPath={toPath}
       buttonHandler={buttonHandler}
     />
   );
 };
 
-const NoticeUpdate = () => {
+const PostUpdate = () => {
   const params = useParams();
-  const [notice, setNotice] = useRecoilState(noticeItemState);
-  const noticeId = (params && params.id) || "";
+  const [post, setPost] = useRecoilState(postItemState);
+  const postId = (params && params.id) || "";
 
-  const { data } = useQuery<NoticeResponse, NoticeVariable>(GET_NOTICE, {
+  const { data } = useQuery<PostResponse, PostVariable>(GET_POST, {
     variables: {
-      noticeId,
+      postId,
     },
   });
 
   useEffect(() => {
     if (data) {
-      setNotice({
+      setPost({
         id: data.getPostById.postId,
         subject: data.getPostById.title,
         content: data.getPostById.content,
@@ -143,19 +137,19 @@ const NoticeUpdate = () => {
         createdAt: new Date(data.getPostById.createdAt).toLocaleString(),
       });
     }
-  }, [data, setNotice]);
+  }, [data, setPost]);
 
   const update = (content: string) => {
-    setNotice((prev) => ({
+    setPost((prev) => ({
       ...prev,
       content,
     }));
   };
 
-  const { renderEditor } = useEditor({ content: notice.content, update });
+  const { renderEditor } = useEditor({ content: post.content, update });
 
   const changeHandler = (event: ChangeEvent<HTMLInputElement>, key: string) => {
-    setNotice((prev: ListItem) => ({
+    setPost((prev: ListItem) => ({
       ...prev,
       [key]: event.target.value,
     }));
@@ -163,12 +157,12 @@ const NoticeUpdate = () => {
 
   return (
     <Box p="50px" bg="gray.50" minH="100%">
-      <NoticeUpdateHeader notice={notice} />
+      <PostUpdateHeader post={post} />
       <Flex flexDirection="column">
         <Input
           placeholder="제목을 입력하세요."
           bg="white"
-          value={notice.subject}
+          value={post.subject}
           onChange={(event) => {
             changeHandler(event, "subject");
           }}
@@ -182,4 +176,4 @@ const NoticeUpdate = () => {
   );
 };
 
-export default NoticeUpdate;
+export default PostUpdate;

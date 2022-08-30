@@ -6,7 +6,7 @@ module.exports = {
     browser: true,
     es2021: true,
   },
-  plugins: ["react", "react-hooks", "@typescript-eslint"],
+  plugins: ["react", "react-hooks", "@typescript-eslint", "simple-import-sort"],
   extends: [
     "react-app",
     "react-app/jest",
@@ -34,6 +34,8 @@ module.exports = {
         js: "never",
       },
     ],
+    "simple-import-sort/imports": "error",
+    "simple-import-sort/exports": "error",
     "react/jsx-filename-extension": [
       "error",
       {

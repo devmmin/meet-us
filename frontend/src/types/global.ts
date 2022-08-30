@@ -45,9 +45,8 @@ type ModalProps = NewModalProps & DefaultModalProps
 
 export type {
   ListItem,
-  Page,
-  UserInfo,
-  NavLinkItem,
   ModalProps,
-  NewModalProps
-};
+  NavLinkItem,
+  NewModalProps,
+  Page,
+  UserInfo };
