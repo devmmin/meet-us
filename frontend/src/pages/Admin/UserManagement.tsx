@@ -1,8 +1,9 @@
 import { Box } from "@chakra-ui/react";
-import ListHeader from "../components/List/ListHeader";
-import ListTable from "../components/List/ListTable";
-import { ListItem } from "../types/global";
-import { getHeader } from "../util";
+
+import ListHeader from "../../components/List/ListHeader";
+import ListTable from "../../components/List/ListTable";
+import { ListItem } from "../../types/global";
+import { getHeader } from "../../util";
 
 const {
   data: { header },

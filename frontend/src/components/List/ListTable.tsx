@@ -1,25 +1,26 @@
 import {
-  Table,
-  Flex,
-  TableContainer,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Checkbox,
-  Badge,
   Avatar,
+  Badge,
+  Checkbox,
+  Flex,
+  IconButton,
   Menu,
   MenuButton,
-  MenuList,
   MenuItem,
-  IconButton,
+  MenuList,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
-import { useRecoilState } from "recoil";
 import { MdMoreHoriz } from "react-icons/md";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+
 import { checkedListState } from "../../recoil";
 import { ListItem } from "../../types/global";
 import ListFooter from "./ListFooter";

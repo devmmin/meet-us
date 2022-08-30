@@ -1,13 +1,14 @@
+import { ApolloProvider } from "@apollo/client";
+import { ChakraProvider } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import ReactDOM from "react-dom";
-import { ChakraProvider } from "@chakra-ui/react";
-import { ApolloProvider } from "@apollo/client";
-import { RecoilRoot, useRecoilSnapshot } from "recoil";
 import { BrowserRouter } from "react-router-dom";
+import { RecoilRoot, useRecoilSnapshot } from "recoil";
+
 import App from "./App";
-import reportWebVitals from "./reportWebVitals";
 import client from "./config/apollo";
 import theme from "./config/chakra-ui";
+import reportWebVitals from "./reportWebVitals";
 
 const DebugObserver = () => {
   const snapshot = useRecoilSnapshot();

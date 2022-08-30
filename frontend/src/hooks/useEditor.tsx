@@ -1,7 +1,8 @@
-import { useRef, MutableRefObject, useLayoutEffect } from "react";
-import { Editor } from "@toast-ui/react-editor";
-import { EditorType } from "@toast-ui/editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
+
+import { EditorType } from "@toast-ui/editor";
+import { Editor } from "@toast-ui/react-editor";
+import { MutableRefObject, useLayoutEffect, useRef } from "react";
 
 const useEditor = ({
   content,

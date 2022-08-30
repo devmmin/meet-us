@@ -1,16 +1,17 @@
 import {
+  Button,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Button,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
+
 import { modalState } from "../../recoil";
 
 const ConfirmModal = () => {

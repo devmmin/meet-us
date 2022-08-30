@@ -1,9 +1,9 @@
-import { Heading, Button, Flex, Text } from "@chakra-ui/react";
-import { useRecoilValue } from "recoil";
+import { Button, Flex, Heading, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { useMemo } from "react";
-import { checkedListState } from "../../recoil";
+import { useRecoilValue } from "recoil";
+
 import useModal from "../../hooks/useModal";
+import { checkedListState } from "../../recoil";
 
 interface Props {
   title: string;
@@ -34,7 +34,7 @@ const ListHeader = ({ title, buttonTitle, toPath = "", confirm }: Props) => {
     });
   };
 
-  const isToggle = useMemo(() => checkedList.length, [checkedList.length]);
+  const isToggle = checkedList.length;
   return (
     <>
       <Flex h="70px">

@@ -1,23 +1,42 @@
 import {
+  Avatar,
   Box,
-  Divider,
-  Heading,
-  Icon,
-  Text,
-  useColorModeValue,
-  Flex,
   Breadcrumb,
   BreadcrumbItem,
+  Divider,
+  Flex,
+  Heading,
+  Icon,
+  Stack,
+  Text,
+  useColorModeValue,
 } from "@chakra-ui/react";
+import { useLayoutEffect } from "react";
+import { FaBlog, FaBullhorn, FaUsersCog } from "react-icons/fa";
 import { MdHome, MdOutlineSettings } from "react-icons/md";
-import { FaBullhorn, FaBlog, FaUsersCog } from "react-icons/fa";
 import { SiChakraui } from "react-icons/si";
 import { NavLink } from "react-router-dom";
-import { useLayoutEffect } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
+
+import { navLinksState, userInfoState } from "../recoil";
 import { getNavLinks } from "../util";
-import { navLinksState } from "../recoil";
-import UserInfo from "./Sidebar/UserInfo";
+
+const UserInfo = () => {
+  const userInfo = useRecoilValue(userInfoState);
+
+  return (
+    <Box>
+      <Divider />
+      <Flex p="18px 14px">
+        <Avatar mr="10px" />
+        <Stack>
+          <Text fontSize="14px">{userInfo.nickName}</Text>
+          <Text fontSize="14px">{userInfo.id}</Text>
+        </Stack>
+      </Flex>
+    </Box>
+  );
+};
 
 // TODO: API fetch
 const { data } = getNavLinks();

@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+
 import { ListItem, ModalProps, NavLinkItem, Page, UserInfo } from "../types/global";
 
 export const checkedListState = atom<string[]>({

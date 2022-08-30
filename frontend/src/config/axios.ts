@@ -1,6 +1,7 @@
 import axios from "axios";
-import { postRefreshToken, logout } from "../util";
+
 import ERROR from "../constants/error";
+import { logout, postRefreshToken } from "../util";
 
 const instance = axios.create({
   baseURL: "https://meet-us-api.byeonggi.synology.me",

@@ -1,4 +1,5 @@
 import { useRecoilState } from "recoil";
+
 import { modalState } from "../recoil";
 import { NewModalProps } from "../types/global";
 

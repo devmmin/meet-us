@@ -1,8 +1,10 @@
-import { Flex, Box, Select, IconButton } from "@chakra-ui/react";
-import { ChangeEvent, MouseEvent, memo } from "react";
+import { Box, Flex, IconButton, Select } from "@chakra-ui/react";
+import { ChangeEvent, memo, MouseEvent } from "react";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
-import { useNavigate, useLocation } from "react-router-dom";
+
+import usePagination from "../../hooks/usePagination";
 import { pageInfoState } from "../../recoil";
 
 const offsetList = [5, 10, 15, 20, 30];
@@ -11,14 +13,8 @@ const ListFooter = memo(() => {
   const [pageInfo, setPageInfo] = useRecoilState(pageInfoState);
   const location = useLocation();
   const navigate = useNavigate();
-  const endPageNum =
-    pageInfo.page * pageInfo.offset > pageInfo.totalCount
-      ? pageInfo.totalCount
-      : pageInfo.page * pageInfo.offset;
-  const startPageNum =
-    pageInfo.page <= 1
-      ? 1
-      : pageInfo.page * pageInfo.offset - (pageInfo.offset - 1);
+  const { startPageNum, endPageNum } = usePagination({ pageInfo });
+
   const paginationHandler = (
     e:
       | ChangeEvent<HTMLSelectElement>

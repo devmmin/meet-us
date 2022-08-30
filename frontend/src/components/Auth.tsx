@@ -1,20 +1,21 @@
-import { useSetRecoilState, useRecoilState, useResetRecoilState } from "recoil";
 import { useQuery } from "@apollo/client";
 import { Flex, Spinner, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useRecoilState, useResetRecoilState, useSetRecoilState } from "recoil";
+
+import { GET_USER } from "../gql";
+import Main from "../pages/Admin/Main";
 import {
   checkedListState,
   isAuthState,
   pageInfoState,
   userInfoState,
 } from "../recoil";
-import { GET_USER } from "../gql";
 import { UserResponse, UserVariable } from "../types/server";
 import { logout } from "../util";
-import Main from "../pages/Main";
 
-const Auth = ({ component = <Main /> }: { component?: JSX.Element }) => {
+const Auth = ({ component = <Main /> }: { component?: ReactElement }) => {
   const [isLoading, setLoading] = useState(true);
   const [isAuth, setIsAuth] = useRecoilState(isAuthState);
   const setUserInfo = useSetRecoilState(userInfoState);
